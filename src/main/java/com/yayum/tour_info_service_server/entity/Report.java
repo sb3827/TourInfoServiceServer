@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Many;
 @Entity
 @Builder
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
 public class Report {
