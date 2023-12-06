@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FolderDeleteDTO {
+public class FolderSpotDTO {
     private Long mno;
-    private String title;
+    private String pno;
+    private Long fno;
+
 }
