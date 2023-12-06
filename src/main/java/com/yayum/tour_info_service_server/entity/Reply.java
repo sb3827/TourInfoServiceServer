@@ -3,7 +3,6 @@ package com.yayum.tour_info_service_server.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Entity
 @Builder
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Reply {
+public class Reply extends BaseEntity{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long rno;
@@ -27,7 +26,5 @@ public class Reply {
 
   @Column(nullable = false, length =1000)
   private String text;    // 댓글 내용
-  private LocalDate regDate;  // 등록 일자
-  private LocalDate modDate;  // 수정 일자
 
   }
