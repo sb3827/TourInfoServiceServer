@@ -1,12 +1,11 @@
 package com.yayum.tour_info_service_server.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -29,5 +28,13 @@ public class Member {
   private int warn;
   private int disciplinary;
   private int bussinessId;
+
+  @ElementCollection(fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Role> roleSet = new HashSet<>();
+
+  public void addMemberRole(Role role){
+    roleSet.add(role);
+  }
 
 }
