@@ -17,7 +17,7 @@ public class Board extends BaseEntity{
     private Long bno;
 
     private String title;
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
     private Boolean isAd;
     private Boolean isCourse;
