@@ -14,8 +14,12 @@ public class Folder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fno;
 
-    private String title;
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Member mno;
+
+    private String title;
+
+    public void changeTitle(String title){
+        this.title=title;
+    }
 }
