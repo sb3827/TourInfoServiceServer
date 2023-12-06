@@ -4,7 +4,6 @@ package com.yayum.tour_info_service_server.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.lang.reflect.Member;
 import java.time.LocalDate;
 
 @Entity
