@@ -20,6 +20,7 @@ public class Member extends BaseEntity {
 
   private String email;
   private String password;
+  private LocalDateTime birth;
   private String phone;
   private String name;
   private String image;
