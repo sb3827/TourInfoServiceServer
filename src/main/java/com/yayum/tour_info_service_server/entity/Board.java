@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class Board {
+public class Board extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
@@ -20,8 +20,6 @@ public class Board {
     @Lob
     private String content;
     private Boolean isAd;
-    private LocalDate regDate;
-    private LocalDate modDate;
     private Boolean isCourse;
     private Double score;
     private int likes;
