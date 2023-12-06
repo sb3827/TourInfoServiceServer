@@ -1,8 +1,6 @@
 package com.yayum.tour_info_service_server.service;
 
-import com.yayum.tour_info_service_server.dto.FolderChangeDTO;
-import com.yayum.tour_info_service_server.dto.FolderDTO;
-import com.yayum.tour_info_service_server.dto.FolderDeleteDTO;
+import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.Folder;
 import com.yayum.tour_info_service_server.entity.Member;
 
@@ -10,8 +8,8 @@ import java.util.List;
 
 public interface FolderService {
 
-    //폴더 내용 조회
-    List<FolderDTO> getAllFolder(Long mno);
+    //폴더 전부 조회
+    List<Object[]> getAllFolder(Long mno);
 
     //폴더명 조회
     List<String> getTitle(Long mno);
@@ -23,11 +21,13 @@ public interface FolderService {
     Long modify(FolderChangeDTO folderChangeDTO);
 
     //폴더 삭제 - 성공 시 폴더번호, 실패시 -1
-    Long remove(FolderDeleteDTO folderDeleteDTO);
+    void remove(Long fno);
 
     //장바구니 스팟 추가 - 추후 진행
+    Long addSpot(FolderSpotDTO folderSpotDTO);
 
     //장바구니 스팟 삭제 - 추후 진행
+    Long deleteSpot(FolderSpotDTO folderSpotDTO);
 
 
     //dtoToEntity
