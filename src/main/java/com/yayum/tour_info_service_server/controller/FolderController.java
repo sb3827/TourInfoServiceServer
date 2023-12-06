@@ -2,7 +2,6 @@ package com.yayum.tour_info_service_server.controller;
 
 import com.yayum.tour_info_service_server.dto.FolderChangeDTO;
 import com.yayum.tour_info_service_server.dto.FolderDTO;
-import com.yayum.tour_info_service_server.dto.FolderDeleteDTO;
 import com.yayum.tour_info_service_server.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +18,9 @@ public class FolderController {
 
     private final FolderService folderService;
 
-    //폴더 내용 모두 들고오기 - 수정해야함
+    //폴더 내용 모두 들고오기
     @GetMapping(value = "/all",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FolderDTO>> allFolder(@RequestParam(value = "mno")Long mno){
+    public ResponseEntity<List<Object[]>> allFolder(@RequestParam(value = "mno")Long mno){
       return new ResponseEntity<>(folderService.getAllFolder(mno), HttpStatus.OK);
     }
 
@@ -47,12 +46,9 @@ public class FolderController {
 
     //폴더 삭제
     @DeleteMapping(value = "/delete",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long>remove(@RequestBody FolderDeleteDTO folderDeleteDTO){
-        Long num=folderService.remove(folderDeleteDTO);
-        return new ResponseEntity<>(num,HttpStatus.OK);
+    public ResponseEntity remove(@RequestBody Long fno){
+        folderService.remove(fno);
+        return new ResponseEntity(HttpStatus.OK);
     }
-
-
-
 
 }
