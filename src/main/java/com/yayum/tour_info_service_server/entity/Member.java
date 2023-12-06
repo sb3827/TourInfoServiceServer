@@ -13,14 +13,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Member {
+public class Member extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long mno;
 
   private String email;
   private String password;
-  private LocalDateTime birth;
   private String phone;
   private String name;
   private String image;
