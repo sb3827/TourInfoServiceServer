@@ -71,7 +71,7 @@ public class FolderServiceImpl implements FolderService{
     //폴더 스팟 추가 - CartService와 머지 후 주석 제거
 //    @Override
 //    public Long addSpot(FolderAddSpot folderAddSpot) {
-//        Cart cart=dtoToEntity(FolderAddSpot);
+//        Cart cart=dtoToEntity(CartDTO);
 //        cartRepository.save(cart);
 //        return cart.getCartPK().getFno().getFno();
 //    }
@@ -79,10 +79,13 @@ public class FolderServiceImpl implements FolderService{
     public Long addSpot(FolderSpotDTO folderSpotDTO) {
         return null;
     }
+
+
+
     //폴더 스팟 제거 - CartService와 머지 후 주석 제거
 //    @Override
-//    public Long deleteSpot(FolderSpotDTO folderSpotDTO) {
-//        cartRepository.delete(dtoToEntity(folderSpotDTO));
+//    public Long deleteSpot(CartDTO cartDTO) {
+//        cartRepository.delete(dtoToEntity(cartDTO));
 //    }
 
     @Override
