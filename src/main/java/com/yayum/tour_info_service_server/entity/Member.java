@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +26,7 @@ public class Member extends BaseEntity {
   private String password;
 
   @Column(nullable = false)
-  private LocalDateTime birth;
+  private LocalDate birth;
 
   @Column(nullable = false)
   private String phone;
