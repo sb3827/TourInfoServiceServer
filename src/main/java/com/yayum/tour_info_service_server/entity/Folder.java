@@ -16,9 +16,9 @@ public class Folder {
     private Long fno;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member mno;
+    private Member member;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Default Name'")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT '폴더'")
     private String title;
 
     public void changeTitle(String title){

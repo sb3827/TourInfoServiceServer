@@ -15,7 +15,7 @@ public class Image {
     private Long pno;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Board bno; //게시글번호 - 머지 후 import 해야함
+    private Board board; //게시글번호 - 머지 후 import 해야함
 
     @Column(nullable = false)
     private String src; //이미지 경로
