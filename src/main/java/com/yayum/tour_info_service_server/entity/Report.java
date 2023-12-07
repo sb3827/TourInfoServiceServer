@@ -23,7 +23,7 @@ public class Report {
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private Member complainant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
