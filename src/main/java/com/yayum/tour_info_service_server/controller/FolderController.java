@@ -1,6 +1,5 @@
 package com.yayum.tour_info_service_server.controller;
 
-import com.yayum.tour_info_service_server.dto.FolderChangeDTO;
 import com.yayum.tour_info_service_server.dto.FolderDTO;
 import com.yayum.tour_info_service_server.service.FolderService;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +38,8 @@ public class FolderController {
 
     //폴더명 수정
     @PutMapping(value = "/update",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long>modify(@RequestBody FolderChangeDTO folderChangeDTO){
-        Long num=folderService.modify(folderChangeDTO);
+    public ResponseEntity<Long>modify(@RequestBody FolderDTO folderDTO){
+        Long num=folderService.modify(folderDTO);
         return new ResponseEntity<>(num,HttpStatus.OK);
     }
 
