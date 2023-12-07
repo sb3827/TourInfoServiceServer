@@ -2,6 +2,7 @@ package com.yayum.tour_info_service_server.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -18,15 +19,29 @@ public class Member extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long mno;
 
+  @Column(nullable = false)
   private String email;
+
+  @Column(nullable = false)
   private String password;
+
+  @Column(nullable = false)
   private LocalDateTime birth;
+
+  @Column(nullable = false)
   private String phone;
+
+  @Column(nullable = false)
   private String name;
   private String image;
+
+  @ColumnDefault("false")
   private boolean fromSocial;
-  private int warn;
+
+  @ColumnDefault("0")
   private int disciplinary;
+
+  @ColumnDefault("0")
   private int bussinessId;
 
   @ElementCollection(fetch = FetchType.LAZY)
