@@ -20,10 +20,4 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
     @Query("select f.title from Folder f where f.mno.mno=:mno")
     List<String> getFolderTitle(Long mno);
 
-
-    //폴더 - mno와 title 넘겨서 해당하는 컬럼 가져오기
-    @Query("select f from Folder f where f.mno=:mno and f.title=:title")
-    Folder findByMnoAndTitle(Long mno,String title);
-
-
 }
