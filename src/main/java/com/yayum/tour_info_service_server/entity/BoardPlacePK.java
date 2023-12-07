@@ -1,5 +1,6 @@
 package com.yayum.tour_info_service_server.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -15,7 +16,10 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class BoardPlacePK implements Serializable {
+    @Column(nullable = false)
     private int day;
+
+    @Column(nullable = false)
     private int order;
 
     @ManyToOne(fetch = FetchType.LAZY)
