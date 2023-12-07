@@ -26,5 +26,4 @@ public class Reply extends BaseEntity{
 
   @Column(nullable = false, length =1000)
   private String text;    // 댓글 내용
-
   }

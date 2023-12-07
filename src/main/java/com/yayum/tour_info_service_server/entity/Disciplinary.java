@@ -20,7 +20,9 @@ public class Disciplinary {
   @ManyToOne(fetch = FetchType.LAZY)
   private Member mno;
 
+  @Column(nullable = false)
   private String reason;
+
   private LocalDate strDate;  // 제재 시작 일자
   private LocalDate expDate;  // 제재 종료 일자
 }

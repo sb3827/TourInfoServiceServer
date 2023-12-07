@@ -2,6 +2,7 @@ package com.yayum.tour_info_service_server.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -16,12 +17,22 @@ public class Board extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
 
+    @Column(nullable = false)
     private String title;
-    @Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String content;
+
+    @ColumnDefault("false")
     private Boolean isAd;
+
+    @Column(nullable = false)
     private Boolean isCourse;
+
+    @ColumnDefault("0")
     private Double score;
+
+    @ColumnDefault("0")
     private int likes;
 
     @ManyToOne(fetch= FetchType.LAZY)

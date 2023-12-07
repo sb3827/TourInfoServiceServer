@@ -2,6 +2,7 @@ package com.yayum.tour_info_service_server.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Builder
@@ -17,6 +18,7 @@ public class Folder {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member mno;
 
+    @ColumnDefault("'폴더'")
     private String title;
 
     public void changeTitle(String title){
