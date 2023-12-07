@@ -11,13 +11,13 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
     //폴더 모두 조회 - 오류
     @Query("select f.fno,f.title,p.pno,p.name " +
             "from Folder f " +
-            "left outer join Cart c on f.fno=c.cartPK.fno.fno " +
-            "left outer join Place p on c.cartPK.pno.pno=p.pno " +
-            "where f.mno.mno=:mno ")
+            "left outer join Cart c on f.fno=c.cartPK.folder.fno " +
+            "left outer join Place p on c.cartPK.place.pno=p.pno " +
+            "where f.member.mno=:mno ")
     List<Object[]> getFolderAll(Long mno);
 
     //폴더명 조회
-    @Query("select f.title from Folder f where f.mno.mno=:mno")
+    @Query("select f.title from Folder f where f.member.mno=:mno")
     List<String> getFolderTitle(Long mno);
 
 }

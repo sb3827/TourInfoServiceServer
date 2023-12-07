@@ -34,7 +34,7 @@ public interface FolderService {
     default Folder dtoToEntity(FolderDTO folderDTO){
         Folder folder=Folder.builder()
                 .fno(folderDTO.getFno())
-                .mno(Member
+                .member(Member
                         .builder()
                         .mno(folderDTO.getMno())
                         .build())
@@ -47,7 +47,7 @@ public interface FolderService {
     default FolderDTO entityToDto(Folder folder){
         FolderDTO folderDTO=FolderDTO.builder()
                 .fno(folder.getFno())
-                .mno(folder.getMno().getMno())
+                .mno(folder.getMember().getMno())
                 .title(folder.getTitle())
                 .build();
         return folderDTO;
