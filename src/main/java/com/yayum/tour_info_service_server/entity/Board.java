@@ -36,5 +36,5 @@ public class Board extends BaseEntity{
     private int likes;
 
     @ManyToOne(fetch= FetchType.LAZY)
-    private Member member;
+    private Member writer;
 }
