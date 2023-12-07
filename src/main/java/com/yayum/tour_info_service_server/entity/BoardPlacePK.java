@@ -16,11 +16,9 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class BoardPlacePK implements Serializable {
-    @Column(nullable = false)
     private int day;
 
-    @Column(nullable = false)
-    private int order;
+    private int orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board bno;

@@ -7,7 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Builder
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class Folder {
@@ -18,7 +18,7 @@ public class Folder {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member mno;
 
-    @ColumnDefault("폴더")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'Default Name'")
     private String title;
 
     public void changeTitle(String title){
