@@ -23,12 +23,12 @@ public class Report {
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member mno;
+    private Member complainant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Board bno;
+    private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Reply rno;
+    private Reply reply;
 
 }

@@ -26,6 +26,7 @@ public class Place extends BaseEntity{
 
     @Column(nullable = false)
     private Double lat; // 위도
+
     private String roadAddress; //도로명 주소
     private String localAddress; // 주소
     private String engAddress; //영문 주소

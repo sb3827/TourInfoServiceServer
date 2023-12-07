@@ -18,7 +18,7 @@ public class Disciplinary {
   private Long dno;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Member mno;
+  private Member member;
 
   @Column(nullable = false)
   private String reason;
