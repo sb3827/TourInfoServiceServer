@@ -22,7 +22,7 @@ class FolderRepositoryTest {
     public void insertDummies(){
         IntStream.rangeClosed(1,10).forEach(i->{
             Folder folder=Folder.builder()
-                    .mno(Member.builder().mno(21l).build())
+                    .member(Member.builder().mno(21l).build())
                     .title("test : "+i)
                     .build();
             folderRepository.save(folder);
