@@ -42,7 +42,7 @@ public class Member extends BaseEntity {
   private int disciplinary;
 
   @ColumnDefault("0")
-  private int bussinessId;
+  private int businessId;
 
   @ElementCollection(fetch = FetchType.LAZY)
   @Builder.Default
