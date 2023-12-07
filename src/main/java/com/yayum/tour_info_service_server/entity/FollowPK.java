@@ -5,6 +5,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Builder
 @Embeddable
@@ -12,7 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class FollowPK {
+public class FollowPK implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Member mno;
