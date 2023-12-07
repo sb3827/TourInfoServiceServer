@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,11 +47,13 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 수정
     @Override
-    public Long modify(FolderChangeDTO folderChangeDTO) {
-        Folder folder=folderRepository.findByMnoAndTitle(folderChangeDTO.getMno(),folderChangeDTO.getTitle());
-        log.info("폴더 "+folderChangeDTO.getReTitle()+"로 수정");
-        if(folder!=null) {
-            folder.changeTitle(folderChangeDTO.getReTitle());
+    public Long modify(FolderDTO folderDTO) {
+        Long num=folderDTO.getFno();
+        Optional<Folder> result=folderRepository.findById(num);
+        log.info("폴더 "+folderDTO.getTitle()+"로 수정");
+        if(result.isPresent()) {
+            Folder folder=result.get();
+            folder.changeTitle(folderDTO.getTitle());
             folderRepository.save(folder);
             return folder.getFno();
         }

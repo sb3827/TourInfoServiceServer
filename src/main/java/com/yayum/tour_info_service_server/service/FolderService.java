@@ -18,7 +18,7 @@ public interface FolderService {
     Long register(FolderDTO folderDTO);
 
     //폴더명 수정 - 성공 시 폴더번호, 실패시 -1
-    Long modify(FolderChangeDTO folderChangeDTO);
+    Long modify(FolderDTO folderDTO);
 
     //폴더 삭제 - 성공 시 폴더번호, 실패시 -1
     void remove(Long fno);
