@@ -21,8 +21,8 @@ public class BoardPlacePK implements Serializable {
     private int orderNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Board bno;
+    private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Place pno;
+    private Place place;
 }

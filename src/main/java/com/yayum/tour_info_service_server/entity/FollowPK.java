@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class FollowPK implements Serializable {
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private Member mno;
+  private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Member follower;

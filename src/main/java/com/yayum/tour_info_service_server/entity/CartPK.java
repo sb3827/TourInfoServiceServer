@@ -16,11 +16,11 @@ import java.io.Serializable;
 @ToString
 public class CartPK implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member mno;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Place pno;
+    private Place place;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Folder fno;
+    private Folder folder;
 }
