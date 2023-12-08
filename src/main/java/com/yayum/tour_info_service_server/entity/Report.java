@@ -11,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
-public class Report {
+public class Report extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sno;
@@ -30,5 +30,7 @@ public class Report {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Reply reply;
+
+    public void changeIsDone(Boolean isDone){this.isDone=isDone;};
 
 }
