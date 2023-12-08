@@ -1,8 +1,8 @@
 package com.yayum.tour_info_service_server.service;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.yayum.tour_info_service_server.dto.*;
-import com.yayum.tour_info_service_server.entity.Folder;
-import com.yayum.tour_info_service_server.entity.Member;
+import com.yayum.tour_info_service_server.entity.*;
 
 import java.util.List;
 
@@ -24,14 +24,13 @@ public interface FolderService {
     void remove(Long fno);
 
     //장바구니 스팟 추가 - 추후 진행
-    Long addSpot(FolderSpotDTO folderSpotDTO);
+    Long addSpot(CartDTO cartDTO);
 
     //장바구니 스팟 삭제 - 추후 진행
-    Long deleteSpot(FolderSpotDTO folderSpotDTO);
+    Long deleteSpot(CartDTO cartDTO);
 
-
-    //dtoToEntity
-    default Folder dtoToEntity(FolderDTO folderDTO){
+    //Folder dtoToEntity
+    default Folder folderDtoToEntity(FolderDTO folderDTO){
         Folder folder=Folder.builder()
                 .fno(folderDTO.getFno())
                 .member(Member
@@ -43,13 +42,37 @@ public interface FolderService {
         return folder;
     }
 
-    //entityToDto
-    default FolderDTO entityToDto(Folder folder){
+    //Folder entityToDto
+    default FolderDTO folderEntityToDto(Folder folder){
         FolderDTO folderDTO=FolderDTO.builder()
                 .fno(folder.getFno())
                 .mno(folder.getMember().getMno())
                 .title(folder.getTitle())
                 .build();
         return folderDTO;
+    }
+
+    //Cart dtoToEntity
+    default Cart cartDtoToEntity(CartDTO cartDTO){
+        CartPK cartPK=CartPK.builder()
+                .member(Member.builder().mno(cartDTO.getMno()).build())
+                .place(Place.builder().pno(cartDTO.getPno()).build())
+                .folder(Folder.builder().fno(cartDTO.getFno()).build())
+                .build();
+        Cart cart=Cart.builder()
+                .cartPK(cartPK)
+                .build();
+
+        return cart;
+    }
+
+    //Cart entityToDTO
+    default CartDTO cartEntityToDto(Cart cart){
+        CartDTO cartDTO=CartDTO.builder()
+                .mno(cart.getCartPK().getMember().getMno())
+                .pno(cart.getCartPK().getPlace().getPno())
+                .fno(cart.getCartPK().getFolder().getFno())
+                .build();
+        return cartDTO;
     }
 }

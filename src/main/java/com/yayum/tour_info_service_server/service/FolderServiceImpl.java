@@ -1,7 +1,9 @@
 package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.*;
+import com.yayum.tour_info_service_server.entity.Cart;
 import com.yayum.tour_info_service_server.entity.Folder;
+import com.yayum.tour_info_service_server.repository.CartRepository;
 import com.yayum.tour_info_service_server.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,8 +19,9 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 repository
     private final FolderRepository folderRepository;
+
     //장바구니 repository
-    //private final CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
     //폴더 전부 조회
     @Override
@@ -40,7 +43,7 @@ public class FolderServiceImpl implements FolderService{
     @Override
     public Long register(FolderDTO folderDTO) {
         log.info("폴더 등록 "+folderDTO.getFno());
-        Folder folder=dtoToEntity(folderDTO);
+        Folder folder=folderDtoToEntity(folderDTO);
         folderRepository.save(folder);
         return folder.getFno();
     }
@@ -68,31 +71,20 @@ public class FolderServiceImpl implements FolderService{
     }
 
 
-    //폴더 스팟 추가 - CartService와 머지 후 주석 제거
-//    @Override
-//    public Long addSpot(FolderAddSpot folderAddSpot) {
-//        Cart cart=dtoToEntity(CartDTO);
-//        cartRepository.save(cart);
-//        return cart.getCartPK().getFno().getFno();
-//    }
+    //폴더 스팟 추가
     @Override
-    public Long addSpot(FolderSpotDTO folderSpotDTO) {
-        return null;
+    public Long addSpot(CartDTO cartDTO) {
+        Cart cart=cartDtoToEntity(cartDTO);
+        cartRepository.save(cart);
+        return 1l;
     }
 
 
 
     //폴더 스팟 제거 - CartService와 머지 후 주석 제거
-//    @Override
-//    public Long deleteSpot(CartDTO cartDTO) {
-//        cartRepository.delete(dtoToEntity(cartDTO));
-//    }
-
     @Override
-    public Long deleteSpot(FolderSpotDTO folderSpotDTO) {
-        return null;
+    public Long deleteSpot(CartDTO cartDTO) {
+        cartRepository.delete(cartDtoToEntity(cartDTO));
+        return 1l;
     }
-
-
-
 }
