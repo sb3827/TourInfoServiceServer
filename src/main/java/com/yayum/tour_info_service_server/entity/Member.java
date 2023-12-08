@@ -45,6 +45,8 @@ public class Member extends BaseEntity {
   @ColumnDefault("0")
   private int businessId;
 
+  private boolean isApprove;
+
   @ElementCollection(fetch = FetchType.LAZY)
   @Builder.Default
   private Set<Role> roleSet = new HashSet<>();
