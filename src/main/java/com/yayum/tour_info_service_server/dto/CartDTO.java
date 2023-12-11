@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartDTO {
-    Long mno;
-    Long pno;
-    Long fno;
+    private Long mno;
+    private Long pno;
+    private Long fno;
 }
