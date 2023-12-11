@@ -3,12 +3,14 @@ package com.yayum.tour_info_service_server.service;
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.Cart;
 import com.yayum.tour_info_service_server.entity.Folder;
+import com.yayum.tour_info_service_server.entity.Place;
 import com.yayum.tour_info_service_server.repository.CartRepository;
 import com.yayum.tour_info_service_server.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +27,19 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 전부 조회
     @Override
-    public List<Object[]> getAllFolder(Long mno) {
+    public List<FolderAllDTO> getAllFolder(Long mno) {
         List<Object[]> result=folderRepository.getFolderAll(mno);
-        log.info("폴더 전체 조회 "+result);
-        return result;
+        List<FolderAllDTO> folderAllDTOS = new ArrayList<>();
+
+        for (Object[] objects : result) {
+            FolderAllDTO folderAllDTO = new FolderAllDTO();
+            folderAllDTO.setFno((Long) objects[0]);
+            folderAllDTO.setTitle((String) objects[1]);
+            folderAllDTO.setPno((Long)objects[2]);
+            folderAllDTO.setName((String)objects[3]);
+            folderAllDTOS.add(folderAllDTO);
+        }
+        return folderAllDTOS;
     }
 
     //폴더명 조회
@@ -65,9 +76,10 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 삭제
     @Override
-    public void remove(Long fno) {
+    public Long remove(Long fno) {
         log.info("폴더 삭제 "+fno);
         folderRepository.deleteById(fno);
+        return fno;
     }
 
 
@@ -76,15 +88,19 @@ public class FolderServiceImpl implements FolderService{
     public Long addSpot(CartDTO cartDTO) {
         Cart cart=cartDtoToEntity(cartDTO);
         cartRepository.save(cart);
-        return 1l;
+        return cartDTO.getFno();
     }
 
 
 
     //폴더 스팟 제거 - CartService와 머지 후 주석 제거
     @Override
-    public Long deleteSpot(CartDTO cartDTO) {
+    public String deleteSpot(CartDTO cartDTO) {
         cartRepository.delete(cartDtoToEntity(cartDTO));
-        return 1l;
+        Place place= Place.builder()
+                .pno(cartDTO.getPno())
+                .build();
+        System.out.println(place.getName());
+        return place.getName();
     }
 }

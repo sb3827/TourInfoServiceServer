@@ -9,7 +9,7 @@ import java.util.List;
 public interface FolderService {
 
     //폴더 전부 조회
-    List<Object[]> getAllFolder(Long mno);
+    List<FolderAllDTO> getAllFolder(Long mno);
 
     //폴더명 조회
     List<String> getTitle(Long mno);
@@ -21,13 +21,13 @@ public interface FolderService {
     Long modify(FolderDTO folderDTO);
 
     //폴더 삭제 - 성공 시 폴더번호, 실패시 -1
-    void remove(Long fno);
+    Long remove(Long fno);
 
     //장바구니 스팟 추가 - 추후 진행
     Long addSpot(CartDTO cartDTO);
 
     //장바구니 스팟 삭제 - 추후 진행
-    Long deleteSpot(CartDTO cartDTO);
+    String deleteSpot(CartDTO cartDTO);
 
     //Folder dtoToEntity
     default Folder folderDtoToEntity(FolderDTO folderDTO){
