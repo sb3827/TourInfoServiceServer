@@ -20,9 +20,9 @@ class FolderRepositoryTest {
     //폴더 생성 테스트
     @Test
     public void insertDummies(){
-        IntStream.rangeClosed(1,10).forEach(i->{
+        IntStream.rangeClosed(1,5).forEach(i->{
             Folder folder=Folder.builder()
-                    .member(Member.builder().mno(21l).build())
+                    .member(Member.builder().mno(2l).build())
                     .title("test : "+i)
                     .build();
             folderRepository.save(folder);
@@ -32,7 +32,7 @@ class FolderRepositoryTest {
     //폴더 전부 조회
     @Test
     public void listAll(){
-        List<Object[]> result=folderRepository.getFolderAll(1l);
+        List<Object[]> result=folderRepository.getFolderAll(2l);
         for (Object[] item : result) {
             System.out.println("item2222 : "+ Arrays.toString(item));
         }
@@ -41,7 +41,7 @@ class FolderRepositoryTest {
     //폴더명 조회
     @Test
     public void getTitle(){
-        List<String>result=folderRepository.getFolderTitle(1l);
+        List<String>result=folderRepository.getFolderTitle(2l);
         System.out.println(result);
     }
 }
