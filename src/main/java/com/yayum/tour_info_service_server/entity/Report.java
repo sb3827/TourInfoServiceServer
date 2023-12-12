@@ -8,7 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Builder
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class Report extends BaseEntity{

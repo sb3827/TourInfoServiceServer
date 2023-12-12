@@ -2,6 +2,7 @@ package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.DisciplinaryDTO;
 import com.yayum.tour_info_service_server.dto.ReportDTO;
+import com.yayum.tour_info_service_server.dto.ReportFilterDTO;
 import com.yayum.tour_info_service_server.entity.*;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public interface ReportService {
 
 
     //신고 필터 조회
-    List<ReportDTO> reportFilter(String filter,String member);
+    List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO);
 
     //해당 신고 내역 정보 조회
     ReportDTO reportDetail(Long sno);

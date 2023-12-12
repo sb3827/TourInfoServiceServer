@@ -2,6 +2,7 @@ package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.DisciplinaryDTO;
 import com.yayum.tour_info_service_server.dto.ReportDTO;
+import com.yayum.tour_info_service_server.dto.ReportFilterDTO;
 import com.yayum.tour_info_service_server.entity.Disciplinary;
 import com.yayum.tour_info_service_server.entity.Member;
 import com.yayum.tour_info_service_server.entity.Report;
@@ -30,10 +31,11 @@ public class ReportServiceImpl implements ReportService{
         return result.stream().map(report -> entityToDto(report)).collect(Collectors.toList());
     }
 
-    //신고 필터 조회 - 보류
+    //신고 필터 조회
     @Override
-    public List<ReportDTO> reportFilter(String filter, String member) {
-
+    public List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO) {
+        List<Report> result=reportRepository.searchBoardReport(reportFilterDTO.getFilter(),reportFilterDTO.getSearch());
+        System.out.println(result);
         return null;
     }
 
@@ -51,7 +53,7 @@ public class ReportServiceImpl implements ReportService{
     //유저에대한 정지 정보
     @Override
     public List<Object> disciplinaryUserData(Long mno) {
-        List<Object> result=disciplinaryRepository.findAllByMember(mno);
+        List<Object> result=disciplinaryRepository.findAllByMember(Member.builder().mno(mno).build());
         return result;
     }
 
@@ -78,7 +80,7 @@ public class ReportServiceImpl implements ReportService{
     //제재
     @Override
     public Long disciplinary(DisciplinaryDTO disciplinaryDTO) {
-        int row=disciplinaryRepository.findAllByMember(disciplinaryDTO.getMno()).size();
+        int row=disciplinaryRepository.findAllByMember(Member.builder().mno(disciplinaryDTO.getMno()).build()).size();
         Disciplinary disciplinary;
         if(row>=4){
             disciplinary=Disciplinary.builder()
