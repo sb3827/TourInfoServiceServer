@@ -25,17 +25,33 @@ public class ReportServiceImpl implements ReportService{
     private final DisciplinaryRepository disciplinaryRepository;
 
     //신고 내역 모두 조회
-    @Override
-    public List<ReportDTO> reportAll() {
-        List<Report> result=reportRepository.findAllByOrderByRegDateDesc();
-        return result.stream().map(report -> entityToDto(report)).collect(Collectors.toList());
-    }
 
     //신고 필터 조회
     @Override
-    public List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO) {
-        List<Report> result=reportRepository.searchBoardReport(reportFilterDTO.getFilter(),reportFilterDTO.getSearch());
-        System.out.println(result);
+    public List<Object> reportFilter(ReportFilterDTO reportFilterDTO) {
+        String filter=reportFilterDTO.getFilter();
+        String search=reportFilterDTO.getSearch();
+        if(filter=="all"){
+            List<Object> result=reportRepository.findAllByOrderByRegDateDesc();
+            if(!result.isEmpty()){
+
+            }
+        }else if(filter=="reporting"){
+
+
+        }else if(filter=="reported"){
+
+        }else if(filter=="board_reporting"){
+
+        }else if(filter=="board_reported"){
+
+        }else if(filter=="reply_reporting"){
+
+        }else if(filter=="reply_reported"){
+
+        }else {
+            return null;
+        }
         return null;
     }
 

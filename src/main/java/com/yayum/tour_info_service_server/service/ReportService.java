@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ReportService {
     //신고 모두 조회
-    List<ReportDTO> reportAll();
+//    List<ReportDTO> reportAll();
 
 
     //신고 필터 조회
-    List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO);
+    List<Object> reportFilter(ReportFilterDTO reportFilterDTO);
 
     //해당 신고 내역 정보 조회
     ReportDTO reportDetail(Long sno);

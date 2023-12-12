@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReportFilterDTO {
-    private Boolean filter;
+    private String filter;
     private String search;
 }
