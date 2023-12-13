@@ -13,7 +13,7 @@ public interface ReportService {
 
 
     //신고 필터 조회
-    List<Object> reportFilter(ReportFilterDTO reportFilterDTO);
+    List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO);
 
     //해당 신고 내역 정보 조회
     ReportDTO reportDetail(Long sno);
@@ -33,14 +33,17 @@ public interface ReportService {
         Report report=Report.builder()
                 .sno(reportDTO.getSno())
                 .complainant(Member.builder()
-                        .mno(reportDTO.getMno())
+                        .mno(reportDTO.getComplainant())
                         .build())
-                .board(Board.builder()
+                .defendant(Member.builder()
+                        .mno(reportDTO.getDefendant())
+                        .build())
+                .board(reportDTO.getBno()!=null?Board.builder()
                         .bno(reportDTO.getBno())
-                        .build())
-                .reply(Reply.builder()
+                        .build():null)
+                .reply(reportDTO.getRno()!=null?Reply.builder()
                         .rno(reportDTO.getRno())
-                        .build())
+                        .build():null)
                 .isDone(reportDTO.getIsDone())
                 .message(reportDTO.getMessage())
                 .build();
@@ -48,11 +51,15 @@ public interface ReportService {
     }
 
     default ReportDTO entityToDto(Report report){
+        Long bno=(report.getBoard()!=null)?report.getBoard().getBno():null;
+        Long rno = (report.getReply() != null) ? report.getReply().getRno() : null;
+
         ReportDTO reportDTO=ReportDTO.builder()
                 .sno(report.getSno())
-                .mno(report.getComplainant().getMno())
-                .bno(report.getBoard().getBno())
-                .rno(report.getReply().getRno())
+                .complainant(report.getComplainant().getMno())
+                .defendant(report.getDefendant().getMno())
+                .bno(bno)
+                .rno(rno)
                 .isDone(report.getIsDone())
                 .message(report.getMessage())
                 .regDate(report.getRegDate())
