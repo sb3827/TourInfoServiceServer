@@ -37,12 +37,15 @@ public class Member extends BaseEntity {
   private String image;
 
   @ColumnDefault("false")
+  @Column(nullable = false)
   private boolean fromSocial;
 
   @ColumnDefault("0")
+  @Column(nullable = false)
   private int disciplinary;
 
   @ColumnDefault("0")
+  @Column(nullable = false)
   private int businessId;
 
   private boolean isApprove;
