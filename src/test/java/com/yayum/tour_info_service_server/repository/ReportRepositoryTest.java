@@ -1,5 +1,6 @@
 package com.yayum.tour_info_service_server.repository;
 
+import com.yayum.tour_info_service_server.dto.ReportDTO;
 import com.yayum.tour_info_service_server.entity.Board;
 import com.yayum.tour_info_service_server.entity.Member;
 import com.yayum.tour_info_service_server.entity.Report;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,8 +23,8 @@ class ReportRepositoryTest {
     @Test
     public void testInsert(){
         Report report=Report.builder()
-                .complainant(Member.builder().mno(2l).build())
-                .board(Board.builder().bno(2l).build())
+                .complainant(Member.builder().mno(1l).build())
+                .board(Board.builder().bno(1l).build())
                 .isDone(false)
                 .message("테스트~")
                 .build();
@@ -31,9 +34,11 @@ class ReportRepositoryTest {
     //신고 전부 조회
     @Test
     public void testAllReport(){
-        List<Report> result=reportRepository.findAllByOrderByRegDateDesc();
+        List<Report> result=reportRepository.searchReportAll("");
         System.out.println(result.size());
     }
+
+
 
     //신고 필터 - 처리 or 처리x
     @Test
