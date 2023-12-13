@@ -21,10 +21,10 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    //전부 조회
+
     //필터 조회
     @GetMapping(value = "/",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Object>>reportFilter(@RequestParam ReportFilterDTO reportFilterDTO){
+    public ResponseEntity<List<ReportDTO>>reportFilter(@RequestParam ReportFilterDTO reportFilterDTO){
         return new ResponseEntity<>(reportService.reportFilter(reportFilterDTO),HttpStatus.OK);
     }
 
