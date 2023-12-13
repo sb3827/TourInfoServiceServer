@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReportDTO {
     Long sno;
-    Long mno;
+    Long complainant;
+    Long defendant;
     Long bno;
     Long rno;
     Boolean isDone;
