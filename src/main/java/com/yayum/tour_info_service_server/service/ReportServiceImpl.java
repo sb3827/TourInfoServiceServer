@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,31 +29,48 @@ public class ReportServiceImpl implements ReportService{
 
     //신고 필터 조회
     @Override
-    public List<Object> reportFilter(ReportFilterDTO reportFilterDTO) {
+    public List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO) {
         String filter=reportFilterDTO.getFilter();
         String search=reportFilterDTO.getSearch();
+
+        List<ReportDTO> reportDTOS=new ArrayList<>();
+        List<Report> result;
+        //전체 조회
         if(filter=="all"){
-            List<Object> result=reportRepository.findAllByOrderByRegDateDesc();
-            if(!result.isEmpty()){
-
-            }
-        }else if(filter=="reporting"){
-
-
-        }else if(filter=="reported"){
-
-        }else if(filter=="board_reporting"){
-
-        }else if(filter=="board_reported"){
-
-        }else if(filter=="reply_reporting"){
-
-        }else if(filter=="reply_reported"){
-
+            result=reportRepository.searchReportAll(search);
+        }
+        //처리 중
+        else if(filter=="reporting"){
+            result=reportRepository.searchIsDone(false,search);
+        }
+        //처리 완료
+        else if(filter=="reported"){
+            result=reportRepository.searchIsDone(true,search);
+        }
+        //게시글 처리중
+        else if(filter=="board_reporting"){
+            result=reportRepository.searchBoardReport(false,search);
+        }
+        //게시글 처리완료
+        else if(filter=="board_reported"){
+            result=reportRepository.searchBoardReport(true,search);
+        }
+        //리뷰 처리중
+        else if(filter=="reply_reporting"){
+            result=reportRepository.searchReplyReport(false,search);
+        }
+        //리뷰 처리완료
+        else if(filter=="reply_reported"){
+            result=reportRepository.searchReplyReport(true,search);
         }else {
             return null;
         }
-        return null;
+        //reportDTO로 형변환
+        for (Report report:result){
+            ReportDTO reportDTO=entityToDto(report);
+            reportDTOS.add(reportDTO);
+        }
+        return reportDTOS;
     }
 
     //신고 정보 조회
@@ -93,7 +111,7 @@ public class ReportServiceImpl implements ReportService{
         return -1l;
     }
 
-    //제재
+    //제재 - merge후 board delete 추가해야함
     @Override
     public Long disciplinary(DisciplinaryDTO disciplinaryDTO) {
         int row=disciplinaryRepository.findAllByMember(Member.builder().mno(disciplinaryDTO.getMno()).build()).size();
@@ -106,7 +124,7 @@ public class ReportServiceImpl implements ReportService{
                     .strDate(LocalDateTime.now())
                     .expDate(null)
                     .build();
-        }else if(row>=3){
+        }else if(row==3){
             disciplinary=Disciplinary.builder()
                     .dno(disciplinaryDTO.getDno())
                     .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
@@ -114,7 +132,7 @@ public class ReportServiceImpl implements ReportService{
                     .strDate(LocalDateTime.now())
                     .expDate(LocalDateTime.now().plusDays(30))
                     .build();
-        }else if(row>=2){
+        }else if(row == 2){
             disciplinary=Disciplinary.builder()
                     .dno(disciplinaryDTO.getDno())
                     .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
@@ -123,7 +141,7 @@ public class ReportServiceImpl implements ReportService{
                     .expDate(LocalDateTime.now().plusDays(14))
                     .build();
 
-        }else if(row>=1){
+        }else if(row==1){
             disciplinary=Disciplinary.builder()
                     .dno(disciplinaryDTO.getDno())
                     .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
