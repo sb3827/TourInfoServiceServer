@@ -1,8 +1,6 @@
 package com.yayum.tour_info_service_server.service;
 
-import com.yayum.tour_info_service_server.dto.DisciplinaryDTO;
-import com.yayum.tour_info_service_server.dto.ReportDTO;
-import com.yayum.tour_info_service_server.dto.ReportFilterDTO;
+import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.*;
 
 import java.util.List;
@@ -13,7 +11,7 @@ public interface ReportService {
 
 
     //신고 필터 조회
-    List<ReportDTO> reportFilter(ReportFilterDTO reportFilterDTO);
+    List<ReportResponseDTO> reportFilter(String filter,String search);
 
     //해당 신고 내역 정보 조회
     ReportDTO reportDetail(Long sno);
@@ -22,28 +20,26 @@ public interface ReportService {
     List<Object> disciplinaryUserData(Long mno);
 
     //신고(게시글 or 댓글)
-    Long report(ReportDTO reportDTO);
+    Long report(ReportRequestDTO reportRequestDTO);
 
     //신고 상태 업데이트
     Long reportUpdate(Long sno);
 
     //제재
-    Long disciplinary(DisciplinaryDTO disciplinaryDTO);
+    Long disciplinary(DisciplinaryRequestDTO disciplinaryRequestDTO);
     default Report dtoToEntity(ReportDTO reportDTO){
+
         Report report=Report.builder()
                 .sno(reportDTO.getSno())
-                .complainant(Member.builder()
-                        .mno(reportDTO.getComplainant())
-                        .build())
-                .defendant(Member.builder()
-                        .mno(reportDTO.getDefendant())
-                        .build())
+                .complainant_mno(reportDTO.getComplainant())
+                .defendant_mno(reportDTO.getDefendant())
                 .board(reportDTO.getBno()!=null?Board.builder()
                         .bno(reportDTO.getBno())
                         .build():null)
                 .reply(reportDTO.getRno()!=null?Reply.builder()
                         .rno(reportDTO.getRno())
                         .build():null)
+                .content(reportDTO.getContent())
                 .isDone(reportDTO.getIsDone())
                 .message(reportDTO.getMessage())
                 .build();
@@ -51,15 +47,13 @@ public interface ReportService {
     }
 
     default ReportDTO entityToDto(Report report){
-        Long bno=(report.getBoard()!=null)?report.getBoard().getBno():null;
-        Long rno = (report.getReply() != null) ? report.getReply().getRno() : null;
-
         ReportDTO reportDTO=ReportDTO.builder()
                 .sno(report.getSno())
-                .complainant(report.getComplainant().getMno())
-                .defendant(report.getDefendant().getMno())
-                .bno(bno)
-                .rno(rno)
+                .complainant(report.getComplainant_mno())
+                .defendant(report.getDefendant_mno())
+                .bno(report.getBoard()!=null?report.getBoard().getBno():null)
+                .rno(report.getReply()!=null?report.getReply().getRno():null)
+                .content(report.getContent())
                 .isDone(report.getIsDone())
                 .message(report.getMessage())
                 .regDate(report.getRegDate())
