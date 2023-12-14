@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReportDTO {
-    Long sno;
-    Long complainant;
-    Long defendant;
-    Long bno;
-    Long rno;
-    Boolean isDone;
-    String message;
-    LocalDateTime regDate;
+    private Long sno;
+    private Long complainant;
+    private Long defendant;
+    private Long bno;
+    private Long rno;
+    private String content;
+    private Boolean isDone;
+    private String message;
+    private LocalDateTime regDate;
 }
