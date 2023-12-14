@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,22 +19,26 @@ class BoardRepositoryTests {
   @Autowired
   private BoardRepository boardRepository;
 
+  @Autowired
+  private MemberRepository memberRepository;
+
   @Test
   public void insertDummies() {
-    IntStream.rangeClosed(1, 5).forEach(i -> {
-      Member member = Member.builder().mno((long)(i)).build();
-      Board board = Board.builder()
-          .title("title"+i)
-          .content("content"+i)
-          .score(Math.random()*i)
-          .isAd(false)
-          .isCourse(false)
-          .likes(i)
-          .writer(member)
-          .build();
 
-      System.out.println(board);
-      boardRepository.save(board);
+    IntStream.rangeClosed(1, 5).forEach(i -> {
+
+      Member member = Member.builder().mno(1L).build();
+
+        Board board = Board.builder()
+            .title("title" + i)
+            .content("content" + i)
+            .score(Math.random() * i)
+            .isAd(false)
+            .isCourse(false)
+            .likes(i)
+            .writer(member)
+            .build();
+        boardRepository.save(board);
     });
   }
 }
