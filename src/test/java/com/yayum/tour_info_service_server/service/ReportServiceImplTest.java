@@ -1,12 +1,12 @@
 package com.yayum.tour_info_service_server.service;
 
-import com.yayum.tour_info_service_server.dto.DisciplinaryDTO;
-import com.yayum.tour_info_service_server.dto.ReportDTO;
-import com.yayum.tour_info_service_server.entity.Disciplinary;
-import com.yayum.tour_info_service_server.entity.Member;
-import com.yayum.tour_info_service_server.entity.Report;
+import com.yayum.tour_info_service_server.dto.*;
+import com.yayum.tour_info_service_server.entity.*;
+import com.yayum.tour_info_service_server.repository.BoardRepository;
 import com.yayum.tour_info_service_server.repository.DisciplinaryRepository;
+import com.yayum.tour_info_service_server.repository.MemberRepository;
 import com.yayum.tour_info_service_server.repository.ReportRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +24,12 @@ class ReportServiceImplTest {
     private ReportRepository reportRepository;
 
     @Autowired
+    private BoardRepository boardRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private DisciplinaryRepository disciplinaryRepository;
 
     @Autowired
@@ -34,7 +40,7 @@ class ReportServiceImplTest {
         String filter="all";
         String search="";
 
-        List<ReportDTO> reportDTOS=new ArrayList<>();
+        List<ReportResponseDTO> reportResponseDTOS=new ArrayList<>();
         List<Report> result;
         //전체 조회
         if(filter=="all"){
@@ -68,16 +74,33 @@ class ReportServiceImplTest {
         }
         //reportDTO로 형변환
         for (Report report:result){
-            ReportDTO reportDTO=reportService.entityToDto(report);
-            reportDTOS.add(reportDTO);
+//            ReportDTO reportDTO=reportService.entityToDto(report);
+//            reportDTOS.add(reportDTO);
+            Optional<Member> com=memberRepository.findById(report.getComplainant_mno());
+            Optional<Member> def=memberRepository.findById(report.getDefendant_mno());
+
+            ReportResponseDTO reportResponseDTO=ReportResponseDTO.builder()
+                    .sno(report.getSno())
+                    .complainant_mno(report.getComplainant_mno())
+                    .complainant(com.get().getName())
+                    .defendant_mno(report.getDefendant_mno())
+                    .defendant(def.get().getName())
+                    .bno(report.getBoard()!=null?report.getBoard().getBno():null)
+                    .rno(report.getReply()!=null?report.getReply().getRno():null)
+                    .content(report.getContent())
+                    .isDone(report.getIsDone())
+                    .message(report.getMessage())
+                    .regDate(report.getRegDate())
+                    .build();
+            reportResponseDTOS.add(reportResponseDTO);
         }
-        System.out.println(reportDTOS);
+        System.out.println(reportResponseDTOS);
     }
 
     //신고 정보 조회
     @Test
     public void reportDetail(){
-        Long sno=2l;
+        Long sno=1l;
         Optional<Report> result=reportRepository.findById(sno);
         if (result.isPresent()){
             Report report=result.get();
@@ -87,21 +110,23 @@ class ReportServiceImplTest {
 
     //유저 제재내역 조회
     @Test
+    @Transactional
     public void testUserDisciplinary(){
-        Long mno=2l;
+        Long mno=1l;
         List<Object> result=disciplinaryRepository.findAllByMember(Member.builder().mno(mno).build());
-        System.out.println(result.size());
+        System.out.println(result);
     }
 
     //신고
     @Test
     public void testReport(){
         ReportDTO reportDTO=ReportDTO.builder()
-                .sno(4l)
-                .complainant(2l)
-                .bno(1l)
-                .defendant(1l)
-                .message("testest")
+                .complainant(1l)
+                .bno(2l)
+                .defendant(2l)
+                .message("testesttest")
+                .content("<h2>zxcv</h2>")
+                .isDone(false)
                 .build();
         reportRepository.save(reportService.dtoToEntity(reportDTO));
         System.out.println(reportDTO);
@@ -110,65 +135,70 @@ class ReportServiceImplTest {
     //update 신고
     @Test
     public void testReportUpdate(){
-        Long sno=2l;
-        Optional<Report> result=reportRepository.findById(sno);
-        if (result.isPresent()){
-            Report report=result.get();
-            report.changeIsDone(true);
-            reportRepository.save(report);
-        }
+        ReportRequestDTO reportRequestDTO=ReportRequestDTO.builder()
+                .complainant(1l)
+                .defendant(2l)
+                .bno(1l)
+                .content("test abcd")
+                .message("zxcv")
+                .build();
+
+        Report report=Report.builder()
+                .complainant_mno(reportRequestDTO.getComplainant())
+                .defendant_mno(reportRequestDTO.getDefendant())
+                .board(reportRequestDTO.getBno()!=null?Board.builder().bno(reportRequestDTO.getBno()).build():null)
+                .reply(reportRequestDTO.getRno()!=null?Reply.builder().rno(reportRequestDTO.getRno()).build():null)
+                .content(reportRequestDTO.getContent())
+                .message(reportRequestDTO.getMessage())
+                .isDone(false)
+                .build();
+        reportRepository.save(report);
     }
 
 
     //제재
     @Test
     public void disiplinaryTest(){
-        DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
-                .dno(2l)
+        DisciplinaryRequestDTO disciplinaryRequestDTO=DisciplinaryRequestDTO.builder()
                 .mno(1l)
-                .reason("테스트")
+                .reason("test")
                 .build();
-        int row=disciplinaryRepository.findAllByMember(Member.builder().mno(disciplinaryDTO.getMno()).build()).size();
+        int row=disciplinaryRepository.findAllByMember(Member.builder().mno(disciplinaryRequestDTO.getMno()).build()).size();
         Disciplinary disciplinary;
         if(row>=4){
             disciplinary=Disciplinary.builder()
-                    .dno(disciplinaryDTO.getDno())
-                    .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
-                    .reason(disciplinaryDTO.getReason())
+                    .member(Member.builder().mno(disciplinaryRequestDTO.getMno()).build())
+                    .reason(disciplinaryRequestDTO.getReason())
                     .strDate(LocalDateTime.now())
                     .expDate(null)
                     .build();
         }else if(row==3){
             disciplinary=Disciplinary.builder()
-                    .dno(disciplinaryDTO.getDno())
-                    .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
-                    .reason(disciplinaryDTO.getReason())
+                    .member(Member.builder().mno(disciplinaryRequestDTO.getMno()).build())
+                    .reason(disciplinaryRequestDTO.getReason())
                     .strDate(LocalDateTime.now())
                     .expDate(LocalDateTime.now().plusDays(30))
                     .build();
         }else if(row == 2){
             disciplinary=Disciplinary.builder()
-                    .dno(disciplinaryDTO.getDno())
-                    .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
-                    .reason(disciplinaryDTO.getReason())
+                    .member(Member.builder().mno(disciplinaryRequestDTO.getMno()).build())
+                    .reason(disciplinaryRequestDTO.getReason())
                     .strDate(LocalDateTime.now())
                     .expDate(LocalDateTime.now().plusDays(14))
                     .build();
 
         }else if(row==1){
             disciplinary=Disciplinary.builder()
-                    .dno(disciplinaryDTO.getDno())
-                    .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
-                    .reason(disciplinaryDTO.getReason())
+                    .member(Member.builder().mno(disciplinaryRequestDTO.getMno()).build())
+                    .reason(disciplinaryRequestDTO.getReason())
                     .strDate(LocalDateTime.now())
                     .expDate(LocalDateTime.now().plusDays(7))
                     .build();
 
         }else{
             disciplinary=Disciplinary.builder()
-                    .dno(disciplinaryDTO.getDno())
-                    .member(Member.builder().mno(disciplinaryDTO.getMno()).build())
-                    .reason(disciplinaryDTO.getReason())
+                    .member(Member.builder().mno(disciplinaryRequestDTO.getMno()).build())
+                    .reason(disciplinaryRequestDTO.getReason())
                     .strDate(LocalDateTime.now())
                     .expDate(LocalDateTime.now().plusDays(3))
                     .build();
