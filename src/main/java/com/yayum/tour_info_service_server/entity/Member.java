@@ -50,6 +50,10 @@ public class Member extends BaseEntity {
 
   private boolean isApprove;
 
+  @ColumnDefault("false")
+  @Column(nullable = false)
+  private boolean isReset;
+
   @ElementCollection(fetch = FetchType.LAZY)
   @Builder.Default
   private Set<Role> roleSet = new HashSet<>();
