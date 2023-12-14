@@ -35,6 +35,7 @@ public class Place extends BaseEntity{
     private String category; //전체,음식점,숙소,관광지
 
     @ColumnDefault("0")
+    @Column(nullable = false)
     private int cart; //장바구니 담은 총 갯수
 
 }

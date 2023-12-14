@@ -30,9 +30,11 @@ public class Board extends BaseEntity{
     private Boolean isCourse;
 
     @ColumnDefault("0")
+    @Column(nullable = false)
     private Double score;
 
     @ColumnDefault("0")
+    @Column(nullable = false)
     private int likes;
 
     @ManyToOne(fetch= FetchType.LAZY)
