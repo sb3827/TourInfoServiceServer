@@ -17,13 +17,18 @@ public class Report extends BaseEntity{
     private Long sno;
 
     @ColumnDefault("false")
+    @Column(nullable = false)
     private Boolean isDone;
+
+    @Column(columnDefinition = "TEXT",nullable = false)
+    private String content;
 
     @Column(nullable = false)
     private String message;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member complainant;
+    private Long complainant_mno;
+
+    private Long defendant_mno;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
