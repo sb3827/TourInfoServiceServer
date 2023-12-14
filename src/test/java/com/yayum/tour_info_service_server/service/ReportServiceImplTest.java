@@ -113,8 +113,19 @@ class ReportServiceImplTest {
     @Transactional
     public void testUserDisciplinary(){
         Long mno=1l;
-        List<Object> result=disciplinaryRepository.findAllByMember(Member.builder().mno(mno).build());
-        System.out.println(result);
+        List<Disciplinary> result=disciplinaryRepository.findAllByMemberMno(mno);
+        List<DisciplinaryDTO> disciplinaryDTOS=new ArrayList<>();
+        for(Disciplinary disciplinary:result){
+            DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
+                    .dno(disciplinary.getDno())
+                    .mno(disciplinary.getMember().getMno())
+                    .reason(disciplinary.getReason())
+                    .strDate(disciplinary.getStrDate())
+                    .expDate(disciplinary.getExpDate())
+                    .build();
+            disciplinaryDTOS.add(disciplinaryDTO);
+        }
+        System.out.println(disciplinaryDTOS);
     }
 
     //신고
@@ -163,7 +174,7 @@ class ReportServiceImplTest {
                 .mno(1l)
                 .reason("test")
                 .build();
-        int row=disciplinaryRepository.findAllByMember(Member.builder().mno(disciplinaryRequestDTO.getMno()).build()).size();
+        int row=disciplinaryRepository.findAllByMemberMno(disciplinaryRequestDTO.getMno()).size();
         Disciplinary disciplinary;
         if(row>=4){
             disciplinary=Disciplinary.builder()

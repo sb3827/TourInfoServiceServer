@@ -97,9 +97,20 @@ public class ReportServiceImpl implements ReportService{
 
     //유저에대한 정지 정보
     @Override
-    public List<Object> disciplinaryUserData(Long mno) {
-        List<Object> result=disciplinaryRepository.findAllByMember(Member.builder().mno(mno).build());
-        return result;
+    public List<DisciplinaryDTO> disciplinaryUserData(Long mno) {
+        List<Disciplinary> result=disciplinaryRepository.findAllByMemberMno(mno);
+        List<DisciplinaryDTO> disciplinaryDTOS=new ArrayList<>();
+        for(Disciplinary disciplinary:result){
+            DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
+                    .dno(disciplinary.getDno())
+                    .mno(disciplinary.getMember().getMno())
+                    .reason(disciplinary.getReason())
+                    .strDate(disciplinary.getStrDate())
+                    .expDate(disciplinary.getExpDate())
+                    .build();
+            disciplinaryDTOS.add(disciplinaryDTO);
+        }
+        return disciplinaryDTOS;
     }
 
     //신고
@@ -134,7 +145,7 @@ public class ReportServiceImpl implements ReportService{
     //제재 - merge후 board,reply delete 추가해야함
     @Override
     public Long disciplinary(DisciplinaryRequestDTO disciplinaryRequestDTO) {
-        int row=disciplinaryRepository.findAllByMember(Member.builder().mno(disciplinaryRequestDTO.getMno()).build()).size();
+        int row=disciplinaryRepository.findAllByMemberMno(disciplinaryRequestDTO.getMno()).size();
         Disciplinary disciplinary;
         if(row>=4){
             disciplinary=Disciplinary.builder()

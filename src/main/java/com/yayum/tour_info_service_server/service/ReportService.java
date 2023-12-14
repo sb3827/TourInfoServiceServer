@@ -17,7 +17,7 @@ public interface ReportService {
     ReportDTO reportDetail(Long sno);
 
     //해당 회원 제재조회
-    List<Object> disciplinaryUserData(Long mno);
+    List<DisciplinaryDTO> disciplinaryUserData(Long mno);
 
     //신고(게시글 or 댓글)
     Long report(ReportRequestDTO reportRequestDTO);

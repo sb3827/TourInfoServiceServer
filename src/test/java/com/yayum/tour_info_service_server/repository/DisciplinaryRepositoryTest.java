@@ -16,6 +16,6 @@ class DisciplinaryRepositoryTest {
     @Test
     public void testDisciplinary(){
         Long mno=2l;
-        System.out.println(disciplinaryRepository.findAllByMember(Member.builder().mno(mno).build()));
+        System.out.println(disciplinaryRepository.findAllByMemberMno(mno));
     }
 }
