@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,7 +99,13 @@ public class ReportServiceImpl implements ReportService{
     //유저에대한 정지 정보
     @Override
     public List<DisciplinaryDTO> disciplinaryUserData(Long mno) {
-        List<Disciplinary> result=disciplinaryRepository.findAllByMemberMno(mno);
+        //회원이 없을 경우 null 전달
+        Optional<Member> member=memberRepository.findById(mno);
+        if (!member.isPresent()){
+            return null;
+        }
+
+        List<Disciplinary> result=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(mno);
         List<DisciplinaryDTO> disciplinaryDTOS=new ArrayList<>();
         for(Disciplinary disciplinary:result){
             DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
@@ -116,6 +123,12 @@ public class ReportServiceImpl implements ReportService{
     //신고
     @Override
     public Long report(ReportRequestDTO reportRequestDTO) {
+        //신고하고자하는 회원이 없을 경우 null 전달
+        Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
+        if (!member.isPresent()){
+            return null;
+        }
+
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())
                 .defendant_mno(reportRequestDTO.getDefendant())
@@ -126,7 +139,7 @@ public class ReportServiceImpl implements ReportService{
                 .isDone(false)
                 .build();
         reportRepository.save(report);
-        return reportRequestDTO.getRno();
+        return 1l;
     }
 
     //신고 상태 업데이트
@@ -145,7 +158,15 @@ public class ReportServiceImpl implements ReportService{
     //제재 - merge후 board,reply delete 추가해야함
     @Override
     public Long disciplinary(DisciplinaryRequestDTO disciplinaryRequestDTO) {
-        int row=disciplinaryRepository.findAllByMemberMno(disciplinaryRequestDTO.getMno()).size();
+        List<Disciplinary> checkDisciplinary=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(disciplinaryRequestDTO.getMno());
+
+        //이미 정지된 유저
+        if(!checkDisciplinary.isEmpty() && checkDisciplinary.get(0).getExpDate().compareTo(LocalDateTime.now())>=0){
+            return -1l;
+        }
+
+        int row=checkDisciplinary.size();
+
         Disciplinary disciplinary;
         if(row>=4){
             disciplinary=Disciplinary.builder()
