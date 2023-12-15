@@ -3,9 +3,12 @@ package com.yayum.tour_info_service_server.service;
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.Cart;
 import com.yayum.tour_info_service_server.entity.Folder;
+import com.yayum.tour_info_service_server.entity.Member;
 import com.yayum.tour_info_service_server.entity.Place;
 import com.yayum.tour_info_service_server.repository.CartRepository;
 import com.yayum.tour_info_service_server.repository.FolderRepository;
+import com.yayum.tour_info_service_server.repository.MemberRepository;
+import com.yayum.tour_info_service_server.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,12 @@ public class FolderServiceImpl implements FolderService{
 
     //장바구니 repository
     private final CartRepository cartRepository;
+
+    //멤버 repository
+    private final MemberRepository memberRepository;
+
+    //장소 repository
+    private final PlaceRepository placeRepository;
 
     //폴더 전부 조회
     @Override
@@ -46,15 +55,23 @@ public class FolderServiceImpl implements FolderService{
     @Override
     public List<String> getTitle(Long mno) {
         List<String> result=folderRepository.getFolderTitle(mno);
-        log.info("폴더명 조회 "+result);
         return result;
     }
 
     //폴더 등록
     @Override
-    public Long register(FolderDTO folderDTO) {
-        log.info("폴더 등록 "+folderDTO.getFno());
-        Folder folder=folderDtoToEntity(folderDTO);
+    public Long register(FolderRegistDTO folderRegistDTO) {
+        Optional<Member> member=memberRepository.findById(folderRegistDTO.getMno());
+
+        //회원이 없으면 null 반환
+        if(!member.isPresent()){
+            return -1l;
+        }
+
+        Folder folder=Folder.builder()
+                .member(Member.builder().mno(folderRegistDTO.getMno()).build())
+                .title(folderRegistDTO.getTitle())
+                .build();
         folderRepository.save(folder);
         return folder.getFno();
     }
@@ -64,7 +81,6 @@ public class FolderServiceImpl implements FolderService{
     public Long modify(FolderDTO folderDTO) {
         Long num=folderDTO.getFno();
         Optional<Folder> result=folderRepository.findById(num);
-        log.info("폴더 "+folderDTO.getTitle()+"로 수정");
         if(result.isPresent()) {
             Folder folder=result.get();
             folder.changeTitle(folderDTO.getTitle());
@@ -77,18 +93,23 @@ public class FolderServiceImpl implements FolderService{
     //폴더 삭제
     @Override
     public Long remove(Long fno) {
-        log.info("폴더 삭제 "+fno);
-        folderRepository.deleteById(fno);
-        return fno;
+        if (folderRepository.findById(fno).isPresent()) {
+            folderRepository.deleteById(fno);
+            return fno;
+        }
+        return -1l;
     }
 
 
     //폴더 스팟 추가
     @Override
     public Long addSpot(CartDTO cartDTO) {
-        Cart cart=cartDtoToEntity(cartDTO);
-        cartRepository.save(cart);
-        return cartDTO.getFno();
+        if (placeRepository.findById(cartDTO.getPno()).isPresent()){
+            Cart cart=cartDtoToEntity(cartDTO);
+            cartRepository.save(cart);
+            return cartDTO.getFno();
+        }
+        return -1l;
     }
 
 
@@ -96,11 +117,14 @@ public class FolderServiceImpl implements FolderService{
     //폴더 스팟 제거 - CartService와 머지 후 주석 제거
     @Override
     public String deleteSpot(CartDTO cartDTO) {
-        cartRepository.delete(cartDtoToEntity(cartDTO));
-        Place place= Place.builder()
-                .pno(cartDTO.getPno())
-                .build();
-        System.out.println(place.getName());
-        return place.getName();
+        if (cartRepository.findById(cartDTO).isPresent()){
+            cartRepository.delete(cartDtoToEntity(cartDTO));
+            Place place= Place.builder()
+                    .pno(cartDTO.getPno())
+                    .build();
+            System.out.println(place.getName());
+            return place.getName();
+        }
+        return null;
     }
 }

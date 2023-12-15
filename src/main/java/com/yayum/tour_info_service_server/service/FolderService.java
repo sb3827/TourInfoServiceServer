@@ -15,7 +15,7 @@ public interface FolderService {
     List<String> getTitle(Long mno);
 
     //폴더 등록
-    Long register(FolderDTO folderDTO);
+    Long register(FolderRegistDTO folderRegistDTO);
 
     //폴더명 수정 - 성공 시 폴더번호, 실패시 -1
     Long modify(FolderDTO folderDTO);
