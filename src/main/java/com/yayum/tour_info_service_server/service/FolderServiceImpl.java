@@ -1,10 +1,7 @@
 package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.*;
-import com.yayum.tour_info_service_server.entity.Cart;
-import com.yayum.tour_info_service_server.entity.Folder;
-import com.yayum.tour_info_service_server.entity.Member;
-import com.yayum.tour_info_service_server.entity.Place;
+import com.yayum.tour_info_service_server.entity.*;
 import com.yayum.tour_info_service_server.repository.CartRepository;
 import com.yayum.tour_info_service_server.repository.FolderRepository;
 import com.yayum.tour_info_service_server.repository.MemberRepository;
@@ -114,17 +111,13 @@ public class FolderServiceImpl implements FolderService{
 
 
 
-    //폴더 스팟 제거 - CartService와 머지 후 주석 제거
+    //폴더 스팟 제거
     @Override
     public String deleteSpot(CartDTO cartDTO) {
-        if (cartRepository.findById(cartDTO).isPresent()){
-            cartRepository.delete(cartDtoToEntity(cartDTO));
-            Place place= Place.builder()
-                    .pno(cartDTO.getPno())
-                    .build();
-            System.out.println(place.getName());
-            return place.getName();
-        }
-        return null;
+        cartRepository.delete(cartDtoToEntity(cartDTO));
+        Place place= Place.builder()
+                .pno(cartDTO.getPno())
+                .build();
+        return place.getName();
     }
 }
