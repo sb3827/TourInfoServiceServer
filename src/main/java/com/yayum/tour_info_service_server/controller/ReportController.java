@@ -56,10 +56,11 @@ public class ReportController {
         if(data==1l){
             response.setResult(true);
             response.setData(data);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
         //만약 신고한 유저가 존재하지 않는다면 null을 전달받음
 
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
     //신고 확인(신고 상태 업데이트)
@@ -72,8 +73,9 @@ public class ReportController {
         }else if(data==sno){
             response.setResult(true);
             response.setData(data);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
     //제재
@@ -88,10 +90,12 @@ public class ReportController {
         if (data==-1l){
             response.setResult(false);
             response.setData(-1);
+            return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
         }else if(data>0){
             response.setResult(true);
             response.setData(data);
+            return new ResponseEntity<>(response,HttpStatus.OK);
         }
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 }
