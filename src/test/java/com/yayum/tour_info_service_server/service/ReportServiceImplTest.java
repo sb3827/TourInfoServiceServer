@@ -113,7 +113,7 @@ class ReportServiceImplTest {
     @Transactional
     public void testUserDisciplinary(){
         Long mno=1l;
-        List<Disciplinary> result=disciplinaryRepository.findAllByMemberMno(mno);
+        List<Disciplinary> result=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(mno);
         List<DisciplinaryDTO> disciplinaryDTOS=new ArrayList<>();
         for(Disciplinary disciplinary:result){
             DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
@@ -174,7 +174,16 @@ class ReportServiceImplTest {
                 .mno(1l)
                 .reason("test")
                 .build();
-        int row=disciplinaryRepository.findAllByMemberMno(disciplinaryRequestDTO.getMno()).size();
+
+        List<Disciplinary> checkDisciplinary=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(disciplinaryRequestDTO.getMno());
+
+        if(!checkDisciplinary.isEmpty() && checkDisciplinary.get(0).getExpDate().compareTo(LocalDateTime.now())>=0){
+            System.out.println("이미 정지된 회원");
+            return ;
+        }
+
+        int row=checkDisciplinary.size();
+
         Disciplinary disciplinary;
         if(row>=4){
             disciplinary=Disciplinary.builder()
