@@ -2,12 +2,11 @@ package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.*;
-import com.yayum.tour_info_service_server.repository.DisciplinaryRepository;
-import com.yayum.tour_info_service_server.repository.MemberRepository;
-import com.yayum.tour_info_service_server.repository.ReportRepository;
+import com.yayum.tour_info_service_server.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +22,13 @@ public class ReportServiceImpl implements ReportService{
     private final MemberRepository memberRepository;
 
     private final DisciplinaryRepository disciplinaryRepository;
+
+    //게시글 및 댓글 삭제
+    private final ReplyRepository replyRepository;
+    private final BoardLikeRepository boardLikeRepository;
+    private final BoardPlaceRepository boardPlaceRepository;
+    private final ImageRepository imageRepository;
+    private final BoardRepository boardRepository;
 
     //신고 내역 모두 조회
 
@@ -73,8 +79,8 @@ public class ReportServiceImpl implements ReportService{
                     .complainant(com.get().getName())
                     .defendant_mno(report.getDefendant_mno())
                     .defendant(def.get().getName())
-                    .bno(report.getBoard()!=null?report.getBoard().getBno():null)
-                    .rno(report.getReply()!=null?report.getReply().getRno():null)
+                    .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
+                    .rno(report.getReply_rno()!=null?report.getReply_rno():null)
                     .content(report.getContent())
                     .isDone(report.getIsDone())
                     .message(report.getMessage())
@@ -132,8 +138,8 @@ public class ReportServiceImpl implements ReportService{
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())
                 .defendant_mno(reportRequestDTO.getDefendant())
-                .board(reportRequestDTO.getBno()!=null?Board.builder().bno(reportRequestDTO.getBno()).build():null)
-                .reply(reportRequestDTO.getRno()!=null?Reply.builder().rno(reportRequestDTO.getRno()).build():null)
+                .board_bno(reportRequestDTO.getBno()!=null?reportRequestDTO.getBno():null)
+                .reply_rno(reportRequestDTO.getRno()!=null?reportRequestDTO.getRno():null)
                 .content(reportRequestDTO.getContent())
                 .message(reportRequestDTO.getMessage())
                 .isDone(false)
@@ -205,6 +211,58 @@ public class ReportServiceImpl implements ReportService{
                     .strDate(LocalDateTime.now())
                     .expDate(LocalDateTime.now().plusDays(3))
                     .build();
+        }
+
+        //해당 게시글 및 댓글 삭제
+        Optional<Report> report=reportRepository.findById(disciplinaryRequestDTO.getSno());
+
+        if(report.isPresent()){
+            Report result=report.get();
+
+            if (result.getBoard_bno()!=null){ // 게시글 삭제
+
+                //댓글 삭제
+                replyRepository.deleteAllByBoard(Board.builder().bno(result.getBoard_bno()).build());
+
+                //좋아요 삭제
+                boardLikeRepository.deleteAllByBoardLikePKBoard(Board.builder().bno(result.getBoard_bno()).build());
+
+                //이미지 삭제
+                imageRepository.deleteAllByBoard(Board.builder().bno(result.getBoard_bno()).build());
+
+                //BoardPlace 삭제
+                boardPlaceRepository.deleteAllByBoardPlacePKBoard(Board.builder().bno(result.getBoard_bno()).build());
+
+                //Board 삭제
+                boardRepository.deleteById(result.getBoard_bno());
+
+            }else if(result.getReply_rno()!=null){ //댓글 처리
+                //대댓글이 없는 경우
+                if (replyRepository.countAllByParent(Reply.builder().rno(result.getReply_rno()).build())==0){
+                    replyRepository.deleteById(result.getReply_rno());
+                }
+                //대댓글이거나 대댓글이 존재하는 경우
+                else{
+                    Optional<Reply> checkReply=replyRepository.findById(result.getReply_rno());
+                    Reply r=checkReply.get();
+
+                        Reply reply = Reply.builder()
+                                .rno(result.getReply_rno())
+                                .parent(r.getParent()!=null?r.getParent():null)
+                                .member(null)
+                                .board(Board.builder().bno(result.getBoard_bno()).build())
+                                .text("삭제된 댓글 입니다.")
+                                .build();
+                        replyRepository.save(reply);
+                }
+            }
+            //게시글, 댓글 둘다 있는경우 오류 처리
+            else{
+                return -2l;
+            }
+        }else{
+            //신고가 존재하지 않는 경우
+            return -3l;
         }
         disciplinaryRepository.save(disciplinary);
         return disciplinary.getDno();
