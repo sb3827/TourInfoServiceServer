@@ -38,12 +38,12 @@ public class FolderController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-    //폴더 등록 - 수정해야함
+    //폴더 등록
     @PostMapping(value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapper<Long>>register(@RequestBody FolderRegistDTO folderRegistDTO){
         ResponseWrapper response=new ResponseWrapper<>(false,null);
         Long data=folderService.register(folderRegistDTO);
-        if(data!=-1l){
+        if(data>0){
             response.setResult(true);
             response.setData(data);
             return new ResponseEntity<>(response,HttpStatus.OK);

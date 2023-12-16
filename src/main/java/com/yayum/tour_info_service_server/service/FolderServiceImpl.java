@@ -4,7 +4,6 @@ import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.*;
 import com.yayum.tour_info_service_server.repository.CartRepository;
 import com.yayum.tour_info_service_server.repository.FolderRepository;
-import com.yayum.tour_info_service_server.repository.MemberRepository;
 import com.yayum.tour_info_service_server.repository.PlaceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,9 +23,6 @@ public class FolderServiceImpl implements FolderService{
 
     //장바구니 repository
     private final CartRepository cartRepository;
-
-    //멤버 repository
-    private final MemberRepository memberRepository;
 
     //장소 repository
     private final PlaceRepository placeRepository;
@@ -58,13 +54,6 @@ public class FolderServiceImpl implements FolderService{
     //폴더 등록
     @Override
     public Long register(FolderRegistDTO folderRegistDTO) {
-        Optional<Member> member=memberRepository.findById(folderRegistDTO.getMno());
-
-        //회원이 없으면 null 반환
-        if(!member.isPresent()){
-            return -1l;
-        }
-
         Folder folder=Folder.builder()
                 .member(Member.builder().mno(folderRegistDTO.getMno()).build())
                 .title(folderRegistDTO.getTitle())
