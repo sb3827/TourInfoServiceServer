@@ -25,7 +25,7 @@ class ReportRepositoryTest {
         Report report=Report.builder()
                 .complainant_mno(2l)
                 .defendant_mno(1l)
-                .board(Board.builder().bno(1l).build())
+                .board_bno(1l)
                 .content("<h1>테스트<h1>")
                 .isDone(false)
                 .message("테스트~")
