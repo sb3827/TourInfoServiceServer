@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DisciplinaryRequestDTO {
-    private Long sno;
-    private Long mno;
-    private String reason;
+    private Long sno; //신고 번호
+    private Long mno; //제재할 유저
+    private String reason; //제재 이유
 }
