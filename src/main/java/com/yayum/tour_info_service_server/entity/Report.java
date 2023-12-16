@@ -35,13 +35,9 @@ public class Report extends BaseEntity{
 
     private Long defendant_mno;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_bno")
-    private Board board;
+    private Long board_bno;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reply_rno")
-    private Reply reply;
+    private Long reply_rno;
 
     public void changeIsDone(Boolean isDone){this.isDone=isDone;};
 
