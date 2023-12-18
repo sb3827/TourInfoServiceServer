@@ -18,7 +18,8 @@ public class Folder {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255) DEFAULT '폴더'")
+    @ColumnDefault("'폴더'")
+    @Column(nullable = false)
     private String title;
 
     public void changeTitle(String title){
