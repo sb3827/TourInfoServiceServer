@@ -10,5 +10,4 @@ public interface DisciplinaryRepository extends JpaRepository<Disciplinary,Long>
     //유저에 대한 모든 징계 조회
     List<Disciplinary> findAllByMemberMnoOrderByExpDateDesc(Long mno);
 
-    //해당 유저
 }
