@@ -102,11 +102,8 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 스팟 제거
     @Override
-    public String deleteSpot(CartDTO cartDTO) {
+    public Long deleteSpot(CartDTO cartDTO) {
         cartRepository.delete(cartDtoToEntity(cartDTO));
-        Place place= Place.builder()
-                .pno(cartDTO.getPno())
-                .build();
-        return place.getName();
+        return cartDTO.getPno();
     }
 }

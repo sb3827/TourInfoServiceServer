@@ -91,9 +91,10 @@ public class FolderController {
 
     //스팟 삭제
     @DeleteMapping(value="/spot-delete",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseDTO<String>>spotDelete(@RequestBody CartDTO cartDTO){
+    public ResponseEntity<ResponseDTO<Long>>spotDelete(@RequestBody CartDTO cartDTO){
         ResponseDTO response=new ResponseDTO(false,null);
-        String data=folderService.deleteSpot(cartDTO);
+        Long data=folderService.deleteSpot(cartDTO);
+        System.out.println("data 테스트 "+data);
         if (data!=null){
             response.setResult(true);
             response.setData(data);

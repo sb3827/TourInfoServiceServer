@@ -27,7 +27,7 @@ public interface FolderService {
     Long addSpot(CartDTO cartDTO);
 
     //장바구니 스팟 삭제 - 추후 진행
-    String deleteSpot(CartDTO cartDTO);
+    Long deleteSpot(CartDTO cartDTO);
 
     //Folder dtoToEntity
     default Folder folderDtoToEntity(FolderDTO folderDTO){
