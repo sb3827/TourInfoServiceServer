@@ -1,7 +1,6 @@
 package com.yayum.tour_info_service_server.entity;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -13,4 +12,7 @@ import lombok.*;
 public class BoardPlace {
     @EmbeddedId
     private BoardPlacePK boardPlacePK;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Place place;
 }
