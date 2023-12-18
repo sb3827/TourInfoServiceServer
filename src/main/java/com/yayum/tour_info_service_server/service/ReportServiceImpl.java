@@ -239,12 +239,15 @@ public class ReportServiceImpl implements ReportService{
                 boardRepository.deleteById(result.getBoard_bno());
 
             }else if(result.getReply_rno()!=null){ //댓글 처리
+                System.out.println("댓글 널 x");
                 //대댓글이 없는 경우
                 if (replyRepository.countAllByParent(Reply.builder().rno(result.getReply_rno()).build())==0){
+                    System.out.println("대댓글 x");
                     replyRepository.deleteById(result.getReply_rno());
                 }
                 //대댓글이거나 대댓글이 존재하는 경우
                 else{
+                    System.out.println("대댓글 o");
                     Optional<Reply> checkReply=replyRepository.findById(result.getReply_rno());
                     Reply r=checkReply.get();
 
@@ -252,7 +255,7 @@ public class ReportServiceImpl implements ReportService{
                                 .rno(result.getReply_rno())
                                 .parent(r.getParent()!=null?r.getParent():null)
                                 .member(null)
-                                .board(Board.builder().bno(result.getBoard_bno()).build())
+                                .board(Board.builder().bno(r.getBoard().getBno()).build())
                                 .text("삭제된 댓글 입니다.")
                                 .build();
                         replyRepository.save(reply);
