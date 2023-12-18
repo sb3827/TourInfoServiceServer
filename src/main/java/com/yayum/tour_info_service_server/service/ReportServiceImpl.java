@@ -3,6 +3,7 @@ package com.yayum.tour_info_service_server.service;
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.*;
 import com.yayum.tour_info_service_server.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -163,6 +164,7 @@ public class ReportServiceImpl implements ReportService{
 
     //제재 - merge후 board,reply delete 추가해야함
     @Override
+    @Transactional
     public Long disciplinary(DisciplinaryRequestDTO disciplinaryRequestDTO) {
         List<Disciplinary> checkDisciplinary=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(disciplinaryRequestDTO.getMno());
 
