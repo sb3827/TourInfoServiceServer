@@ -31,8 +31,8 @@ public class Place extends BaseEntity{
     private String localAddress; // 주소
     private String engAddress; //영문 주소
 
-    @Column(nullable = false)
-    private String category; //전체,음식점,숙소,관광지
+    @Builder.Default
+    private Category category = Category.ETC; //전체,음식점,숙소,관광지
 
     @ColumnDefault("0")
     @Column(nullable = false)
