@@ -4,6 +4,7 @@ import com.yayum.tour_info_service_server.dto.CartDTO;
 import com.yayum.tour_info_service_server.dto.FolderAllDTO;
 import com.yayum.tour_info_service_server.dto.FolderDTO;
 import com.yayum.tour_info_service_server.dto.FolderRegistDTO;
+import com.yayum.tour_info_service_server.service.CartService;
 import com.yayum.tour_info_service_server.service.FolderService;
 import com.yayum.tour_info_service_server.dto.ResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import java.util.List;
 public class FolderController {
 
     private final FolderService folderService;
+
+    private final CartService cartService;
 
     //폴더 내용 모두 들고오기
     @GetMapping(value = "/all/{mno}",produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,7 +83,7 @@ public class FolderController {
     @PostMapping(value = "/spot-append",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Long>>spotAdd(@RequestBody CartDTO cartDTO){
         ResponseDTO response=new ResponseDTO(false,null);
-        Long data=folderService.addSpot(cartDTO);
+        Long data=cartService.addCart(cartDTO);
         if (data!=-1l){
             response.setResult(true);
             response.setData(data);
@@ -93,7 +96,7 @@ public class FolderController {
     @DeleteMapping(value="/spot-delete",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Long>>spotDelete(@RequestBody CartDTO cartDTO){
         ResponseDTO response=new ResponseDTO(false,null);
-        Long data=folderService.deleteSpot(cartDTO);
+        Long data=cartService.deleteCart(cartDTO);
         System.out.println("data 테스트 "+data);
         if (data!=null){
             response.setResult(true);
