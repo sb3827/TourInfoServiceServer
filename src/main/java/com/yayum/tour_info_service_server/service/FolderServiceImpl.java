@@ -21,12 +21,6 @@ public class FolderServiceImpl implements FolderService{
     //폴더 repository
     private final FolderRepository folderRepository;
 
-    //장바구니 repository
-    private final CartRepository cartRepository;
-
-    //장소 repository
-    private final PlaceRepository placeRepository;
-
     //폴더 전부 조회
     @Override
     public List<FolderAllDTO> getAllFolder(Long mno) {
@@ -86,24 +80,4 @@ public class FolderServiceImpl implements FolderService{
         return -1l;
     }
 
-
-    //폴더 스팟 추가
-    @Override
-    public Long addSpot(CartDTO cartDTO) {
-        if (placeRepository.findById(cartDTO.getPno()).isPresent()){
-            Cart cart=cartDtoToEntity(cartDTO);
-            cartRepository.save(cart);
-            return cartDTO.getFno();
-        }
-        return -1l;
-    }
-
-
-
-    //폴더 스팟 제거
-    @Override
-    public Long deleteSpot(CartDTO cartDTO) {
-        cartRepository.delete(cartDtoToEntity(cartDTO));
-        return cartDTO.getPno();
-    }
 }
