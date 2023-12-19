@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -19,7 +20,9 @@ class MemberRepositoryTest {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
     @Test
+    // member dummy data insert test
     public void insertMembers() {
         IntStream.rangeClosed(1, 20).forEach(i -> {
             Member member = Member.builder()
@@ -30,26 +33,44 @@ class MemberRepositoryTest {
                     .name("name"+i)
                     .build();
 
-            if (i<10) member.addMemberRole(Role.MEMBER);
-            else if (i < 19) member.addMemberRole(Role.BUSINESSPERSON);
-            else if (i < 20) member.addMemberRole(Role.ADMIN);
+            if (i<=10) member.addMemberRole(Role.MEMBER);
+            else if (i <= 19) member.addMemberRole(Role.BUSINESSPERSON);
+            else if (i == 20) member.addMemberRole(Role.ADMIN);
 
             memberRepository.save(member);
         });
     }
 
     @Test
+    // email로 member 찾기 test
     public void findEmailTest() {
-        Member member = memberRepository.findMemberByEmail("mh98@email.com");
-
-        log.info(member.getMno());
+        Optional<Member> result = memberRepository.findByEmail("mh98@email.com");
+        if (result.isEmpty()){
+            log.info("not found member");
+        } else {
+            Member member = result.get();
+            log.info("MNO: " + member.getMno());
+        }
     }
 
     @Test
+    // member+phone로 member 찾기 test
     public void findMemberbyNamePhoneTest() {
-        Member member = memberRepository.findMemberByNameAndPhone("희범", "010-1234-5678");
+        Optional<Member> result = memberRepository.findMemberByNameAndPhone("희범", "010-1234-5678");
 
-        log.info(member.getEmail());
+        if (result.isEmpty()){
+            log.info("not found member");
+        } else {
+            Member member = result.get();
+            log.info("email: "+member.getEmail());
+        }
+
+    }
+
+    @Test
+    // email 중복 test
+    public void existEmailTest(){
+        log.info("is Duplicate?: "+memberRepository.existsByEmail("mmk2751@gmail.com"));
     }
 
 }
