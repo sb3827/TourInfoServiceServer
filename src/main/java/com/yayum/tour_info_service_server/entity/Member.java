@@ -66,4 +66,11 @@ public class Member extends BaseEntity {
     roleSet.add(role);
   }
 
+  public void changePassword(String password) {
+    this.password = password;
+  }
+
+  public void changeIsReset() {
+    this.isReset = !this.isReset;
+  }
 }
