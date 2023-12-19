@@ -97,7 +97,6 @@ public class FolderController {
     public ResponseEntity<ResponseDTO<Long>>spotDelete(@RequestBody CartDTO cartDTO){
         ResponseDTO response=new ResponseDTO(false,null);
         Long data=cartService.deleteCart(cartDTO);
-        System.out.println("data 테스트 "+data);
         if (data!=null){
             response.setResult(true);
             response.setData(data);
