@@ -44,17 +44,17 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Password가 일치하지 않습니다");
         }
 
-//        if (member.isReset()) {
-//            throw new RuntimeException("password 변경이 필요 합니다");
-//        }
+        if (member.isReset()) {
+            throw new RuntimeException("password 변경이 필요 합니다");
+        }
 
         if (!member.isApprove()) {
             throw new RuntimeException("관리자의 승인이 필요합니다.");
         }
 
-//        if (member.isValidate()) {
-//            throw new RuntimeException("이메일 인증이 필요합니다.");
-//        }
+        if (!member.getIsValidate()) {
+            throw new RuntimeException("이메일 인증이 필요합니다.");
+        }
 
         //jwt token 생성 -> token return
         String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
@@ -73,10 +73,9 @@ public class AuthServiceImpl implements AuthService {
         Member member = signupDtoToEntity(signupDTO);
         // password encoding
         member.changePassword(passwordEncoder.encode(member.getPassword()));
-        // todo add column isValidate
+        member.changeIsValidate(false);
         try {
             String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
-            // todo token address generate
             mailService.sendValidateUrl(signupDTO.getEmail(), signupDTO.getName(), token);
             memberRepository.save(member);
         } catch (MailException | MessagingException | UnsupportedEncodingException e) {
@@ -110,7 +109,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseDTO changePassword(ChangeMemberDTO changeMemberDTO) {
-        //todo
         Optional<Member> result = memberRepository.findByEmail(changeMemberDTO.getEmail());
         ResponseDTO responseDTO;
 
@@ -217,7 +215,7 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
         Member member = result.get();
-//        member.changeIsValidate(true);
+        member.changeIsValidate(true);
         memberRepository.save(member);
 
         return true;
