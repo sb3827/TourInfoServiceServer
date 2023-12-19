@@ -4,14 +4,18 @@ import com.yayum.tour_info_service_server.config.jwt.TokenProvider;
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.Member;
 import com.yayum.tour_info_service_server.repository.MemberRepository;
+import com.yayum.tour_info_service_server.security.util.SecurityUtil;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.*;
@@ -40,23 +44,47 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Password가 일치하지 않습니다");
         }
 
-        String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
+//        if (member.isReset()) {
+//            throw new RuntimeException("password 변경이 필요 합니다");
+//        }
+
+        if (!member.isApprove()) {
+            throw new RuntimeException("관리자의 승인이 필요합니다.");
+        }
+
+//        if (member.isValidate()) {
+//            throw new RuntimeException("이메일 인증이 필요합니다.");
+//        }
+
         //jwt token 생성 -> token return
+        String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
 
         return token;
     }
 
     @Override
-    public Long signup(SignupDTO signupDTO) {
-        //todo 빈값 처리
-        // todo email 중복처리
-        Member member = dtoToEntity(signupDTO);
+    public Long signup(SignupRequestDTO signupDTO) {
+
+        // email 중복처리
+        if (memberRepository.existsByEmail(signupDTO.getEmail())) {
+            throw new RuntimeException("중복된 이메일");
+        }
+
+        Member member = signupDtoToEntity(signupDTO);
+        // password encoding
         member.changePassword(passwordEncoder.encode(member.getPassword()));
+        // todo add column isValidate
         try {
+            String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
+            // todo token address generate
+            mailService.sendValidateUrl(signupDTO.getEmail(), signupDTO.getName(), token);
             memberRepository.save(member);
+        } catch (MailException | MessagingException | UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("메일 전송 오류");
         } catch (Exception e) {
-            log.error(e.getClass());
-            return (long) -1;
+            log.error(e.getMessage());
+            throw e;
         }
 
         return member.getMno();
@@ -64,43 +92,36 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean emailCheck(String email) {
-        //Member member = memberRepository.findMemberByEmail(email);
-
-        //todo test
         return memberRepository.existsByEmail(email);
-
-//        if (member == null) {
-//            return false;
-//        }
-//        if (member.getMno() > 0) {
-//            return true;
-//        }
-//        return false;
     }
 
     @Override
     public String findEmail(String name, String phone) {
-        Member member = memberRepository.findMemberByNameAndPhone(name, phone);
+        Optional<Member> result = memberRepository.findMemberByNameAndPhone(name, phone);
 
-        if (member != null) {
-            return member.getEmail();
-        } else {
-            return null;
+        // DB에 없는 경우
+        if (result.isEmpty()){
+            throw new RuntimeException("not found member");
         }
+
+        Member member = result.get();
+        return member.getEmail();
     }
 
     @Override
     public ResponseDTO changePassword(ChangeMemberDTO changeMemberDTO) {
-        Member member = memberRepository.findMemberByEmail(changeMemberDTO.getEmail());
+        //todo
+        Optional<Member> result = memberRepository.findByEmail(changeMemberDTO.getEmail());
         ResponseDTO responseDTO;
 
         // DB 없을 경우
-        if (member == null){
+        if (result.isEmpty()){
             return ResponseDTO.builder()
                     .msg("not found member")
                     .result(false)
                     .build();
         }
+        Member member = result.get();
 
         // 기존 비밀번호가 일치하지 않을 경우
         if (!passwordEncoder.matches(changeMemberDTO.getOldPassword(), member.getPassword())) {
@@ -129,20 +150,24 @@ public class AuthServiceImpl implements AuthService {
         return responseDTO;
     }
 
+    // 비밀번호 초기화
     @Override
     public ResponseDTO resetPassword(MemberDTO memberDTO) {
-        // todo add column isReset in member entity
-        Member member = memberRepository.findMemberByEmail(memberDTO.getEmail());
+        Optional<Member> result = memberRepository.findByEmail(memberDTO.getEmail());
 
-        if (member == null){
+        // 검색결과x
+        if (!result.isPresent()){
             return ResponseDTO.builder()
                     .msg("not found member")
                     .result(false)
                     .build();
         }
+        Member member = result.get();
+
 
         String oldPassword = member.getPassword();
         String password = generateRandomPassword();
+        member.changeIsReset(); // 비밀번호 변경 요청 여부 변경
         member.changePassword(passwordEncoder.encode(password));
         try {
             memberRepository.save(member);
@@ -181,5 +206,20 @@ public class AuthServiceImpl implements AuthService {
         password = password.substring(0, pwLength);
 
         return password;
+    }
+
+    @Override
+    public Boolean checkValidate() {
+        String email = SecurityUtil.getCurrentMemberEmail();
+        Optional<Member> result = memberRepository.findByEmail(email);
+
+        if (result.isEmpty()) {
+            return false;
+        }
+        Member member = result.get();
+//        member.changeIsValidate(true);
+        memberRepository.save(member);
+
+        return true;
     }
 }
