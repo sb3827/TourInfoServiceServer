@@ -24,7 +24,7 @@ class ImageRepositoryTests {
 
       Image image = Image.builder()
           .board(board)
-          .pno(place.getPno())
+          .ino(place.getPno())
           .src("test")
           .build();
       imageRepository.save(image);
