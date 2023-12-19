@@ -52,6 +52,12 @@ public class Member extends BaseEntity {
   @Column(nullable = false)
   private boolean isReset; // 비밀번호 초기화 대상 여부
 
+
+  @ColumnDefault("false")
+  private Boolean isValidate;
+
+  public void changeIsValidate(Boolean isValidate){this.isValidate=isValidate;};
+
   @ElementCollection(fetch = FetchType.LAZY)
   @Builder.Default
   private Set<Role> roleSet = new HashSet<>();

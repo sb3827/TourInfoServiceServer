@@ -40,10 +40,4 @@ public class Board extends BaseEntity{
     @ManyToOne(fetch= FetchType.LAZY)
     private Member writer;
 
-
-    @ColumnDefault("false")
-    private Boolean isValidate;
-
-    public void changeIsValidate(Boolean isValidate){this.isValidate=isValidate;};
-
 }
