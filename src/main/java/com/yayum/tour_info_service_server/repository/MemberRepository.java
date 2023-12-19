@@ -10,12 +10,11 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Member findMemberByEmail(@Param("email") String email);
     Optional<Member> findByEmail(@Param("email") String email);
 
     //@Query("select * from Member m where m.name =:name and m.phone =:phone")
-    Member findMemberByNameAndPhone(@Param("name") String name, @Param("phone") String phone);
+    Optional<Member> findMemberByNameAndPhone(@Param("name") String name, @Param("phone") String phone);
 
-    // todo test
+    // 중복 여부(true: 중복, false: 중복x)
     boolean existsByEmail(String email);
 }
