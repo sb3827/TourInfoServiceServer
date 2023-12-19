@@ -55,6 +55,23 @@ public class TokenProvider {
                 .compact();
     }
 
+    public String generateRefresh(String mno) {
+        Date now = new Date();
+
+        key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
+
+        return Jwts.builder()
+                .header()
+                .add("typ","JWT")
+                .and()
+                .issuer(jwtProperties.getIssuer())
+                .issuedAt(now)
+                .expiration(new Date(now.getTime() + Duration.ofHours(3).toMillis()))
+                .subject(mno)
+                .signWith(key)
+                .compact();
+    }
+
     // 유효 token 검증 method
     public boolean validToken(String token) {
         key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
