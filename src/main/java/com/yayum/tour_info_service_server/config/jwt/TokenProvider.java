@@ -29,11 +29,13 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "Bearer";
     private Key key;
 
+    //token 생성 method
     public String generateToken(Member member, Duration expiredAt){
         Date now = new Date();
         return makeToken(new Date(now.getTime() + expiredAt.toMillis()), member);
     }
 
+    //token 생성 method
     private String makeToken(Date expiry, Member member) {
         Date now = new Date();
 
@@ -53,6 +55,7 @@ public class TokenProvider {
                 .compact();
     }
 
+    // 유효 token 검증 method
     public boolean validToken(String token) {
         key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
 
@@ -76,34 +79,39 @@ public class TokenProvider {
         return false;
     }
 
+    // jwt의 정보 중 role으로 권한정보 추출 및 principal에 저장하기 위한 authentication 생성
     public Authentication getAuthentication(String token) {
         Claims claims = getClaims(token);
 
+        // jwt에 role가 없는 경우 => 권한x
         if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
+        // jwt 저장된 role으로 role collection 생성
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-        // security context principal 저장
+        // security context principal 저장하기 위한 객체 생성
         UserDetails principal = new AuthMemberDTO(claims.getSubject(), claims.get("id", Long.class), "", false, authorities);
-
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
+    // jwt로 mno 추출
     public Long getMemberId(String token) {
         Claims claims = getClaims(token);
         return claims.get("id", Long.class);
     }
 
+    // jwt로 email 추출
     public String getMemberEmail(String token) {
         Claims claims = getClaims(token);
-        return claims.get("email", String.class);
+        return claims.get("sub", String.class);
     }
 
+    // jwt parsing method
     private Claims getClaims(String token) {
         key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
 

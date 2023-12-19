@@ -4,6 +4,7 @@ import com.yayum.tour_info_service_server.config.jwt.JwtAuthenticationEntryPoint
 import com.yayum.tour_info_service_server.config.jwt.TokenProvider;
 import com.yayum.tour_info_service_server.security.filter.JwtFilter;
 import com.yayum.tour_info_service_server.security.handler.JwtAccessDeniedHandler;
+import com.yayum.tour_info_service_server.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -36,41 +37,47 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain config(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
+                // csrf disable
                 .csrf(AbstractHttpConfigurer::disable)
 
+                // setting exception handler
                 .exceptionHandling(exceptionHandlingConfigurer ->
                         exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 )
 
+                // setting authorize of address
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.requestMatchers("/auth/getTest").authenticated();
                     authorizeRequests.anyRequest().permitAll();
                 })
 
+                // 세션 state less
                 .sessionManagement(sessionManagementConfigurer ->
                         sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-
+                // token filter를 filter chain 추가
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }
 
     @Bean
+    // jwt filter bean
     public JwtFilter jwtFilter(){
         return new JwtFilter(tokenProvider);
     }
 
     @Bean
+    // authentication bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
+    // password encoder bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

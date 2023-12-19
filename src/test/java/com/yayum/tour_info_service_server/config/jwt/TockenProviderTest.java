@@ -14,6 +14,7 @@ class TockenProviderTest {
     @Autowired
     TokenProvider tockenProvider;
     @Test
+    // token 생성 test
     public void gentokenTest(){
         log.info(tockenProvider.generateToken(Member.builder()
                         .mno(1L)
@@ -22,16 +23,19 @@ class TockenProviderTest {
     }
 
     @Test
+    // token 검증 test
     public void validTokenTest() {
         log.info(tockenProvider.validToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJtbWsyNzUxQGdtYWlsLmNvbSIsImlhdCI6MTcwMjU0MzU4NywiZXhwIjoxNzAyNTQzNTg4LCJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJpZCI6MX0.VWXJ0pWfaqezePk7-bqDUb0bQAqAtVMm5lreepyV3vlmm_CxoST0VvC5IXSzuuKl"));
     }
 
     @Test
+    // token mno(id) 추출 test
     public void getMemberIdTest() {
         log.info(tockenProvider.getMemberId("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJtbWsyNzUxQGdtYWlsLmNvbSIsImlhdCI6MTcwMjU0NjQxNSwiZXhwIjoxNzAyNTQ3MDE1LCJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoxfQ.sWS8why1RSXRR6ByDa8pEOPYjymWVzZQSGswEsZaD2DBgUGvJIqyl1n6EpQb9Kkx"));
     }
 
     @Test
+    // token email 추출 test
     public void getMemberEmailTest() {
         log.info(tockenProvider.getMemberEmail("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJpc3MiOiJtbWsyNzUxQGdtYWlsLmNvbSIsImlhdCI6MTcwMjU0NjQxNSwiZXhwIjoxNzAyNTQ3MDE1LCJlbWFpbCI6ImVtYWlsQGVtYWlsLmNvbSIsImlkIjoxfQ.sWS8why1RSXRR6ByDa8pEOPYjymWVzZQSGswEsZaD2DBgUGvJIqyl1n6EpQb9Kkx"));
     }
