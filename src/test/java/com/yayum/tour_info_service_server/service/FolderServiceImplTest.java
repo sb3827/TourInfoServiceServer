@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,18 +29,20 @@ class FolderServiceImplTest{
     @Test
     public void testGetAllFolder() {
         Long mno=2l;
-        List<Object[]> result=folderRepository.getFolderAll(mno);
-        List<FolderAllDTO> folderAllDTOS = new ArrayList<>();
+        List<Object[]> result = folderRepository.getFolderAll(mno);
+        Map<Long, FolderAllDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
-            FolderAllDTO folderAllDTO = new FolderAllDTO();
-            folderAllDTO.setFno((Long) objects[0]);
-            folderAllDTO.setTitle((String) objects[1]);
-            folderAllDTO.setPno((Long)objects[2]);
-            folderAllDTO.setName((String)objects[3]);
-            folderAllDTOS.add(folderAllDTO);
+            Long fno = (Long) objects[0];
+            String title = (String) objects[1];
+            Long pno = (Long) objects[2];
+            String name = (String) objects[3];
+
+            FolderAllDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
+            folderAllDTO.getPno().add(pno);
+            folderAllDTO.getName().add(name);
         }
-        System.out.println(folderAllDTOS);
+        System.out.println(new ArrayList<>(folderMap.values()));
     }
 
     //폴더명 조회 테스트

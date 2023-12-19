@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,18 +22,33 @@ public class FolderServiceImpl implements FolderService{
     //폴더 전부 조회
     @Override
     public List<FolderAllDTO> getAllFolder(Long mno) {
-        List<Object[]> result=folderRepository.getFolderAll(mno);
-        List<FolderAllDTO> folderAllDTOS = new ArrayList<>();
+//        List<Object[]> result=folderRepository.getFolderAll(mno);
+//        List<FolderAllDTO> folderAllDTOS = new ArrayList<>();
+//
+//        for (Object[] objects : result) {
+//            FolderAllDTO folderAllDTO = new FolderAllDTO();
+//            folderAllDTO.setFno((Long) objects[0]);
+//            folderAllDTO.setTitle((String) objects[1]);
+//            folderAllDTO.setPno((Long)objects[2]);
+//            folderAllDTO.setName((String)objects[3]);
+//            folderAllDTOS.add(folderAllDTO);
+//        }
+//        return folderAllDTOS;
+        List<Object[]> result = folderRepository.getFolderAll(mno);
+        Map<Long, FolderAllDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
-            FolderAllDTO folderAllDTO = new FolderAllDTO();
-            folderAllDTO.setFno((Long) objects[0]);
-            folderAllDTO.setTitle((String) objects[1]);
-            folderAllDTO.setPno((Long)objects[2]);
-            folderAllDTO.setName((String)objects[3]);
-            folderAllDTOS.add(folderAllDTO);
+            Long fno = (Long) objects[0];
+            String title = (String) objects[1];
+            Long pno = (Long) objects[2];
+            String name = (String) objects[3];
+
+            FolderAllDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
+            folderAllDTO.getPno().add(pno);
+            folderAllDTO.getName().add(name);
         }
-        return folderAllDTOS;
+
+        return new ArrayList<>(folderMap.values());
     }
 
     //폴더명 조회
