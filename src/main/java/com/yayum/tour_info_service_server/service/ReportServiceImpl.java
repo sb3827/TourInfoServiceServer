@@ -215,7 +215,7 @@ public class ReportServiceImpl implements ReportService{
                     .build();
         }
 
-        //해당 게시글 및 댓글 삭제
+        //해당 게시글 및 댓글 삭제 -> merge 후 겹치는부분 제거
         Optional<Report> report=reportRepository.findById(disciplinaryRequestDTO.getSno());
 
         if(report.isPresent()){
@@ -266,6 +266,10 @@ public class ReportServiceImpl implements ReportService{
             //신고가 존재하지 않는 경우
             return -3l;
         }
+        //신고 상태 업데이트 -> 신고 처리 완료
+        reportUpdate(disciplinaryRequestDTO.getSno());
+
+        //제재
         disciplinaryRepository.save(disciplinary);
         return disciplinary.getDno();
     }

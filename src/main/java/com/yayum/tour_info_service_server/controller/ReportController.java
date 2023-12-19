@@ -81,11 +81,14 @@ public class ReportController {
     @PostMapping(value="/disciplinary",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Long>> disciplinary(@RequestBody DisciplinaryRequestDTO disciplinaryRequestDTO){
         ResponseDTO response=new ResponseDTO(false,null);
-        //신고 완료 처리
-        reportService.reportUpdate(disciplinaryRequestDTO.getSno());
-        //유저 제재
+
+        // 유저 제재
         Long data=reportService.disciplinary(disciplinaryRequestDTO);
-        //이미 정지된 유저
+
+        // 이미 정지된 유저
+        // -1은 이미 정지된 유저
+        // -2는 게시글과 댓글 둘다 신고가 된경우(게시글 신고 또는 댓글 신고만 가능)
+        // -3은 신고가 존재하지 않는 경우
         if (data<=-1l){
             response.setData(data);
             return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
