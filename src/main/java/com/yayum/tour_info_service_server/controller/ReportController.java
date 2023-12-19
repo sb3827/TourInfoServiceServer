@@ -85,7 +85,6 @@ public class ReportController {
         // 유저 제재
         Long data=reportService.disciplinary(disciplinaryRequestDTO);
 
-        // 이미 정지된 유저
         // -1은 이미 정지된 유저
         // -2는 게시글과 댓글 둘다 신고가 된경우(게시글 신고 또는 댓글 신고만 가능)
         // -3은 신고가 존재하지 않는 경우
