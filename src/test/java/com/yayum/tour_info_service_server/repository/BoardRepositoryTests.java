@@ -41,4 +41,11 @@ class BoardRepositoryTests {
         boardRepository.save(board);
     });
   }
+
+  @Transactional
+  @Test
+  public void getPlaceBoardTest() {
+    List<Board> result = boardRepository.getPlaceBoard(3L);
+    System.out.println(result);
+  }
 }
