@@ -34,18 +34,23 @@ public class Member extends BaseEntity {
   @Column(nullable = false)
   private String name;
 
-  private String image;
+  private String image; // 이미지 url
 
   @ColumnDefault("false")
-  private boolean fromSocial;
+  @Column(nullable = false)
+  private boolean fromSocial; // 소셜 로그인 여부
 
   @ColumnDefault("0")
+  @Column(nullable = false)
   private int disciplinary;
 
-  @ColumnDefault("0")
-  private int businessId;
+  private int businessId; // 사업자 번호
 
-  private boolean isApprove;
+  private boolean isApprove; // 사업자 승인 여부
+
+  @ColumnDefault("false")
+  @Column(nullable = false)
+  private boolean isReset; // 비밀번호 초기화 대상 여부
 
   @ElementCollection(fetch = FetchType.LAZY)
   @Builder.Default

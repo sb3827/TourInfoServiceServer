@@ -12,7 +12,7 @@ import lombok.*;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long pno;
+    private Long ino;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board; //게시글번호 - 머지 후 import 해야함
