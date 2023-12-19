@@ -80,7 +80,7 @@ public class FolderController {
     }
 
     //스팟 등록
-    @PostMapping(value = "/spot-append",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/cart-append",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Long>>spotAdd(@RequestBody CartDTO cartDTO){
         ResponseDTO response=new ResponseDTO(false,null);
         Long data=cartService.addCart(cartDTO);
@@ -93,7 +93,7 @@ public class FolderController {
     }
 
     //스팟 삭제
-    @DeleteMapping(value="/spot-delete",produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value="/cart-delete",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<Long>>spotDelete(@RequestBody CartDTO cartDTO){
         ResponseDTO response=new ResponseDTO(false,null);
         Long data=cartService.deleteCart(cartDTO);
