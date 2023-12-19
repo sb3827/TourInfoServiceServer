@@ -25,7 +25,7 @@ class BoardRepositoryTests {
   @Test
   public void insertDummies() {
 
-    IntStream.rangeClosed(1, 5).forEach(i -> {
+    IntStream.rangeClosed(7, 10).forEach(i -> {
 
       Member member = Member.builder().mno(1L).build();
 
@@ -34,7 +34,7 @@ class BoardRepositoryTests {
             .content("content" + i)
             .score(Math.random() * i)
             .isAd(false)
-            .isCourse(false)
+            .isCourse(true)
             .likes(i)
             .writer(member)
             .build();
@@ -45,7 +45,7 @@ class BoardRepositoryTests {
   @Transactional
   @Test
   public void getPlaceBoardTest() {
-    List<Board> result = boardRepository.getPlaceBoard(3L);
+    List<Object[]> result = boardRepository.getPlaceBoardByBno(3L);
     System.out.println(result);
   }
 }

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Log4j2
 @RequiredArgsConstructor
@@ -36,5 +38,13 @@ public class BoardController {
    log.info("modify...dto: "+boardDTO);
    Long bno = boardService.modify(boardDTO);
    return new ResponseEntity<>(bno,HttpStatus.OK);
+  }
+
+  // 장소 포스팅 정보 조회
+  @GetMapping(value = {"/place/posting/{bno}"})
+  public ResponseEntity<BoardDTO> getPlaceBoard(@PathVariable("bno") Long bno) {
+    log.info("getPlaceBoard... bno: "+ bno);
+    BoardDTO boardDTO = boardService.getPlaceBoardByBno(bno);
+    return new ResponseEntity<>(boardDTO, HttpStatus.OK);
   }
 }
