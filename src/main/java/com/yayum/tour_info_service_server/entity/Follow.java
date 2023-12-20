@@ -4,6 +4,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import lombok.*;
 
+
 @Getter
 @Builder
 @Embeddable
