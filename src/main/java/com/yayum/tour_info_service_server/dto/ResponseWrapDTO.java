@@ -11,4 +11,3 @@ public class ResponseWrapDTO<T> {
     private boolean result;
     private T data;
 }
-
