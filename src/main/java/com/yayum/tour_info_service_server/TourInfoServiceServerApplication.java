@@ -12,7 +12,7 @@ public class TourInfoServiceServerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TourInfoServiceServerApplication.class, args);
-		System.out.println("http://localhost:4000");
+		System.out.println("http://localhost:8080");
 	}
 
 }
