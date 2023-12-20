@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ResponseDTO<T> {
+public class ResponseWrapDTO<T> {
     private boolean result;
     private T data;
 }
