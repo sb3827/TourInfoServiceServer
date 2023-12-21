@@ -11,7 +11,7 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
 
     //신고 전체 조회 - 최신순
     @Query("select r " +
-            "from Report r left outer join Member m on r.complainant_mno = m.mno " +
+            "from Report r left outer join Member m on r.defendant_mno = m.mno " +
             "where m.name like concat('%',:search,'%')" +
             "group by r.sno " +
             "order by r.regDate desc ")
@@ -19,7 +19,7 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
 
     //신고 필터 조회 - 처리 or 처리X
     @Query("select r " +
-            "from Report r left outer join Member m on r.complainant_mno = m.mno " +
+            "from Report r left outer join Member m on r.defendant_mno = m.mno " +
             "where r.isDone=:isDone and m.name like concat('%',:search,'%') " +
             "group by r.sno " +
             "order by r.regDate desc")
@@ -27,7 +27,7 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
 
     //신고 필터 조회 - 게시글(처리 or 처리x)
     @Query("select r " +
-            "from Report r left outer join Member m on r.complainant_mno = m.mno " +
+            "from Report r left outer join Member m on r.defendant_mno = m.mno " +
             "where r.board_bno is not null and r.isDone=:isDone and m.name like concat('%',:search,'%')" +
             "group by r.sno " +
             "order by r.regDate desc ")
@@ -35,7 +35,7 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
 
     //신고 필터 조회 - 댓글(처리 or 처리x)
     @Query("select r " +
-            "from Report r left outer join Member m on r.complainant_mno = m.mno " +
+            "from Report r left outer join Member m on r.defendant_mno = m.mno " +
             "where r.reply_rno is not null and r.isDone=:isDone and m.name like concat('%',:search,'%') " +
             "group by r.sno " +
             "order by r.regDate desc")
