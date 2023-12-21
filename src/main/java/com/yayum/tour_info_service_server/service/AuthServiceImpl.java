@@ -27,12 +27,11 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private MailService mailService;
     private final TokenProvider tockenProvider;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
     @Override
-    public String login(JwtRequestDTO requestDTO) {
+    public Long login(JwtRequestDTO requestDTO) {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
 
         if (!result.isPresent()){
@@ -57,9 +56,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         //jwt token 생성 -> token return
-        String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
+//        String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
 
-        return token;
+        return member.getMno();
     }
 
     @Override
@@ -207,8 +206,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Boolean checkValidate() {
-        String email = SecurityUtil.getCurrentMemberEmail();
+    public Boolean checkValidate(String email) {
         Optional<Member> result = memberRepository.findByEmail(email);
 
         if (result.isEmpty()) {
