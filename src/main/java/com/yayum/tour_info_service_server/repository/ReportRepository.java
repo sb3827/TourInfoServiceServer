@@ -1,11 +1,13 @@
 package com.yayum.tour_info_service_server.repository;
 
 import com.yayum.tour_info_service_server.entity.Report;
+
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report,Long> {
 
@@ -40,5 +42,10 @@ public interface ReportRepository extends JpaRepository<Report,Long> {
             "group by r.sno " +
             "order by r.regDate desc")
     List<Report> searchReplyReport(Boolean isDone,String search);
+
+    @Modifying
+    @Transactional
+    @Query("update Report r set r.board_bno = null")
+    void updateReportBnoNull(List<Long> bno);
 
 }
