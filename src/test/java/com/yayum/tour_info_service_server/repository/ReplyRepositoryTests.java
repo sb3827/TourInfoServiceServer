@@ -30,14 +30,15 @@ class ReplyRepositoryTests {
   public void insertReply() {
     IntStream.rangeClosed(1, 2).forEach(i -> {
 
-      Member member = Member.builder().mno(11L).build();
+      Member member = Member.builder().mno(1L).build();
 
-      Board board = Board.builder().bno(12L).build();
+      Board board = Board.builder().bno(5L).build();
 
         Reply reply = Reply.builder()
             .text("Reply...." + i)
             .board(board)
             .member(member)
+            .parent(null)
             .build();
         replyRepository.save(reply);
     });
