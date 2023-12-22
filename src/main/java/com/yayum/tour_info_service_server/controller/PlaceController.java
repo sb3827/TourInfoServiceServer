@@ -22,10 +22,10 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
-    @GetMapping ("/register")
-    public void register(){
-        log.info("register get.............");
-    }
+    // @GetMapping ("/register")
+    // public void register(){
+    //     log.info("register get.............");
+    // }
 
 
     @PostMapping("/register")
