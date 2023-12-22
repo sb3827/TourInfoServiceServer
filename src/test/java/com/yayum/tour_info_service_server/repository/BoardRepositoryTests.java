@@ -25,7 +25,7 @@ class BoardRepositoryTests {
   @Test
   public void insertDummies() {
 
-    IntStream.rangeClosed(7, 10).forEach(i -> {
+    IntStream.rangeClosed(1, 5).forEach(i -> {
 
       Member member = Member.builder().mno(1L).build();
 
@@ -42,10 +42,24 @@ class BoardRepositoryTests {
     });
   }
 
-  @Transactional
-  @Test
-  public void getPlaceBoardTest() {
-    List<Object[]> result = boardRepository.getPlaceBoardByBno(3L);
-    System.out.println(result);
-  }
+//  @Transactional
+//  @Test
+//  public void getPlaceBoardTest() {
+//    List<Object[]> result = boardRepository.getPlaceBoardByBno(3L);
+//    System.out.println(result);
+//  }
+//
+//  @Transactional
+//  @Test
+//  public void getCoarseBoardTest() {
+//    List<Object[]> result = boardRepository.getCourseBoardByBno(8L);
+//    System.out.println(result);
+//  }
+
+//  @Transactional
+//  @Test
+//  public void getBoardByMnoTest() {
+//    List<Object[]> result = boardRepository.getBoardByMno(1L);
+//    System.out.println(result);
+//  }
 }

@@ -2,10 +2,13 @@ package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.BoardDTO;
 import com.yayum.tour_info_service_server.entity.Board;
+import com.yayum.tour_info_service_server.entity.Image;
 import com.yayum.tour_info_service_server.entity.Member;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public interface BoardService {
 
@@ -18,8 +21,14 @@ public interface BoardService {
   // 수정 성공시 bno 실패시 -1
   Long modify(BoardDTO boardDTO);
 
-  // 장소 포스팅 정보 조회
-  BoardDTO getPlaceBoardByBno(Long bno);
+//  // 장소 포스팅 정보 조회 실패시, null 반환
+//  BoardDTO getPlaceBoardByBno(Long bno);
+//
+//  // 코스 포스팅 정보 조회 실패시, null 반환
+//  BoardDTO getCourseBoardByBno(Long bno);
+
+  // 회원별 포스팅 정보 조회, 실패시 null 반환
+  //  List<BoardDTO> getBoardByMno(Long mno);
 
 
   default Board dtoToEntity (BoardDTO boardDTO) {
@@ -36,7 +45,7 @@ public interface BoardService {
     return board;
   }
 
-  default BoardDTO entityToDto (Board board ,Member member) {
+  default BoardDTO entityToDto (Board board) {
     BoardDTO boardDTO = BoardDTO.builder()
         .bno(board.getBno())
         .title(board.getTitle())
@@ -46,7 +55,7 @@ public interface BoardService {
         .content(board.getContent())
         .score(board.getScore())
         .likes(board.getLikes())
-        .writer(member.getMno())
+        .writer(board.getWriter().getMno())
         .modDate(board.getModDate())
         .regDate(board.getRegDate())
         .build();
