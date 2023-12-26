@@ -30,10 +30,12 @@ public class FolderServiceImpl implements FolderService{
             String title = (String) objects[1];
             Long pno = (Long) objects[2];
             String name = (String) objects[3];
+            String src=(String)objects[4];
 
-            FolderAllDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
+            FolderAllDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
             folderAllDTO.getPno().add(pno);
             folderAllDTO.getName().add(name);
+            folderAllDTO.getSrc().add(src);
         }
 
         return new ArrayList<>(folderMap.values());

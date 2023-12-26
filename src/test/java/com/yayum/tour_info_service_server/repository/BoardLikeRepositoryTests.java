@@ -7,15 +7,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BoardLikeRepositoryTests {
 
-  @Autowired
-  private BoardLikeRepository boardLikeRepository;
+    @Autowired
+    BoardLikeRepository boardLikeRepository;
 
-  @Test
+    @Test
+    void removeBoardLikeTest(){
+        boardLikeRepository.removeBoardLike(9L);
+    }
+
+    @Test
   public void insert() {
     IntStream.rangeClosed(1, 5).forEach(i -> {
 

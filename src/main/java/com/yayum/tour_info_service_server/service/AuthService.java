@@ -41,4 +41,6 @@ public interface AuthService {
         }
         return member;
     }
+
+    void logout();
 }

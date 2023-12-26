@@ -2,32 +2,59 @@ package com.yayum.tour_info_service_server.repository;
 
 import com.yayum.tour_info_service_server.entity.Board;
 import com.yayum.tour_info_service_server.entity.Member;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BoardRepositoryTests {
-  @Autowired
-  private BoardRepository boardRepository;
 
-  @Autowired
-  private MemberRepository memberRepository;
+    @Autowired
+    BoardRepository boardRepository;
 
-  @Test
-  public void insertDummies() {
+    @Test
+    void remove(){
+        boardRepository.removeBoard(1L);
+    }
 
-    IntStream.rangeClosed(1, 5).forEach(i -> {
+    @Test
+    void course(){
+        System.out.println(boardRepository.boardIsCourse(5L));
+    }
 
-      Member member = Member.builder().mno(1L).build();
+    @Test
+    void returnBno(){
+        System.out.println(boardRepository.returnBnos(26L));
+    }
+
+
+//    @Test
+//    void removeTest(){
+//        List<Long> bnosToRemove = boardRepository.returnBnos(4L);
+//
+//        for ( Long bnos : bnosToRemove){
+//            boardRepository.deleteById(bnos);
+//        }
+//    }
+
+
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Test
+    public void insertDummies() {
+
+        IntStream.rangeClosed(1, 5).forEach(i -> {
+
+        Member member = Member.builder().mno(1L).build();
 
         Board board = Board.builder()
             .title("title" + i)

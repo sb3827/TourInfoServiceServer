@@ -26,15 +26,15 @@ import java.util.*;
 public class AuthServiceImpl implements AuthService {
     @Autowired
     private MailService mailService;
-    private final TokenProvider tockenProvider;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final TokenService tokenService;
 
     @Override
     public Long login(JwtRequestDTO requestDTO) {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
 
-        if (!result.isPresent()){
+        if (!result.isPresent()) {
             throw new RuntimeException("유저 정보가 없습니다");
         }
 
@@ -74,12 +74,15 @@ public class AuthServiceImpl implements AuthService {
         member.changePassword(passwordEncoder.encode(member.getPassword()));
         member.changeIsValidate(false);
         try {
-            String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
-            mailService.sendValidateUrl(signupDTO.getEmail(), signupDTO.getName(), token);
+            TokenDTO token = tokenService.generateTokens(member.getMno());
+            mailService.sendValidateUrl(signupDTO.getEmail(), signupDTO.getName(), token.getToken());
             memberRepository.save(member);
         } catch (MailException | MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new RuntimeException("메일 전송 오류");
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("토큰 생성 오류");
         } catch (Exception e) {
             log.error(e.getMessage());
             throw e;
@@ -98,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<Member> result = memberRepository.findMemberByNameAndPhone(name, phone);
 
         // DB에 없는 경우
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
             throw new RuntimeException("not found member");
         }
 
@@ -112,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
         ResponseDTO responseDTO;
 
         // DB 없을 경우
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
             return ResponseDTO.builder()
                     .msg("not found member")
                     .result(false)
@@ -153,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<Member> result = memberRepository.findByEmail(memberDTO.getEmail());
 
         // 검색결과x
-        if (!result.isPresent()){
+        if (!result.isPresent()) {
             return ResponseDTO.builder()
                     .msg("not found member")
                     .result(false)
@@ -192,7 +195,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    private String generateRandomPassword(){
+    private String generateRandomPassword() {
         final int pwLength = 12;
         SecureRandom secureRandom = new SecureRandom();
         byte[] randomBytes = new byte[pwLength];
@@ -217,5 +220,11 @@ public class AuthServiceImpl implements AuthService {
         memberRepository.save(member);
 
         return true;
+    }
+
+    @Override
+    public void logout() {
+        Long mno = SecurityUtil.getCurrentMemberMno();
+        tokenService.deleteRefreshToken(mno);
     }
 }

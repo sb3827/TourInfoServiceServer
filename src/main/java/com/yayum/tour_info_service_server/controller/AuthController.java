@@ -39,16 +39,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody JwtRequestDTO requestDTO) {
-        Map<String, String> result = new HashMap<>();
+    public ResponseEntity<TokenDTO> login(@RequestBody JwtRequestDTO requestDTO) {
+        TokenDTO result;
         try {
             Long mno = authService.login(requestDTO);
             String refreshToken = tokenService.generateRefreshToken(mno);
-            result.put("accessToken", tokenService.createNewAccessToken(refreshToken));
-            result.put("refreshToken", refreshToken);
+            result = TokenDTO.builder()
+                    .refreshToken(refreshToken)
+                    .token(tokenService.createNewAccessToken(refreshToken))
+                    .build();
         } catch (Exception e) {
-            result.put("msg", e.getMessage());
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -70,13 +71,13 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseDTO logout(HttpServletRequest request, HttpServletResponse response) {
-        // todo refresh token 생성시 refresh token 삭제 logic add
+    public ResponseEntity<ResponseDTO> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
+            authService.logout();
             new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-            return new ResponseDTO("success", true);
+            return new ResponseEntity<>(new ResponseDTO("success", true), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseDTO(e.getMessage(), false);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
