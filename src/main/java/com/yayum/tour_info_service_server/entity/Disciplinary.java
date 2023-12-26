@@ -4,12 +4,12 @@ package com.yayum.tour_info_service_server.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
+@Getter
 @Builder
 @ToString
 public class Disciplinary {
@@ -23,6 +23,6 @@ public class Disciplinary {
   @Column(nullable = false)
   private String reason;
 
-  private LocalDate strDate;  // 제재 시작 일자
-  private LocalDate expDate;  // 제재 종료 일자
+  private LocalDateTime strDate;  // 제재 시작 일자
+  private LocalDateTime expDate;  // 제재 종료 일자
 }
