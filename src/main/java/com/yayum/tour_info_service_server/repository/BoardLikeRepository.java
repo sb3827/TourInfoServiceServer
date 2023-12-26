@@ -1,5 +1,6 @@
 package com.yayum.tour_info_service_server.repository;
 
+import com.yayum.tour_info_service_server.entity.Board;
 import com.yayum.tour_info_service_server.entity.BoardLike;
 import com.yayum.tour_info_service_server.entity.BoardLikePK;
 import jakarta.transaction.Transactional;
@@ -17,4 +18,7 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeP
     @Transactional
     @Query("delete from BoardLike bl where bl.boardLikePK.board.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno)")
     void removeBoardLike(Long pno);
+
+    //게시글에 해당하는 좋아요 삭제
+    void deleteAllByBoardLikePKBoard(Board board);
 }

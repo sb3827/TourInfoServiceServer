@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Many;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
+//같은 사용자가 같은 게시글 또는 댓글을 여러번 신고불가능하도록 unique 설정
+@Table(name = "report", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"complainant_mno", "board_bno"}),
+        @UniqueConstraint(columnNames = {"complainant_mno","reply_rno"})
+})
 @Builder
 @Getter
 @NoArgsConstructor
@@ -16,8 +21,8 @@ public class Report extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long sno;
 
-    @ColumnDefault("false")
     @Column(nullable = false)
+    @ColumnDefault("false")
     private Boolean isDone;
 
     @Column(columnDefinition = "TEXT",nullable = false)
@@ -30,11 +35,9 @@ public class Report extends BaseEntity{
 
     private Long defendant_mno;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Board board;
+    private Long board_bno;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Reply reply;
+    private Long reply_rno;
 
     public void changeIsDone(Boolean isDone){this.isDone=isDone;};
 

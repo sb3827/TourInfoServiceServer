@@ -1,5 +1,6 @@
 package com.yayum.tour_info_service_server.repository;
 
+import com.yayum.tour_info_service_server.entity.Board;
 import com.yayum.tour_info_service_server.entity.BoardPlace;
 import com.yayum.tour_info_service_server.entity.BoardPlacePK;
 import jakarta.transaction.Transactional;
@@ -19,5 +20,8 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Transactional
     @Query("delete from BoardPlace bp where bp.place.pno = :pno")
     void removeBoardPlaceByPno(Long pno);
+
+    //게시글에 해당하는것 삭제
+    void deleteAllByBoardPlacePKBoard(Board board);
 
 }
