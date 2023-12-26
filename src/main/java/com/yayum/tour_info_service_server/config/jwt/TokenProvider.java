@@ -6,13 +6,13 @@ import com.yayum.tour_info_service_server.repository.RefreshTokenRepository;
 import com.yayum.tour_info_service_server.security.dto.AuthMemberDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +58,7 @@ public class TokenProvider {
                 .compact();
     }
 
+    @Transactional
     public String generateRefresh(Long mno) {
         Date now = new Date();
 
@@ -74,12 +75,22 @@ public class TokenProvider {
                 .signWith(key)
                 .compact();
 
-        RefreshToken refreshTokenEntity = RefreshToken.builder()
-                .userId(mno)
-                .refreshToken(refreshToken)
-                .build();
+        Optional<RefreshToken> result = refreshTokenRepository.findByUserId(mno);
+
+        RefreshToken refreshTokenEntity;
+
+        if (result.isPresent()){
+            refreshTokenEntity = result.get();
+            refreshTokenEntity.update(refreshToken);
+        } else {
+            refreshTokenEntity = RefreshToken.builder()
+                    .userId(mno)
+                    .refreshToken(refreshToken)
+                    .build();
+        }
 
         refreshTokenRepository.save(refreshTokenEntity);
+
         return refreshToken;
     }
 
