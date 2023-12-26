@@ -1,19 +1,17 @@
 package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.BoardDTO;
+import com.yayum.tour_info_service_server.dto.CourseBoardDTO;
 import com.yayum.tour_info_service_server.entity.Board;
-import com.yayum.tour_info_service_server.entity.Image;
 import com.yayum.tour_info_service_server.entity.Member;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public interface BoardService {
 
-  // 등록
-  Long register(BoardDTO boardDTO);
+  // 장소 등록
+  Long placeRegister(BoardDTO boardDTO);
+
+  // 코스 등록
+  Long courseRegister(CourseBoardDTO courseBoardDTO);
 
   // 삭제
   Long remove(Long bno);
@@ -45,6 +43,20 @@ public interface BoardService {
     return board;
   }
 
+  default Board courseDtoToEntity (CourseBoardDTO courseBoardDTO) {
+    Board board = Board.builder()
+        .bno(courseBoardDTO.getBno())
+        .title(courseBoardDTO.getTitle())
+        .content(courseBoardDTO.getContent())
+        .isAd(courseBoardDTO.getIsAd())
+        .isCourse(courseBoardDTO.getIsCourse())
+        .score(courseBoardDTO.getScore())
+        .likes(courseBoardDTO.getLikes())
+        .writer(Member.builder().mno(courseBoardDTO.getWriter()).build())
+        .build();
+    return board;
+  }
+
   default BoardDTO entityToDto (Board board) {
     BoardDTO boardDTO = BoardDTO.builder()
         .bno(board.getBno())
@@ -61,5 +73,6 @@ public interface BoardService {
         .build();
     return boardDTO;
   }
+
 
 }

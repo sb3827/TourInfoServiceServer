@@ -1,6 +1,7 @@
 package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.BoardDTO;
+import com.yayum.tour_info_service_server.dto.CourseBoardDTO;
 import com.yayum.tour_info_service_server.entity.*;
 import com.yayum.tour_info_service_server.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,10 @@ public class BoardServiceImpl implements BoardService{
 
   @Override
   @Transactional
-  public Long register(BoardDTO boardDTO) {
+  public Long placeRegister(BoardDTO boardDTO) {
     Board board = dtoToEntity(boardDTO);
     boardRepository.save(board);
     log.info("board 저장");
-
     BoardPlacePK boardPlacePK=BoardPlacePK.builder()
         .day(1)
         .orderNumber(1)
@@ -44,9 +44,40 @@ public class BoardServiceImpl implements BoardService{
         .place(Place.builder().pno(boardDTO.getPno()).build())
         .build();
     boardPlaceRepository.save(boardPlace);
-    log.info("board place 저장");
     if (boardDTO.getSrc()!=null) {
       for (String src : boardDTO.getSrc()) {
+        Image image = Image.builder()
+            .src(src)
+            .board(board)
+            .build();
+        imageRepository.save(image);
+        log.info("image 저장");
+      }
+    }
+    return board.getBno();
+  }
+
+  @Override
+  @Transactional
+  public Long courseRegister(CourseBoardDTO courseBoardDTO) {
+    Board board = courseDtoToEntity(courseBoardDTO);
+    boardRepository.save(board);
+    log.info("board 저장");
+
+    for (Long pno : courseBoardDTO.getPno()) {
+    BoardPlacePK boardPlacePK=BoardPlacePK.builder()
+        .day(courseBoardDTO.getDay())
+        .orderNumber(courseBoardDTO.getOrderNumber())
+        .board(board)
+        .build();
+      BoardPlace boardPlace = BoardPlace.builder()
+          .boardPlacePK(boardPlacePK)
+          .place(Place.builder().pno(pno).build())
+          .build();
+      boardPlaceRepository.save(boardPlace);
+    }
+    if (courseBoardDTO.getSrc()!=null) {
+      for (String src : courseBoardDTO.getSrc()) {
         Image image = Image.builder()
             .src(src)
             .board(board)
@@ -83,6 +114,39 @@ public class BoardServiceImpl implements BoardService{
       board.changeTitle(boardDTO.getTitle());
       board.changeContent(boardDTO.getContent());
       boardRepository.save(board);
+
+      if (boardDTO.getSrc() !=null ) {
+        //이미지를 조회
+        List<Image> images = imageRepository.selectImageByBno(boardDTO.getBno());
+        List<Image> images1 = new ArrayList<>(images);
+
+        // 이미지가 없는 경우 이미지 추가
+        for (String src : boardDTO.getSrc()) {
+          boolean exists = images.stream().anyMatch(image -> image.getSrc().equals(src));
+          if (!exists) {
+            Image image = Image.builder()
+                .board(Board.builder().bno(boardDTO.getBno()).build())
+                .src(src)
+                .build();
+            images.add(image);
+            images1.add(image);
+          }
+        }
+
+        //제거해야하는 이미지
+        images1.removeIf(image -> boardDTO.getSrc().contains(image.getSrc()));
+        for (Image image : images1) {
+          imageRepository.deleteById(image.getIno());
+        }
+
+        // 이미지 db에 값을 보드 dto와 비교해서 맞지않으면 삭제
+        images.removeIf(image -> !boardDTO.getSrc().contains(image.getSrc()));
+
+        //새로운 이미지 db 추가와 삭제된 db를 저장
+        for (Image image : images) {
+          imageRepository.save(image);
+        }
+      }
       return board.getBno();
     }
       return -1l;

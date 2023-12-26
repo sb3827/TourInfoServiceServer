@@ -1,16 +1,12 @@
 package com.yayum.tour_info_service_server.service;
 
 import com.yayum.tour_info_service_server.dto.BoardDTO;
-import com.yayum.tour_info_service_server.entity.Board;
-import com.yayum.tour_info_service_server.entity.Image;
+import com.yayum.tour_info_service_server.dto.CourseBoardDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @SpringBootTest
@@ -20,40 +16,78 @@ class BoardServiceTests {
   private BoardService boardService;
 
   @Test
-  public void registerPost () {
+  public void placeRegisterPost () {
     List<String> imagePaths = new ArrayList<>();
     imagePaths.add("이미지1 경로");
     imagePaths.add("이미지2 경로");
 
     BoardDTO boardDTO = BoardDTO.builder()
-        .bno(30L)
+        .bno(4L)
         .title("제목3")
         .content("글1")
         .isAd(false)
         .isCourse(false)
         .score(0d)
         .likes(0)
-        .writer(2L)
-        .src(null)
-        .pno(7L)
+        .writer(5L)
+        .src(imagePaths)
+        .pno(6L)
         .build();
 
-    Long bno = boardService.register(boardDTO);
+    Long bno = boardService.placeRegister(boardDTO);
+    System.out.println("bno: "+ bno);
+
+  }
+
+  @Test
+  public void CourseRegisterPost () {
+    List<String> imagePaths = new ArrayList<>();
+    imagePaths.add("이미지1 경로");
+    imagePaths.add("이미지2 경로");
+
+    List<Long> pno = new ArrayList<>();
+    pno.add(7L);
+    pno.add(8L);
+    pno.add(9L);
+
+    CourseBoardDTO courseBoardDTO = CourseBoardDTO.builder()
+        .bno(4L)
+        .title("제목1")
+        .content("글1")
+        .isAd(false)
+        .isCourse(true)
+        .day(2)
+        .orderNumber(2)
+        .score(0d)
+        .likes(0)
+        .writer(5L)
+        .src(null)
+        .pno(pno)
+        .build();
+    Long bno = boardService.courseRegister(courseBoardDTO);
     System.out.println("bno: "+ bno);
 
   }
 
   @Test
   public void remove() {
-     boardService.remove(3L);
+     boardService.remove(2L);
   }
 
   @Test
   public void modify() {
+
+//    List<String> imagePaths = new ArrayList<>();
+//    imagePaths.add("이미지1 경로수정");
+//    imagePaths.add("이미지2 경로수정4");
+//    imagePaths.add("이미지3 경로수정");
+
+
     BoardDTO boardDTO = BoardDTO.builder()
-        .bno(1L)
-        .title("changed title")
-        .content("changed content")
+        .bno(3L)
+        .title("changed title2")
+        .content("changed content2")
+//        .src(imagePaths)
         .build();
     boardService.modify(boardDTO);
 

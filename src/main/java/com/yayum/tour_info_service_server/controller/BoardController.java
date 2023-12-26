@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @Log4j2
 @RequiredArgsConstructor
@@ -20,7 +18,7 @@ public class BoardController {
   // 장소 포스팅 등록
   @PostMapping(value = {"/place/posting/register"})
   public ResponseEntity<Long> registerPost (@RequestBody BoardDTO boardDTO) {
-    Long bno = boardService.register(boardDTO);
+    Long bno = boardService.placeRegister(boardDTO);
     return  new ResponseEntity<>(bno, HttpStatus.OK);
   }
 
