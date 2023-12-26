@@ -4,6 +4,8 @@ import com.yayum.tour_info_service_server.config.jwt.JwtAuthenticationEntryPoint
 import com.yayum.tour_info_service_server.config.jwt.TokenProvider;
 import com.yayum.tour_info_service_server.security.filter.JwtFilter;
 import com.yayum.tour_info_service_server.security.handler.JwtAccessDeniedHandler;
+import com.yayum.tour_info_service_server.security.handler.OAuth2SuccessHandler;
+import com.yayum.tour_info_service_server.security.service.OAuth2MemberDetailsService;
 import com.yayum.tour_info_service_server.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -33,6 +35,8 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final OAuth2MemberDetailsService oAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
 
     @Bean
     protected SecurityFilterChain config(HttpSecurity httpSecurity) throws Exception{
@@ -48,9 +52,15 @@ public class SecurityConfig {
 
                 // setting authorize of address
                 .authorizeHttpRequests(authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/auth/getTest").authenticated();
+                    authorizeRequests.requestMatchers("/auth/getTest", "/auth/logout").authenticated();
                     authorizeRequests.anyRequest().permitAll();
                 })
+
+                .oauth2Login(OAuth2LoginConfigurer ->
+                        OAuth2LoginConfigurer
+                                .successHandler(successHandler)
+//                                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
+                )
 
                 // 세션 state less
                 .sessionManagement(sessionManagementConfigurer ->
