@@ -17,35 +17,35 @@ import java.util.List;
 public class ReplyController {
   private final ReplyService replyService;
 
-  @GetMapping("/{mno}")
+  @GetMapping("/mno/{mno}")
   public ResponseEntity<List<ReplyDTO>> getListByMno(@PathVariable("mno") Long mno) {
     log.info("getReplyListByMno....");
     List<ReplyDTO> result = replyService.getListOfReplyByMember(mno);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @GetMapping("/{bno}")
+  @GetMapping("/bno/{bno}")
   public ResponseEntity<List<ReplyDTO>> getListByBno(@PathVariable("bno") Long bno) {
     log.info("getReplyListByBno....");
     List<ReplyDTO> result = replyService.getListOfReplyByBoard(bno);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @PostMapping("/register")
-  public ResponseEntity<String> register(@RequestBody ReplyDTO replyDTO) {
+  @PostMapping("/register") // 댓글은 parentMno가 null 이어야하구 대댓글은 parentMno를 받아야함.
+  public ResponseEntity<Long> register(@RequestBody ReplyDTO replyDTO) {
     replyService.saveReply(replyDTO);
-    return new ResponseEntity<>("successfully registered", HttpStatus.OK);
+    return new ResponseEntity<>(replyDTO.getRno(), HttpStatus.OK);
   }
 
   @PutMapping("/update/{rno}")
-  public ResponseEntity<String> update(@PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
+  public ResponseEntity<Long> update(@PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
     replyService.modify(replyDTO);
-    return new ResponseEntity<>("successfully updated", HttpStatus.OK);
+    return new ResponseEntity<>(replyDTO.getRno(), HttpStatus.OK);
   }
 
   @PutMapping("/delete/{rno}")
-  public ResponseEntity<String> delete(@PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
+  public ResponseEntity<Long> delete(@PathVariable("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
     replyService.delete(replyDTO);
-    return new ResponseEntity<>("successfully deleted", HttpStatus.OK);
+    return new ResponseEntity<>(replyDTO.getRno(), HttpStatus.OK);
   }
 }
