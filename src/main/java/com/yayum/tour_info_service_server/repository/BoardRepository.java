@@ -22,4 +22,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("delete from Board b where b.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno)")
     void removeBoard(Long pno);
 
+    Optional<Board> findBoardByBno(Long bno);
 }

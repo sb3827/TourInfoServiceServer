@@ -23,5 +23,4 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
 
     //게시글에 해당하는것 삭제
     void deleteAllByBoardPlacePKBoard(Board board);
-
 }
