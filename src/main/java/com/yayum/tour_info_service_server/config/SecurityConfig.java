@@ -49,7 +49,7 @@ public class SecurityConfig {
                 // csrf disable
                 .csrf(AbstractHttpConfigurer::disable)
                 //cors 설정
-                .cors(cors->corsConfigurationSource())
+                .cors(cors->cors.configurationSource(corsConfigurationSource()))
 
                 // setting exception handler
                 .exceptionHandling(exceptionHandlingConfigurer ->
@@ -101,7 +101,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "*")); // todo delete "*"
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
