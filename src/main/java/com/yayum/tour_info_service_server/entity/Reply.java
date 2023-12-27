@@ -19,7 +19,6 @@ public class Reply extends BaseEntity{
   private Long rno;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "member_name")
   private Member member;
 
   @ManyToOne(fetch = FetchType.LAZY)
