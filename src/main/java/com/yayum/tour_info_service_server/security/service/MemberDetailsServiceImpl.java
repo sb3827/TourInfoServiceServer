@@ -24,7 +24,7 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> result = memberRepository.findByEmail(username);
 
-        if (!result.isPresent()) {
+        if (result.isEmpty()) {
             throw new UsernameNotFoundException("unregistered users");
         }
         Member member = result.get();

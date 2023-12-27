@@ -16,5 +16,5 @@ public class FolderAllDTO { //폴더 전체 정보 들고옴
     private String title; //폴더 title
     private List<Long> pno; //장소 번호
     private List<String> name; //장소명
-
+    private List<String> src; //이미지
 }
