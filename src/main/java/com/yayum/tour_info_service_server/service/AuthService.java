@@ -14,6 +14,7 @@ public interface AuthService {
     ResponseDTO changePassword(ChangeMemberDTO changeMemberDTO);
     ResponseDTO resetPassword(MemberDTO memberDTO);
     Boolean checkValidate(String email);
+    void resendEmail(String email);
     default Member signupDtoToEntity(SignupRequestDTO signupDTO) {
         Member member;
 

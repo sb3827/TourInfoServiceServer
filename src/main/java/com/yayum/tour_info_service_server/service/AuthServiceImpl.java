@@ -1,6 +1,5 @@
 package com.yayum.tour_info_service_server.service;
 
-import com.yayum.tour_info_service_server.config.jwt.TokenProvider;
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.Member;
 import com.yayum.tour_info_service_server.repository.MemberRepository;
@@ -8,24 +7,20 @@ import com.yayum.tour_info_service_server.security.util.SecurityUtil;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
-import java.time.Duration;
 import java.util.*;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    @Autowired
-    private MailService mailService;
+    private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final TokenService tokenService;
@@ -34,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     public Long login(JwtRequestDTO requestDTO) {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
 
-        if (!result.isPresent()) {
+        if (result.isEmpty()) {
             throw new RuntimeException("유저 정보가 없습니다");
         }
 
@@ -55,9 +50,6 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("이메일 인증이 필요합니다.");
         }
 
-        //jwt token 생성 -> token return
-//        String token = tockenProvider.generateToken(member, Duration.ofMinutes(10));
-
         return member.getMno();
     }
 
@@ -74,9 +66,9 @@ public class AuthServiceImpl implements AuthService {
         member.changePassword(passwordEncoder.encode(member.getPassword()));
         member.changeIsValidate(false);
         try {
+            member = memberRepository.save(member);
             TokenDTO token = tokenService.generateTokens(member.getMno());
             mailService.sendValidateUrl(signupDTO.getEmail(), signupDTO.getName(), token.getToken());
-            memberRepository.save(member);
         } catch (MailException | MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage());
             throw new RuntimeException("메일 전송 오류");
@@ -156,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
         Optional<Member> result = memberRepository.findByEmail(memberDTO.getEmail());
 
         // 검색결과x
-        if (!result.isPresent()) {
+        if (result.isEmpty()) {
             return ResponseDTO.builder()
                     .msg("not found member")
                     .result(false)
@@ -216,6 +208,10 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
         Member member = result.get();
+
+        if (member.getIsValidate()){
+            return false;
+        }
         member.changeIsValidate(true);
         memberRepository.save(member);
 
@@ -226,5 +222,32 @@ public class AuthServiceImpl implements AuthService {
     public void logout() {
         Long mno = SecurityUtil.getCurrentMemberMno();
         tokenService.deleteRefreshToken(mno);
+    }
+
+    @Override
+    public void resendEmail(String email) {
+        Optional<Member> result = memberRepository.findByEmail(email);
+
+        if (result.isEmpty()) {
+            throw new RuntimeException("존재하지 않는 이메일");
+        }
+
+        try {
+            Member member = result.get();
+            if (member.getIsValidate()) {
+                throw new RuntimeException("이미 인증된 이메일");
+            }
+            TokenDTO token = tokenService.generateTokens(member.getMno());
+            mailService.reSendValidateUrl(member.getEmail(), member.getName(), token.getToken());
+        } catch (MailException | MessagingException | UnsupportedEncodingException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("메일 전송 오류");
+        } catch (IllegalArgumentException | IllegalAccessException e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("토큰 생성 오류");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw e;
+        }
     }
 }
