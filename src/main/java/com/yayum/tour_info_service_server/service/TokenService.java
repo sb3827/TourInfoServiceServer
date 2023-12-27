@@ -1,5 +1,6 @@
 package com.yayum.tour_info_service_server.service;
 
+import com.nimbusds.oauth2.sdk.dpop.verifiers.AccessTokenValidationException;
 import com.yayum.tour_info_service_server.config.jwt.TokenProvider;
 import com.yayum.tour_info_service_server.dto.TokenDTO;
 import com.yayum.tour_info_service_server.entity.Member;
@@ -55,5 +56,12 @@ public class TokenService {
 
     public void deleteRefreshToken(Long mno) {
         refreshTokenService.deleteRefreshToken(mno);
+    }
+
+    public void validationToken(String token) throws AccessTokenValidationException {
+        if (!tokenProvider.validToken(token)){
+            throw new AccessTokenValidationException("잘못된 토큰");
+        }
+
     }
 }
