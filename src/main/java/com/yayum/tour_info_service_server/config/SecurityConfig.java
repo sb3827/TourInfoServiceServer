@@ -23,7 +23,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity(debug = true) // todo 완료 후 debug 제거
+@EnableWebSecurity
 @EnableMethodSecurity
 @Log4j2
 @RequiredArgsConstructor
