@@ -37,76 +37,64 @@ import java.util.Arrays;
 @Log4j2
 @RequiredArgsConstructor
 public class SecurityConfig {
-  private final TokenProvider tokenProvider;
-  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-  private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-  private final OAuth2MemberDetailsService oAuth2UserService;
-  private final OAuth2SuccessHandler successHandler;
+    private final CorsConfig corsConfig;
+    private final TokenProvider tokenProvider;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final OAuth2MemberDetailsService oAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
 
-  @Bean
-  protected SecurityFilterChain config(HttpSecurity httpSecurity) throws Exception {
-    return httpSecurity
-        // csrf disable
-        .csrf(AbstractHttpConfigurer::disable)
-        //cors 설정
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    @Bean
+    protected SecurityFilterChain config(HttpSecurity httpSecurity) throws Exception{
+        return httpSecurity
+                // csrf disable
+                .csrf(AbstractHttpConfigurer::disable)
+                //cors 설정
+                .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfig.corsConfigurationSource()))
 
-        // setting exception handler
-        .exceptionHandling(exceptionHandlingConfigurer ->
-            exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
-        )
+                // setting exception handler
+                .exceptionHandling(exceptionHandlingConfigurer ->
+                        exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                                .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
 
-        // setting authorize of address
-        .authorizeHttpRequests(authorizeRequests -> {
-          authorizeRequests.requestMatchers("/auth/getTest", "/auth/logout").authenticated();
-          authorizeRequests.anyRequest().permitAll();
-        })
+                // setting authorize of address
+                .authorizeHttpRequests(authorizeRequests -> {
+                    authorizeRequests.requestMatchers("/auth/getTest", "/auth/logout").authenticated();
+                    authorizeRequests.anyRequest().permitAll();
+                })
 
-        .oauth2Login(OAuth2LoginConfigurer ->
-                OAuth2LoginConfigurer
-                    .successHandler(successHandler)
+                .oauth2Login(OAuth2LoginConfigurer ->
+                        OAuth2LoginConfigurer
+                                .successHandler(successHandler)
 //                                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(oAuth2UserService))
-        )
+                )
 
-        // 세션 state less
-        .sessionManagement(sessionManagementConfigurer ->
-            sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 세션 state less
+                .sessionManagement(sessionManagementConfigurer ->
+                        sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-        // token filter를 filter chain 추가
-        .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                // token filter를 filter chain 추가
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
 
-        .build();
-  }
+                .build();
+    }
 
-  @Bean
-  // jwt filter bean
-  public JwtFilter jwtFilter() {
-    return new JwtFilter(tokenProvider);
-  }
+    @Bean
+    // jwt filter bean
+    public JwtFilter jwtFilter(){
+        return new JwtFilter(tokenProvider);
+    }
 
-  @Bean
-  // authentication bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+    @Bean
+    // authentication bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-  @Bean
+    @Bean
     // password encoder bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-
-  //cors
-  @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "*"));
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
-
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
