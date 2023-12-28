@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Data
 public class ReplyDTO {
   private Long rno;
+  private Long parentRno;
   private String text;
   private Long mno;
-  private String name;
   private Long bno;
   private LocalDateTime regDate, modDate;
 
