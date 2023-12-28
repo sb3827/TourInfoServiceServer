@@ -86,4 +86,27 @@ public class MailServiceImpl implements MailService {
 
         javaMailSender.send(message);
     }
+
+    @Override
+    public void reSendValidateUrl(String email, String name, String token) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        String title = name + "님의 yayum 이메일 인증(재전송)";
+        String text = "<h1>"+ name + "님의 재전송된 이메일 인증 입니다.</h1>" +
+                "<p>보내드린 <a href='http://localhost:8080/auth/email/validation?email=" + email + "&token=" + token +
+                "'>주소</a> 로 10분 이내로 접속하여 인증해 주세요.</p>" +
+                "<p>가입하신 내역이 없다면 이 메일을 무시하셔도 됩니다.</p>" +
+                "<meta charset='UTF-8'>";
+
+
+        helper.setFrom(new InternetAddress("noreply@yayum.com", "yayum", "UTF-8"));
+        //받는사람
+        helper.setTo(email);
+        //제목
+        helper.setSubject(title);
+        //내용
+        helper.setText(text, true);
+
+        javaMailSender.send(message);
+    }
 }

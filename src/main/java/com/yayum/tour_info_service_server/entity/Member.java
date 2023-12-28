@@ -25,10 +25,10 @@ public class Member extends BaseEntity {
   @Column(nullable = false)
   private String password;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private LocalDate birth;
 
-  @Column(nullable = false)
+  @Column//modify
   private String phone;
 
   @Column(nullable = false)
