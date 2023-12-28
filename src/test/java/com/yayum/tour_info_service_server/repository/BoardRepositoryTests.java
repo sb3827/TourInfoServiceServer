@@ -93,4 +93,12 @@ class BoardRepositoryTests {
         }
 
     }
+
+    @Test
+    public void findCourse() {
+        List<Object[]> result = boardRepository.findCourseBoard("test2");
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
 }

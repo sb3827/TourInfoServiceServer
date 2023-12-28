@@ -24,7 +24,7 @@ public interface BoardService {
     // 코스 수정
     Long modifyCourse(CourseBoardDTO courseBoardDTO) throws IllegalAccessException, SQLException;
 
-    // 장소 포스팅 정보 조회
+    // 장소, 코스 포스팅 정보 조회
     BoardDTO getBoardByBno(Long bno);
 
     // 메인 포스팅 조회
@@ -38,6 +38,9 @@ public interface BoardService {
 
     // 회원별 코스 포스팅 정보 조회
     List<BoardReplyCountDTO> getCourseBoardByMno(Long mno);
+
+    // 코스 검색 조회
+    List<BoardSearchDTO> findCourseBoard(String search);
 
 
     default Board placeDtoToEntity(PlaceBoardDTO placeBoardDTO) {

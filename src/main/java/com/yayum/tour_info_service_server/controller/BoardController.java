@@ -45,10 +45,19 @@ public class BoardController {
 
     // 장소 포스팅 수정
     @PutMapping(value = {"/place/posting/update"})
-    public ResponseEntity<Long> modifyPlace(@RequestBody PlaceBoardDTO placeBoardDTO) {
+    public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody PlaceBoardDTO placeBoardDTO) {
         log.info("modify...dto: " + placeBoardDTO);
-        Long bno = boardService.placeBoardModify(placeBoardDTO);
-        return new ResponseEntity<>(bno, HttpStatus.OK);
+        Map<String, Long> result = new HashMap<>();
+        if (!SecurityUtil.validateMno(placeBoardDTO.getWriter())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try {
+            Long bno = boardService.placeBoardModify(placeBoardDTO);
+            result.put("bno", bno);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     // 코스 게시글 수정 address
@@ -58,9 +67,9 @@ public class BoardController {
         log.info("courseBoardDTO: " + courseBoardDTO);
         Map<String, Long> result = new HashMap<>();
         // token 없이 controller Test시 제거할 것
-//    if (!SecurityUtil.validateMno(courseBoardDTO.getWriter())) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
+    if (!SecurityUtil.validateMno(courseBoardDTO.getWriter())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
         try {
             Long bno = boardService.modifyCourse(courseBoardDTO);
             result.put("bno", bno);
@@ -108,6 +117,14 @@ public class BoardController {
         log.info("getBoardByMno... bno: " + mno);
         List<BoardReplyCountDTO> boardReplyCountDTO = boardService.getCourseBoardByMno(mno);
         return new ResponseEntity<>(boardReplyCountDTO, HttpStatus.OK);
+    }
+
+    // 코스 검색 조회
+    @GetMapping(value = {"/course/search={search}"})
+    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@PathVariable("search") String search) {
+        log.info("Search.... : "+search);
+        List<BoardSearchDTO> boardSearchDTO = boardService.findCourseBoard(search);
+        return new ResponseEntity<>(boardSearchDTO, HttpStatus.OK);
     }
 
 }

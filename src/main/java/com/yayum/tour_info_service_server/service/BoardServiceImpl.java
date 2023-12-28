@@ -267,6 +267,10 @@ public class BoardServiceImpl implements BoardService {
               .title((String) object[1])
               .replyCount((Long)object[2])
               .regdate((LocalDateTime) object[3])
+              .src((String) object[4])
+              .likes((Integer)object[5])
+              .score((Double) object[6])
+              .writer((Long) object[7])
               .build();
       boardReplyCountDTOS.add(boardReplyCountDTO);
     }
@@ -289,6 +293,9 @@ public class BoardServiceImpl implements BoardService {
               .replyCount((Long) objects[4])
               .mno((Long) objects[5])
               .regdate((LocalDateTime) objects[6])
+              .likes((Integer) objects[7])
+              .score((Double) objects[8])
+
               .build();
       boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
 
@@ -309,10 +316,35 @@ public class BoardServiceImpl implements BoardService {
               .title((String) object[1])
               .replyCount((Long)object[2])
               .regdate((LocalDateTime) object[3])
+              .src((String) object[4])
+              .likes((Integer)object[5])
+              .score((Double) object[6])
+              .writer((Long) object[7])
               .build();
       boardReplyCountDTOS.add(boardReplyCountDTO);
     }
     return boardReplyCountDTOS;
+  }
+
+  @Override
+  public List<BoardSearchDTO> findCourseBoard(String search) {
+    List<Object[]> result = boardRepository.findCourseBoard(search);
+    List<BoardSearchDTO> boardSearchDTOS = new ArrayList<>();
+    if (result.isEmpty()) {
+      return null;
+    }
+    for (Object[] objects: result) {
+      BoardSearchDTO boardSearchDTO = BoardSearchDTO.builder()
+              .bno((Long) objects[0])
+              .title((String) objects[1])
+              .likes((Integer) objects[2])
+              .score((Double) objects[3])
+              .mno((Long) objects[4])
+              .regDate((LocalDateTime) objects[5])
+              .build();
+      boardSearchDTOS.add(boardSearchDTO);
+    }
+    return boardSearchDTOS;
   }
 
   // 메인 조회
