@@ -3,10 +3,14 @@ package com.yayum.tour_info_service_server.repository;
 import com.yayum.tour_info_service_server.entity.Board;
 import com.yayum.tour_info_service_server.entity.BoardPlace;
 import com.yayum.tour_info_service_server.entity.BoardPlacePK;
+import com.yayum.tour_info_service_server.entity.Image;
 import jakarta.transaction.Transactional;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPlacePK> {
 
@@ -28,5 +32,10 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Transactional
     @Query("Delete from BoardPlace bp where bp.boardPlacePK.board.bno = :bno")
     void deleteByBno(Long bno);
+
+    // bno 넣을때 해당하는 boardPlace 반환
+    @Transactional
+    @Query("SELECT bp FROM BoardPlace bp WHERE bp.boardPlacePK.board.bno=:bno")
+    List<BoardPlace> selectBPbyBno(@Param("bno") Long bno);
 
 }

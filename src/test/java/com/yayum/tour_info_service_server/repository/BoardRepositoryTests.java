@@ -6,12 +6,10 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.parameters.P;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class BoardRepositoryTests {
@@ -20,17 +18,17 @@ class BoardRepositoryTests {
     BoardRepository boardRepository;
 
     @Test
-    void remove(){
+    void remove() {
         boardRepository.removeBoard(1L);
     }
 
     @Test
-    void course(){
+    void course() {
         System.out.println(boardRepository.boardIsCourse(5L));
     }
 
     @Test
-    void returnBno(){
+    void returnBno() {
         System.out.println(boardRepository.returnBnos(26L));
     }
 
@@ -45,7 +43,6 @@ class BoardRepositoryTests {
 //    }
 
 
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -54,39 +51,46 @@ class BoardRepositoryTests {
 
         IntStream.rangeClosed(1, 5).forEach(i -> {
 
-        Member member = Member.builder().mno(1L).build();
+            Member member = Member.builder().mno(1L).build();
 
-        Board board = Board.builder()
-            .title("title" + i)
-            .content("content" + i)
-            .score(Math.random() * i)
-            .isAd(false)
-            .isCourse(true)
-            .likes(i)
-            .writer(member)
-            .build();
-        boardRepository.save(board);
-    });
-  }
+            Board board = Board.builder()
+                    .title("title" + i)
+                    .content("content" + i)
+                    .score(Math.random() * i)
+                    .isAd(false)
+                    .isCourse(true)
+                    .likes(i)
+                    .writer(member)
+                    .build();
+            boardRepository.save(board);
+        });
+    }
 
-//  @Transactional
-//  @Test
-//  public void getPlaceBoardTest() {
-//    List<Object[]> result = boardRepository.getPlaceBoardByBno(3L);
-//    System.out.println(result);
-//  }
-//
-//  @Transactional
-//  @Test
-//  public void getCoarseBoardTest() {
-//    List<Object[]> result = boardRepository.getCourseBoardByBno(8L);
-//    System.out.println(result);
-//  }
+    @Transactional
+    @Test
+    public void getBoardTest() {
+        List<Object[]> result = boardRepository.getPlaceBoardByBno(3L);
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
 
-//  @Transactional
-//  @Test
-//  public void getBoardByMnoTest() {
-//    List<Object[]> result = boardRepository.getBoardByMno(1L);
-//    System.out.println(result);
-//  }
+
+    @Transactional
+    @Test
+    public void getBoardByMnoTest() {
+        List<Object[]> result = boardRepository.getBoardByMno(5L);
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    @Test
+    public void gettest() {
+        List<Object[]> result = boardRepository.getBoardByPno(3L);
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
+
+    }
 }

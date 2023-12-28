@@ -51,7 +51,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
   //board 삭제할때 Report의 bno값을 null값으로 변경시켜줌
   @Modifying
-  @Query("UPDATE Report r SET r.board.bno = null where r.board.bno=:bno")
+  @Query("UPDATE Report r SET r.board_bno = null where r.board_bno=:bno")
   void updateReportByBoardBno(@Param("bno") Long bno);
 
 }

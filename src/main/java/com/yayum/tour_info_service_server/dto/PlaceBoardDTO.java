@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CourseBoardDTO {
+public class PlaceBoardDTO {
   private Long bno;
 
   private String title;
@@ -31,7 +31,7 @@ public class CourseBoardDTO {
 
   private LocalDateTime regDate, modDate;
 
-  private List<BoardPlacePKDTO> coursePlaceList;
+  private Long pno;
 
   private List<String> srcList; //이미지 경로
 

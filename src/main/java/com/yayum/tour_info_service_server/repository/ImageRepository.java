@@ -29,10 +29,11 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
   void deleteByBno(Long bno);
 
 
-  // bno 넣을때 해당하는 ino 반환
+  // bno 넣을때 해당하는 image 반환
   @Transactional
   @Query("SELECT i FROM Image i WHERE i.board.bno=:bno")
   List<Image> selectImageByBno(@Param("bno") Long bno);
 
+  List<Image> findAllByBoard(Board board);
 
 }

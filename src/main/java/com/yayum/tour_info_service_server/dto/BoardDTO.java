@@ -1,10 +1,12 @@
 package com.yayum.tour_info_service_server.dto;
 
-import com.yayum.tour_info_service_server.entity.Image;
+import com.yayum.tour_info_service_server.entity.Member;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,9 +33,5 @@ public class BoardDTO {
   private Long writer;
 
   private LocalDateTime regDate, modDate;
-
-  private Long pno;
-
-  private List<String> src; //이미지 경로
-
 }
+
