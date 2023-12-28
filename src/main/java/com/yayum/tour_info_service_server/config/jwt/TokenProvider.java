@@ -1,16 +1,18 @@
 package com.yayum.tour_info_service_server.config.jwt;
 
 import com.yayum.tour_info_service_server.entity.Member;
+import com.yayum.tour_info_service_server.entity.RefreshToken;
+import com.yayum.tour_info_service_server.repository.RefreshTokenRepository;
 import com.yayum.tour_info_service_server.security.dto.AuthMemberDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TokenProvider {
     private final JwtProperties jwtProperties;
+    private final RefreshTokenRepository refreshTokenRepository;
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
     private Key key;
@@ -55,21 +58,40 @@ public class TokenProvider {
                 .compact();
     }
 
-    public String generateRefresh(String mno) {
+    @Transactional
+    public String generateRefresh(Long mno) {
         Date now = new Date();
 
         key = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes());
 
-        return Jwts.builder()
+        String refreshToken = Jwts.builder()
                 .header()
                 .add("typ","JWT")
                 .and()
                 .issuer(jwtProperties.getIssuer())
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + Duration.ofHours(3).toMillis()))
-                .subject(mno)
+                .subject(String.valueOf(mno))
                 .signWith(key)
                 .compact();
+
+        Optional<RefreshToken> result = refreshTokenRepository.findByUserId(mno);
+
+        RefreshToken refreshTokenEntity;
+
+        if (result.isPresent()){
+            refreshTokenEntity = result.get();
+            refreshTokenEntity.update(refreshToken);
+        } else {
+            refreshTokenEntity = RefreshToken.builder()
+                    .userId(mno)
+                    .refreshToken(refreshToken)
+                    .build();
+        }
+
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        return refreshToken;
     }
 
     // 유효 token 검증 method

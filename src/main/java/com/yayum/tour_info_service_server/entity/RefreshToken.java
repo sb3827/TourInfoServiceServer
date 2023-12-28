@@ -1,25 +1,27 @@
 package com.yayum.tour_info_service_server.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class RefreshToken extends BaseEntity{
+public class RefreshToken{
     @Id
-    private Long key; // mno
-    private String value; // token
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(updatable = false)
+    private Long id;
 
-    public RefreshToken updateValue(String token) {
-        this.value = token;
+    @Column(nullable = false, unique = true)
+    private Long userId;
+
+    @Column(nullable = false)
+    private String refreshToken;
+
+    public RefreshToken update(String refreshToken) {
+        this.refreshToken = refreshToken;
         return this;
     }
 }

@@ -7,13 +7,14 @@ import com.yayum.tour_info_service_server.entity.Role;
 import java.util.Objects;
 
 public interface AuthService {
-    String login(JwtRequestDTO requestDTO);
+    Long login(JwtRequestDTO requestDTO);
     Long signup(SignupRequestDTO signupDTO);
     Boolean emailCheck(String email);
     String findEmail(String name, String phone);
     ResponseDTO changePassword(ChangeMemberDTO changeMemberDTO);
     ResponseDTO resetPassword(MemberDTO memberDTO);
-    Boolean checkValidate();
+    Boolean checkValidate(String email);
+    void resendEmail(String email);
     default Member signupDtoToEntity(SignupRequestDTO signupDTO) {
         Member member;
 
@@ -41,4 +42,6 @@ public interface AuthService {
         }
         return member;
     }
+
+    void logout();
 }
