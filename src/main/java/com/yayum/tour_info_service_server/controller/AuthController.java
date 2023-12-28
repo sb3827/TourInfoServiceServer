@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.coyote.BadRequestException;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
@@ -122,15 +124,25 @@ public class AuthController {
     }
 
     @GetMapping("/email/validation")
-    public ModelAndView checkValtidate(@RequestParam("email") String email, @RequestParam("token") String token) {
+    public ModelAndView checkValtidate(@RequestParam("email") String email, @RequestParam("token") String token) throws BadRequestException {
+        //todo token
         boolean isValid = authService.checkValidate(email);
+
+        try {
+            tokenService.validationToken(token);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new BadRequestException("잘못된 요청");
+        }
 
         if (isValid) {
             // 성공한 경우
             return new ModelAndView(new RedirectView("http://localhost:3000/login"));
         } else {
             // 실패한 경우 (badRequest)
-            return new ModelAndView("errorPage"); // 실패 시 보여줄 에러 페이지로 이동
+            // todo
+            throw new BadRequestException("잘못된 요청");
+//            return new ModelAndView("errorPage"); // 실패 시 보여줄 에러 페이지로 이동
         }
     }
 

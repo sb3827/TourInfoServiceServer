@@ -1,7 +1,5 @@
 package com.yayum.tour_info_service_server.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yayum.tour_info_service_server.dto.TokenDTO;
 import com.yayum.tour_info_service_server.service.OAuthService;
 import lombok.RequiredArgsConstructor;
