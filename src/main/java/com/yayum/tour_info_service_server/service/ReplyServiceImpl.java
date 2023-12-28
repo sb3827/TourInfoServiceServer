@@ -44,7 +44,7 @@ public class ReplyServiceImpl implements ReplyService {
     Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
     if (result.isPresent()) {
       Reply reply = result.get();
-      reply.changeText(reply.getText());
+      reply.changeText(replyDTO.getText());
       replyRepository.save(reply);
     }
   }
@@ -54,14 +54,10 @@ public class ReplyServiceImpl implements ReplyService {
     Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
     if (result.isPresent()) {
       Reply reply = result.get();
-      reply.changeText(null);
-      reply.changeMember(Member.builder().mno(null).build());
+      reply.changeText("삭제된 댓글입니다");
+      reply.changeMember(null);
       replyRepository.save(reply);
     }
   }
 
-  @Override
-  public void report(Long rno) {
-
-  }
 }

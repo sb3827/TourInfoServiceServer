@@ -19,22 +19,27 @@ public interface ReplyService {
 
   void delete(ReplyDTO replyDTO);
 
-  void report(Long rno);
-
   default Reply dtoToEntity(ReplyDTO replyDTO) {
-    Reply reply = Reply.builder()
-        .member(Member.builder().mno(replyDTO.getMno()).build())
-        .text(replyDTO.getText())
-        .board(Board.builder().bno(replyDTO.getBno()).build())
-        .parent(Reply.builder().rno(replyDTO.getRno()).build())
-        .rno(replyDTO.getRno())
-        .build();
+    Reply reply;
+    if (replyDTO.getParentRno() != null) {
+      reply = Reply.builder()
+          .member(Member.builder().mno(replyDTO.getMno()).build())
+          .text(replyDTO.getText())
+          .board(Board.builder().bno(replyDTO.getBno()).build())
+          .parent(Reply.builder().rno(replyDTO.getParentRno()).build())
+          .build();
+    } else {
+      reply = Reply.builder()
+          .member(Member.builder().mno(replyDTO.getMno()).build())
+          .text(replyDTO.getText())
+          .board(Board.builder().bno(replyDTO.getBno()).build())
+          .build();
+    }
     return reply;
   }
 
   default ReplyDTO entityToDto(Reply reply) {
     ReplyDTO replyDTO = ReplyDTO.builder()
-        .name(reply.getMember().getName())
         .rno(reply.getRno())
         .text(reply.getText())
         .bno(reply.getBoard().getBno())
