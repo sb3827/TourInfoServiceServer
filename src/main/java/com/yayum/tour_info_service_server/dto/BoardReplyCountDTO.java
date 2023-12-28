@@ -16,7 +16,11 @@ import java.time.LocalDateTime;
 public class BoardReplyCountDTO {
     private Long bno;
     private String title;
+    private String src;
     private Long replyCount;
     private LocalDateTime regdate;
+    private int likes;
+    private Double score;
+    private Long writer;
 
 }

@@ -21,5 +21,7 @@ public class BoardPlaceReplyCountDTO {
     private Long replyCount;
     private Long mno;
     private LocalDateTime regdate;
+    private int likes;
+    private Double score;
 
 }
