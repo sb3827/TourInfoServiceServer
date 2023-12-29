@@ -13,7 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/reply")
@@ -38,39 +40,46 @@ public class ReplyController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<Long> register(@RequestBody ReplyDTO replyDTO) {
+  public ResponseEntity<Map<String, Long>> register(@RequestBody ReplyDTO replyDTO) {
     log.info("saveReply... " + replyDTO);
+    Map<String, Long> result = new HashMap<>();
+    result.put("bno", replyDTO.getBno());
+
     try {
       replyService.saveReply(replyDTO);
+      return new ResponseEntity<>(result, HttpStatus.OK);
     } catch (Exception e) {
       log.error(e.getMessage());
       throw e;
     }
-    return new ResponseEntity<>(replyDTO.getRno(), HttpStatus.OK);
   }
 
-  @PutMapping("/update/rno")
-  public ResponseEntity<Long> update(@RequestParam("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
+  @PutMapping("/update")
+  public ResponseEntity<Map<String, Long>> update(@RequestBody ReplyDTO replyDTO) {
     if (!SecurityUtil.validateMno(replyDTO.getMno())) {
       log.info("NO MNO match@@");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    Map<String, Long> result = new HashMap<>();
+    result.put("rno", replyDTO.getRno());
     log.info("updateReply...replyDTO : " + replyDTO);
     replyService.modify(replyDTO);
-    return new ResponseEntity<>(rno, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @PutMapping("/delete/rno")
-  public ResponseEntity<Long> delete(@RequestParam("rno") Long rno, @RequestBody ReplyDTO replyDTO) {
+  @PutMapping("/delete")
+  public ResponseEntity<Map<String, Long>> delete(@RequestBody ReplyDTO replyDTO) {
     if (!SecurityUtil.validateMno(replyDTO.getMno())) {
       log.info("NO MNO match@@");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+    Map<String, Long> result = new HashMap<>();
+    result.put("rno", replyDTO.getRno());
     log.info("deleteReply...replyDTO : " + replyDTO);
     replyDTO.setText("삭제된 댓글입니다");
     replyDTO.setMno(null);
     replyService.modify(replyDTO);
-    return new ResponseEntity<>(rno, HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
