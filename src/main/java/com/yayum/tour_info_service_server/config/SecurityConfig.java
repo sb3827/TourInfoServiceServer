@@ -32,7 +32,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity(debug = true) // todo 완료 후 debug 제거
+@EnableWebSecurity
 @EnableMethodSecurity
 @Log4j2
 @RequiredArgsConstructor
