@@ -25,14 +25,14 @@ public class ReplyController {
   private final ReplyService replyService;
   private final ReportService reportService;
 
-  @GetMapping("/mno")
+  @GetMapping("")
   public ResponseEntity<List<ReplyDTO>> getListByMno(@RequestParam("mno") Long mno) {
     log.info("getReplyListByMno....");
     List<ReplyDTO> result = replyService.getListOfReplyByMember(mno);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @GetMapping("/bno")
+  @GetMapping("")
   public ResponseEntity<List<ReplyDTO>> getListByBno(@RequestParam("bno") Long bno) {
     log.info("getReplyListByBno....");
     List<ReplyDTO> result = replyService.getListOfReplyByBoard(bno);
