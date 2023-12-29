@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class FollowDTO {
-  private Long mno;
+  private Long memberMno;
   private Long followerMno;
 }
