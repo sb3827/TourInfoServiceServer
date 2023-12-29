@@ -57,7 +57,7 @@ public class ReplyController {
   @PutMapping("/update")
   public ResponseEntity<Map<String, Long>> update(@RequestBody ReplyDTO replyDTO) {
     if (!SecurityUtil.validateMno(replyDTO.getMno())) {
-      log.info("NO MNO match@@");
+      log.error("mno not matched");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     Map<String, Long> result = new HashMap<>();
@@ -70,7 +70,7 @@ public class ReplyController {
   @PutMapping("/delete")
   public ResponseEntity<Map<String, Long>> delete(@RequestBody ReplyDTO replyDTO) {
     if (!SecurityUtil.validateMno(replyDTO.getMno())) {
-      log.info("NO MNO match@@");
+      log.error("mno not matched");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     Map<String, Long> result = new HashMap<>();
