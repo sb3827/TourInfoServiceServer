@@ -35,10 +35,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             throw new RuntimeException(e);
         }
 
-        // redirect http://localhost:8080/oauth/login
-        String targetUrl = UriComponentsBuilder.fromUriString("/oauth/login")
-                .queryParam("token", token.getToken())
-                .queryParam("refreshToken", token.getRefreshToken())
+        String targetUrl = UriComponentsBuilder
+//                .fromUriString("/home")
+                .fromHttpUrl("http://localhost:3000/oauth2")
+                .queryParam("mno", authMemberDTO.getMno())
+                .queryParam("tokens", token)
                 .build()
                 .toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
