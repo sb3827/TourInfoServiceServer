@@ -37,13 +37,39 @@ public interface ReplyService {
   }
 
   default ReplyDTO entityToDto(Reply reply) {
-    ReplyDTO replyDTO = ReplyDTO.builder()
-        .rno(reply.getRno())
-        .text(reply.getText())
-        .bno(reply.getBoard().getBno())
-        .regDate(reply.getRegDate())
-        .modDate(reply.getModDate())
-        .build();
+    ReplyDTO replyDTO;
+    if (reply.getMember() != null) {
+      if (reply.getParent() != null && reply.getParent().getRno() != null) {
+        replyDTO = ReplyDTO.builder()
+            .rno(reply.getRno())
+            .text(reply.getText())
+            .bno(reply.getBoard().getBno())
+            .mno(reply.getMember().getMno())
+            .parentRno(reply.getParent().getRno())
+            .regDate(reply.getRegDate())
+            .modDate(reply.getModDate())
+            .build();
+      } else {
+        replyDTO = ReplyDTO.builder()
+            .rno(reply.getRno())
+            .text(reply.getText())
+            .bno(reply.getBoard().getBno())
+            .mno(reply.getMember().getMno())
+            .regDate(reply.getRegDate())
+            .modDate(reply.getModDate())
+            .build();
+      }
+    } else {
+      // 유저가 삭제한 댓글에 의해 mno가 null인 경우에 대한 처리
+      replyDTO = ReplyDTO.builder()
+          .rno(reply.getRno())
+          .text(reply.getText())
+          .bno(reply.getBoard().getBno())
+          .regDate(reply.getRegDate())
+          .modDate(reply.getModDate())
+          .build();
+    }
     return replyDTO;
   }
+
 }
