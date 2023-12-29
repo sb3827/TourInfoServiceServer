@@ -34,7 +34,7 @@ public class ReplyServiceImpl implements ReplyService {
   }
 
   @Override
-  public void saveReply(ReplyDTO replyDTO) {
+  public void saveReply(ReplyDTO replyDTO){
     Reply reply = dtoToEntity(replyDTO);
     replyRepository.save(reply);
   }
@@ -48,16 +48,4 @@ public class ReplyServiceImpl implements ReplyService {
       replyRepository.save(reply);
     }
   }
-
-  @Override
-  public void delete(ReplyDTO replyDTO) {
-    Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
-    if (result.isPresent()) {
-      Reply reply = result.get();
-      reply.changeText("삭제된 댓글입니다");
-      reply.changeMember(null);
-      replyRepository.save(reply);
-    }
-  }
-
 }

@@ -12,12 +12,10 @@ public interface ReplyService {
 
   List<ReplyDTO> getListOfReplyByMember(Long mno);    // 회원이 작성한 댓글 목록
 
-
   void saveReply(ReplyDTO replyDTO);
 
   void modify(ReplyDTO replyDTO);
 
-  void delete(ReplyDTO replyDTO);
 
   default Reply dtoToEntity(ReplyDTO replyDTO) {
     Reply reply;
