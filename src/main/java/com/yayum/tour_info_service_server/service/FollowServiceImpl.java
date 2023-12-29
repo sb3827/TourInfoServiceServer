@@ -5,8 +5,10 @@ import com.yayum.tour_info_service_server.entity.Follow;
 import com.yayum.tour_info_service_server.entity.FollowPK;
 import com.yayum.tour_info_service_server.entity.Member;
 import com.yayum.tour_info_service_server.repository.FollowRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +24,14 @@ public class FollowServiceImpl implements FollowService {
   @Override
   public List<FollowDTO> getListOfFollower(Long mno) {
     Member member = Member.builder().mno(mno).build();
-    List<Follow> result = followRepository.getFollowerByMember(member);
+    List<Follow> result = followRepository.getFollowersByMember(member);
+    return result.stream().map(follow -> entityToDto(follow)).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<FollowDTO> getListOfFollowing(Long mno) {
+    Member member = Member.builder().mno(mno).build();
+    List<Follow> result = followRepository.getMembersByFollower(member);
     return result.stream().map(follow -> entityToDto(follow)).collect(Collectors.toList());
   }
 
@@ -33,7 +42,8 @@ public class FollowServiceImpl implements FollowService {
   }
 
   @Override
-  public void unFollow(FollowPK followPK) {
-    followRepository.deleteById(followPK);
+  @Transactional
+  public void unFollow(Long mno,Long follower) {
+    followRepository.deleteByMemberAndFollower(Member.builder().mno(mno).build(), Member.builder().mno(follower).build());
   }
 }

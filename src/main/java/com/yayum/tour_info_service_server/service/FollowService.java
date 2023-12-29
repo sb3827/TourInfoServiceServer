@@ -11,14 +11,15 @@ import java.util.List;
 public interface FollowService {
   List<FollowDTO> getListOfFollower(Long mno);
 
+  List<FollowDTO> getListOfFollowing(Long mno);
 
   void follow(FollowDTO followDTO);
 
-  void unFollow(FollowPK followPK);
+  void unFollow(Long mno,Long follower);
 
   default FollowDTO entityToDto(Follow follow) {
     FollowDTO followDTO = FollowDTO.builder()
-        .mno(follow.getFollowPk().getFollower().getMno())
+        .memberMno(follow.getFollowPk().getFollower().getMno())
         .followerMno(follow.getFollowPk().getMember().getMno())
         .build();
     return followDTO;
@@ -27,7 +28,7 @@ public interface FollowService {
   default Follow dtoToEntity(FollowDTO followDTO) {
     Follow follow = Follow.builder().
         followPk(FollowPK.builder()
-            .member(Member.builder().mno(followDTO.getMno()).build())
+            .member(Member.builder().mno(followDTO.getMemberMno()).build())
             .follower(Member.builder().mno(followDTO.getFollowerMno()).build())
             .build())
         .build();
