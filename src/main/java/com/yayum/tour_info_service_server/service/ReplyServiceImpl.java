@@ -44,6 +44,9 @@ public class ReplyServiceImpl implements ReplyService {
     Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
     if (result.isPresent()) {
       Reply reply = result.get();
+      if (replyDTO.getMno()==null){   // 유저댓글삭제시 controller 에서 mno를 setNull함
+        reply.changeMember(null);
+      }
       reply.changeText(replyDTO.getText());
       replyRepository.save(reply);
     }
