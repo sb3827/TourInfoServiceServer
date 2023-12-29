@@ -42,7 +42,7 @@ public class FollowController {
   }
 
   // 회원이 팔로우 중인 사람들 조회(팔로잉 조회)        조회대상회원 -> memberMno 팔로잉->followerMno 로 나옴
-  @GetMapping("/following/mno")
+  @GetMapping("/following")
   public ResponseEntity<List<FollowDTO>> getListOfFollowing(@RequestParam("mno") Long mno) {
     log.info("List of Following : " + mno);
     List<FollowDTO> result = followService.getListOfFollowing(mno);
@@ -50,7 +50,7 @@ public class FollowController {
   }
 
   // 회원을 팔로우 중인 사람들 조회(팔로워조회)       조회대상회원-> followerMno  팔로워->memberMno 로 나옴
-  @GetMapping("/follower/mno")
+  @GetMapping("/follower")
   public ResponseEntity<List<FollowDTO>> getListOfFollower(@RequestParam("mno") Long mno) {
     log.info("List of follower : " + mno);
     List<FollowDTO> result = followService.getListOfFollower(mno);
