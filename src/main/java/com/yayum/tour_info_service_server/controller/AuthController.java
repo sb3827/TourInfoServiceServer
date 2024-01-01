@@ -40,14 +40,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> login(@RequestBody JwtRequestDTO requestDTO) {
-        TokenDTO result;
+    public ResponseEntity<ResponseMapDTO> login(@RequestBody JwtRequestDTO requestDTO) {
+        ResponseMapDTO result;
         try {
             Long mno = authService.login(requestDTO);
             String refreshToken = tokenService.generateRefreshToken(mno);
-            result = TokenDTO.builder()
+            TokenDTO tokens = TokenDTO.builder()
                     .refreshToken(refreshToken)
                     .token(tokenService.createNewAccessToken(refreshToken))
+                    .build();
+            result = ResponseMapDTO.builder()
+                    .response(Map.of("mno", mno, "tokens", tokens))
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());

@@ -59,6 +59,7 @@ public class Member extends BaseEntity {
   public void changeIsValidate(Boolean isValidate){this.isValidate=isValidate;};
 
   @ElementCollection(fetch = FetchType.LAZY)
+  @Enumerated(EnumType.STRING)
   @Builder.Default
   private Set<Role> roleSet = new HashSet<>();
 
