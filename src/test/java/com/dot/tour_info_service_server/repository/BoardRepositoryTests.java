@@ -1,8 +1,5 @@
 package com.dot.tour_info_service_server.repository;
 
-<<<<<<< HEAD:src/test/java/com/yayum/tour_info_service_server/repository/BoardRepositoryTests.java
-=======
->>>>>>> 207487ec6237182fd570d05ca0a9c4f91e640377:src/test/java/com/dot/tour_info_service_server/repository/BoardRepositoryTests.java
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,4 +28,8 @@ class BoardRepositoryTests {
         System.out.println(boardRepository.returnBnos(26L));
     }
 
+    @Test
+    void setNullTest(){
+        boardRepository.setNullMno(16L);
+    }
 }
