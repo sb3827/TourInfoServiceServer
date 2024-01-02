@@ -33,7 +33,8 @@ class CartRepositoryTests {
 
     @Test
     void removeCartTest(){
-        cartRepository.removeCart(16L);
+        cartRepository.removeCartByMno(16L);
+//        cartRepository.removeCart(16L);
     }
 
 }
