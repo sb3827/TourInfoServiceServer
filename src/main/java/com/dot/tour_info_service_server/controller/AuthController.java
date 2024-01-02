@@ -1,7 +1,6 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
-import com.yayum.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.AuthService;
 import com.dot.tour_info_service_server.service.TokenService;

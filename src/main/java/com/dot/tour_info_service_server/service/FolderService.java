@@ -5,8 +5,6 @@ import com.dot.tour_info_service_server.dto.FolderDTO;
 import com.dot.tour_info_service_server.dto.FolderRegistDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
-import com.yayum.tour_info_service_server.dto.*;
-import com.yayum.tour_info_service_server.entity.*;
 
 import java.util.List;
 
