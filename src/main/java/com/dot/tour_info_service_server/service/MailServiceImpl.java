@@ -41,7 +41,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendPassword(String email, String name, String password) {
         SimpleMailMessage message = new SimpleMailMessage();
-        String title = name + "님의 yayum 임시 비밀번호 발급안내";
+        String title = name + "님의 Dot 임시 비밀번호 발급안내";
         String text = name + "님의 임시 비밀번호 발급 안내 입니다.\n" +
                 "임시 비밀번호 " + password + " 로 발급되었습니다.";
         try {
@@ -65,15 +65,15 @@ public class MailServiceImpl implements MailService {
     public void sendValidateUrl(String email, String name, String token) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        String title = name + "님의 yayum 이메일 인증";
-        String text = "<h1>"+ name + "님의 yayum 가입을 축하드립니다.</h1>" +
+        String title = name + "님의 DoT 이메일 인증";
+        String text = "<h1>"+ name + "님의 DoT 가입을 축하드립니다.</h1>" +
                 "<p>보내드린 <a href='http://localhost:8080/auth/email/validation?email=" + email + "&token=" + token +
                 "'>주소</a> 로 10분 이내로 접속하여 인증해 주세요.</p>" +
                 "<p>가입하신 내역이 없다면 이 메일을 무시하셔도 됩니다.</p>" +
                 "<meta charset='UTF-8'>";
 
 
-        helper.setFrom(new InternetAddress("noreply@yayum.com", "yayum", "UTF-8"));
+        helper.setFrom(new InternetAddress("noreply@DoT.com", "DoT", "UTF-8"));
         //받는사람
         helper.setTo(email);
         //제목
@@ -88,7 +88,7 @@ public class MailServiceImpl implements MailService {
     public void reSendValidateUrl(String email, String name, String token) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        String title = name + "님의 yayum 이메일 인증(재전송)";
+        String title = name + "님의 DoT 이메일 인증(재전송)";
         String text = "<h1>"+ name + "님의 재전송된 이메일 인증 입니다.</h1>" +
                 "<p>보내드린 <a href='http://localhost:8080/auth/email/validation?email=" + email + "&token=" + token +
                 "'>주소</a> 로 10분 이내로 접속하여 인증해 주세요.</p>" +
@@ -96,7 +96,7 @@ public class MailServiceImpl implements MailService {
                 "<meta charset='UTF-8'>";
 
 
-        helper.setFrom(new InternetAddress("noreply@yayum.com", "yayum", "UTF-8"));
+        helper.setFrom(new InternetAddress("noreply@DoT.com", "DoT", "UTF-8"));
         //받는사람
         helper.setTo(email);
         //제목

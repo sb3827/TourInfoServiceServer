@@ -2,7 +2,6 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.CartDTO;
 import com.dot.tour_info_service_server.entity.*;
-import com.yayum.tour_info_service_server.entity.*;
 
 public interface CartService {
 
