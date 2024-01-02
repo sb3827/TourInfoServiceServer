@@ -44,8 +44,8 @@ public class PlaceController {
         return new ResponseEntity<>(placeList, HttpStatus.OK);
     }
 
-    @DeleteMapping(value="/delete/{pno}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> removePlace(@PathVariable Long pno){
+    @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Long>> removePlace(@RequestParam("pno") Long pno){
         log.info("delete..............");
         Map<String, Long> result = new HashMap<>();
         placeService.removePlace(pno);
