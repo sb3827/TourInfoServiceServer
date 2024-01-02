@@ -19,4 +19,9 @@ class DisciplinaryRepositoryTest {
         List<Disciplinary> result=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(mno);
         System.out.println(result.size());
     }
+
+    @Test
+    void setNullTest(){
+        disciplinaryRepository.setNullMno(16L);
+    }
 }
