@@ -5,7 +5,7 @@ import com.dot.tour_info_service_server.dto.SearchUserListDTO;
 import com.dot.tour_info_service_server.dto.UserInfoDTO;
 import com.dot.tour_info_service_server.dto.UserProfileDTO;
 import com.dot.tour_info_service_server.entity.Member;
-import com.dot.tour_info_service_server.repository.MemberRepository;
+import com.dot.tour_info_service_server.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,6 +20,13 @@ import java.util.*;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final BoardRepository boardRepository;
+    private final BoardLikeRepository boardLikeRepository;
+    private final CartRepository cartRepository;
+    private final DisciplinaryRepository disciplinaryRepository;
+    private final FolderRepository folderRepository;
+    private final FollowRepository followRepository;
+    private final ReplyRepository replyRepository;
 
     // 회원정보조회
     @Override
@@ -72,6 +79,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteUserInfo(Long mno) {
+        boardRepository.setNullMno(mno);
+        boardLikeRepository.removeBoardLIkeByMno(mno);
+        cartRepository.removeCartByMno(mno);
+        disciplinaryRepository.setNullMno(mno);
+        folderRepository.removeFolderByMno(mno);
+        followRepository.deleteFollowByMno(mno);
+        replyRepository.setNullMno(mno);
         memberRepository.deleteById(mno);
     }
 
