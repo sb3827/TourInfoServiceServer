@@ -74,6 +74,10 @@ class MemberServiceImplTests {
         memberService.joinMember(5L);
     }
 
+    @Test
+    void removeMemberTest(){
+        memberService.deleteUserInfo(16L);
+    }
 }
 
 
