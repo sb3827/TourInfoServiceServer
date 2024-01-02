@@ -23,24 +23,29 @@ public class BoardController {
 
     // 장소 포스팅 등록
     @PostMapping(value = {"/place/posting/register"})
-    public ResponseEntity<Long> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
+    public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
+        Map<String, Long> result = new HashMap<>();
         Long bno = boardService.placeRegister(placeBoardDTO);
-        return new ResponseEntity<>(bno, HttpStatus.OK);
+        result.put("bno", bno);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 코스포스팅 등록
     @PostMapping(value = {"/course/posting/register"})
-    public ResponseEntity<Long> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
+    public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
+        Map<String, Long> result = new HashMap<>();
         Long bno = boardService.courseRegister(courseBoardDTO);
-        return new ResponseEntity<>(bno, HttpStatus.OK);
+        result.put("bno", bno);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 장소,코스 포스팅 삭제
-    @DeleteMapping(value = {"/place/posting/delete/bno={bno}", "/course/posting/delete/bno={bno}"})
-    public ResponseEntity<Long> remove(@PathVariable("bno") Long bno) {
-        log.info("delete...bno: " + bno);
+    @DeleteMapping(value = {"/place/posting/delete", "/course/posting/delete"})
+    public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) {
+        Map<String, Long> result = new HashMap<>();
         boardService.remove(bno);
-        return new ResponseEntity<>(bno, HttpStatus.OK);
+        result.put("bno", bno);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 장소 포스팅 수정
@@ -80,8 +85,8 @@ public class BoardController {
     }
 
     // 장소, 코스 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/bno={bno}", "/course/posting/bno={bno}"})
-    public ResponseEntity<BoardDTO> getPlaceBoard(@PathVariable("bno") Long bno) {
+    @GetMapping(value = {"/place/posting", "/course/posting"})
+    public ResponseEntity<BoardDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
         BoardDTO boardDTO = boardService.getBoardByBno(bno);
         return new ResponseEntity<>(boardDTO, HttpStatus.OK);
@@ -96,32 +101,32 @@ public class BoardController {
 
 
     //   회원별 장소 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/mno={mno}"})
-    public ResponseEntity<List<BoardReplyCountDTO>> getBoardByMno(@PathVariable("mno") Long mno) {
+    @GetMapping(value = {"/place/posting"})
+    public ResponseEntity<List<BoardReplyCountDTO>> getBoardByMno(@RequestParam("mno") Long mno) {
         log.info("getBoardByMno... bno: " + mno);
         List<BoardReplyCountDTO> boardReplyCountDTO = boardService.getBoardByMno(mno);
         return new ResponseEntity<>(boardReplyCountDTO, HttpStatus.OK);
     }
 
     // 장소별 장소 포스팅 정보 조회
-    @GetMapping(value = {"/place/pno={pno}"})
-    public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@PathVariable("pno") Long pno) {
+    @GetMapping(value = {"/place"})
+    public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno) {
         log.info("getBoardByMno... bno: " + pno);
         List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno);
         return new ResponseEntity<>(boardPlaceReplyCountDTO, HttpStatus.OK);
     }
 
     // 회원별 코스 포스팅 정보 조회
-    @GetMapping(value = {"/course/posting/mno={mno}"})
-    public ResponseEntity<List<BoardReplyCountDTO>> getCourseBoardByMno(@PathVariable("mno") Long mno) {
+    @GetMapping(value = {"/course/posting"})
+    public ResponseEntity<List<BoardReplyCountDTO>> getCourseBoardByMno(@RequestParam("mno") Long mno) {
         log.info("getBoardByMno... bno: " + mno);
         List<BoardReplyCountDTO> boardReplyCountDTO = boardService.getCourseBoardByMno(mno);
         return new ResponseEntity<>(boardReplyCountDTO, HttpStatus.OK);
     }
 
     // 코스 검색 조회
-    @GetMapping(value = {"/course/search={search}"})
-    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@PathVariable("search") String search) {
+    @GetMapping(value = {"/course"})
+    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search) {
         log.info("Search.... : "+search);
         List<BoardSearchDTO> boardSearchDTO = boardService.findCourseBoard(search);
         return new ResponseEntity<>(boardSearchDTO, HttpStatus.OK);
