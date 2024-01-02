@@ -27,8 +27,8 @@ public class MemberController {
 
 
     // 회원정보 조회 검증 필요
-    @GetMapping(value="/info/{mno}")
-    public ResponseEntity<UserInfoDTO> findUserInfo(@PathVariable(value="mno") Long mno){
+    @GetMapping(value="/info")
+    public ResponseEntity<UserInfoDTO> findUserInfo(@RequestParam("mno") Long mno){
         log.info("findUserInfo........." + mno);
         if(SecurityUtil.validateMno(mno)){
             UserInfoDTO userInfoDTO = memberService.showUserInfo(mno);
@@ -53,16 +53,16 @@ public class MemberController {
     }
 
     // 회원 프로필 조회
-    @GetMapping(value="/profile/{name}")
-    public ResponseEntity<UserProfileDTO> findUserProfile(@PathVariable(value="name") String name){
+    @GetMapping(value="/profile")
+    public ResponseEntity<UserProfileDTO> findUserProfile(@RequestParam("name") String name){
         log.info("User Profile..........");
         UserProfileDTO userProfileDTO = memberService.showUserProfile(name);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 
     // 회원 탈퇴 검증 필요
-    @DeleteMapping(value="/delete/{mno}")
-    public ResponseEntity<Map<String, Long>> removeUserInfo(@PathVariable(value="mno") Long mno){
+    @DeleteMapping(value="/delete")
+    public ResponseEntity<Map<String, Long>> removeUserInfo(@RequestParam("mno") Long mno){
         log.info("User Delete......");
         Map<String, Long> result = new HashMap<>();
         if(SecurityUtil.validateMno(mno)){
@@ -76,8 +76,8 @@ public class MemberController {
     }
 
     // 회원 검색
-    @GetMapping(value="/find/{search}")
-    public ResponseEntity<List<SearchUserListDTO>> findUser(@PathVariable(value="search") String search){
+    @GetMapping(value="/find")
+    public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search){
         log.info("Searching User.......");
         List<SearchUserListDTO> userlist = memberService.searchUser(search);
         return new ResponseEntity<>(userlist, HttpStatus.OK);
@@ -92,8 +92,8 @@ public class MemberController {
     }
 
     // 회원가입 승인 ( 관리자만 )
-    @PutMapping(value = "/approve/{mno}")
-    public ResponseEntity<Map<String,Long>> joinMember(@PathVariable(value="mno") Long mno){
+    @PutMapping(value = "/approve")
+    public ResponseEntity<Map<String,Long>> joinMember(@RequestParam("mno") Long mno){
         log.info("Join..............");
         Map<String, Long> result = new HashMap<>();
         memberService.joinMember(mno);
