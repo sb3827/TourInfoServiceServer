@@ -1,7 +1,9 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Folder;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -23,5 +25,10 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
     //폴더명 조회
     @Query("select f.title from Folder f where f.member.mno=:mno")
     List<String> getFolderTitle(Long mno);
+
+    @Modifying
+    @Transactional
+    @Query("delete from Folder f where f.member.mno = :mno")
+    void removeFolderByMno(Long mno);
 
 }
