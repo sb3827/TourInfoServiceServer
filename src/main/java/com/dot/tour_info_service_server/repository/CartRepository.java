@@ -13,4 +13,9 @@ public interface CartRepository extends JpaRepository<Cart, CartPK> {
     @Transactional
     @Query("delete from Cart c where c.cartPK.place.pno = :pno")
     void removeCart(Long pno);
+
+    @Modifying
+    @Transactional
+    @Query("delete from Cart c where c.cartPK.member.mno = :mno")
+    void removeCartByMno(Long mno);
 }
