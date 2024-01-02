@@ -81,4 +81,8 @@ class ReplyRepositoryTest {
     });
   }
 
+  @Test
+  void setNullTest(){
+    replyRepository.setNullMno(16L);
+  }
 }
