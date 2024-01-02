@@ -12,7 +12,8 @@ class BoardLikeRepositoryTests {
 
     @Test
     void removeBoardLikeTest(){
-        boardLikeRepository.removeBoardLike(9L);
+        boardLikeRepository.removeBoardLIkeByMno(16L);
+//        boardLikeRepository.removeBoardLike(9L);
     }
 
 }
