@@ -96,4 +96,9 @@ class MemberRepositoryTest {
         memberRepository.joinMember(8L);
     }
 
+    @Test
+    void removeMemberTest(){
+        memberRepository.deleteById(17L);
+    }
+
 }
