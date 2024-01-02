@@ -39,7 +39,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //                .fromUriString("/home")
                 .fromHttpUrl("http://localhost:3000/oauth2")
                 .queryParam("mno", authMemberDTO.getMno())
-                .queryParam("tokens", token)
+                .queryParam("token", token.getToken())
+                .queryParam("refreshToken",token.getRefreshToken())
                 .build()
                 .toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
