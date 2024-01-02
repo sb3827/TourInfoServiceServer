@@ -22,8 +22,8 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   @Modifying
   @Transactional
   @Query("DELETE FROM Reply r WHERE r.parent.rno IN (SELECT r.rno FROM Reply r WHERE r.board.bno IN (SELECT bp.boardPlacePK.board.bno FROM BoardPlace bp WHERE bp.place.pno = :pno))")
-    //    @Query("delete from Reply r where r.rno in ( select r.parent from Reply r where r.board.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno))")
   void removeChildReply(Long pno);
+
 
 
   //자식이 몇개있는지 반환
@@ -38,5 +38,8 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   // 회원이 작성한 댓글 목록 불러오기
   List<Reply> getRepliesByMemberOrderByRegDate(Member member);
 
-
+  @Modifying
+  @Transactional
+  @Query("update Reply r set r.member.mno = null where r.member.mno= :mno")
+  void setNullMno(Long mno);
 }
