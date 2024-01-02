@@ -1,7 +1,6 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Report;
-import com.yayum.tour_info_service_server.entity.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

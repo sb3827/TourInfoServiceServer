@@ -4,7 +4,6 @@ import com.dot.tour_info_service_server.dto.PlaceDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.entity.Place;
-import com.yayum.tour_info_service_server.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
