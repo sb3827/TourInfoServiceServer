@@ -18,21 +18,21 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/reply")
+@RequestMapping("reply")
 @Log4j2
 @RequiredArgsConstructor
 public class ReplyController {
   private final ReplyService replyService;
   private final ReportService reportService;
 
-  @GetMapping("")
+  @GetMapping("/member")
   public ResponseEntity<List<ReplyDTO>> getListByMno(@RequestParam("mno") Long mno) {
     log.info("getReplyListByMno....");
     List<ReplyDTO> result = replyService.getListOfReplyByMember(mno);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @GetMapping("")
+  @GetMapping("/board")
   public ResponseEntity<List<ReplyDTO>> getListByBno(@RequestParam("bno") Long bno) {
     log.info("getReplyListByBno....");
     List<ReplyDTO> result = replyService.getListOfReplyByBoard(bno);
