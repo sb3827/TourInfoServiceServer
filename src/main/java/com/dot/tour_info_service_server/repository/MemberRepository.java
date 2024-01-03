@@ -28,8 +28,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
 
     // 회원 프로필 조회 ( mno, 이름, 팔로잉수, 팔로워수, 찜목록수, 이미지)
-    @Query(value = "select m.mno as mno, m.name, count( f1.followPk.follower.mno) as followings, count(distinct f2.followPk.member.mno) as followers, " +
-            "count(distinct c.cartPK.member.mno) as cart, m.image " +
+    @Query(value = "select m.mno as mno, m.name, count( f1.followPk.follower.mno) as followings, count( f2.followPk.member.mno) as followers, " +
+            "count( c.cartPK.member.mno) as cart, m.image " +
             "from Member m left outer join Follow f1 on m.mno = f1.followPk.follower.mno  " +
             "left outer join Follow f2 on m.mno = f2.followPk.member.mno " +
             "left outer join Cart c on m.mno = c.cartPK.member.mno " +
