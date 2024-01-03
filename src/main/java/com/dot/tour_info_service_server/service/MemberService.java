@@ -2,13 +2,15 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.Member;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 import java.util.List;
 
 public interface MemberService {
 
-    // 회원 정보 수정 페이지에 회원 정보 조회 이미지, 이름, 이메일, 전화번호, 생년월일
+    // 회원 정보 수정 페이지에 회원 정보 조회 이미지, 이름, 이메일, 전화번호, 생년월일, role
     UserInfoDTO showUserInfo(Long mno);
+
 
     // 회원정보 수정 ( 이미지, 이름, 전화번호 )
     UserInfoDTO modifyUserInfo(UserInfoDTO userInfoDTO);
@@ -27,7 +29,6 @@ public interface MemberService {
 
     // 회원가입승인 ( is_approve를 true로 )
     void joinMember(Long mno);
-
 
     default UserInfoDTO entityToDto(Member member){
         UserInfoDTO userInfoDTO = UserInfoDTO.builder()
