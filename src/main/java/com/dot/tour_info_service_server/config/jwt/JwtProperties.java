@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.config.jwt;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;

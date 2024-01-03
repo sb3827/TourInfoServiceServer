@@ -44,4 +44,9 @@ class FolderRepositoryTest {
         List<String>result=folderRepository.getFolderTitle(2l);
         System.out.println(result);
     }
+
+    @Test
+    void removeTest(){
+        folderRepository.removeFolderByMno(16L);
+    }
 }

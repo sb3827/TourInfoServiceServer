@@ -49,4 +49,9 @@ class FollowRepositoryTest {
     Member follower = Member.builder().mno(15L).build();
     followRepository.deleteByMemberAndFollower(member,follower);
   }
+
+  @Test
+  void removeFollowTest(){
+    followRepository.deleteFollowByMno(16L);
+  }
 }

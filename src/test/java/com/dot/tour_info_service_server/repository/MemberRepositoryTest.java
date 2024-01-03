@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -57,7 +58,6 @@ class MemberRepositoryTest {
     // member+phone로 member 찾기 test
     public void findMemberbyNamePhoneTest() {
         Optional<Member> result = memberRepository.findMemberByNameAndPhone("희범", "010-1234-5678");
-
         if (result.isEmpty()){
             log.info("not found member");
         } else {
@@ -71,6 +71,41 @@ class MemberRepositoryTest {
     // email 중복 test
     public void existEmailTest(){
         log.info("is Duplicate?: "+memberRepository.existsByEmail("mmk2751@gmail.com"));
+    }
+
+    // 회원 검색 테스트
+    @Test
+    public void searchUserTest(){
+        List<Object[]> userlist= memberRepository.searchUser("백");
+        for(Object[] list : userlist){
+            log.info("user mno : " + list[0]);
+            log.info("user image : " + list[1]);
+            log.info("user name : " + list[2]);
+        }
+    }
+
+    // 회원가입 대기 조회 테스트
+    @Test
+    public void showTest(){
+        log.info(memberRepository.showJoinWaiting());
+    }
+
+    // 회원가입 승인 테스트
+    @Test
+    public void joinTest(){
+        memberRepository.joinMember(8L);
+    }
+
+    @Test
+    void removeMemberTest(){
+        memberRepository.deleteById(17L);
+    }
+
+    @Test
+    void userInfoWithRoleTest(){
+        Object[] user = memberRepository.userInfo(5L).get(0);
+//        log.info("role: " + user[6]);
+        log.info("class : " + user[6].getClass());
     }
 
 }

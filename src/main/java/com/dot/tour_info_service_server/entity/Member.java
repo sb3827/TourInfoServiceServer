@@ -74,4 +74,16 @@ public class Member extends BaseEntity {
   public void changeIsReset() {
     this.isReset = !this.isReset;
   }
+
+  public void changeName(String name) {
+    this.name = name;
+  }
+
+  public void changePhone(String phone) {
+    this.phone = phone;
+  }
+
+  public void changeImage(String image) {
+    this.image = image;
+  }
 }

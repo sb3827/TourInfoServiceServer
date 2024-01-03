@@ -31,7 +31,7 @@ public class Place extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Category category = Category.ETC; //전체,음식점,숙소,관광지
+    private Category category = Category.ETC; //음식점,숙소,관광지,기타, 전체
 
     @ColumnDefault("0")
     @Column(nullable = false)

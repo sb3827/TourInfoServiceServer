@@ -3,6 +3,7 @@ package com.dot.tour_info_service_server.repository;
 import com.dot.tour_info_service_server.entity.Follow;
 import com.dot.tour_info_service_server.entity.FollowPK;
 import com.dot.tour_info_service_server.entity.Member;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,9 @@ public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
   @Query("DELETE FROM Follow f WHERE f.followPk.member = :member AND f.followPk.follower = :follower")
   void deleteByMemberAndFollower(@Param("member") Member member, @Param("follower") Member follower);
 
+  @Modifying
+  @Transactional
+  @Query("delete from Follow f where f.followPk.member.mno = :mno or f.followPk.follower.mno = :mno")
+  void deleteFollowByMno(Long mno);
 
 }

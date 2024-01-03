@@ -4,6 +4,7 @@ import com.dot.tour_info_service_server.dto.PlaceDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.entity.Place;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final ReplyRepository replyRepository;
     private final ReportRepository reportRepository;
 
-    // 이미 등록된 장소일 경우 장소 등록하지 못하도록 처리
+
     @Override
     public Long registerPlace(PlaceDTO placeDTO) {
         log.info("DTO-------------------");
@@ -48,6 +49,7 @@ public class PlaceServiceImpl implements PlaceService {
 
 
     @Override
+    @Transactional
     public void removePlace(Long pno) {
 
         List<Long> deleteBnos = boardRepository.returnBnos(pno);
@@ -76,7 +78,6 @@ public class PlaceServiceImpl implements PlaceService {
                 boardRepository.deleteById(bnos);
                 }
                 placeRepository.deleteById(pno);// 장소 삭제
-
             }
         }
     }
