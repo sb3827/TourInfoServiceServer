@@ -100,7 +100,6 @@ public class MemberController {
         result.put("mno", mno);
         return new ResponseEntity<>(result , HttpStatus.OK);
     }
-
 }
 
 
