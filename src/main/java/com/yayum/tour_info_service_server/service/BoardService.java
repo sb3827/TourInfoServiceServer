@@ -3,6 +3,7 @@ package com.yayum.tour_info_service_server.service;
 import com.yayum.tour_info_service_server.dto.*;
 import com.yayum.tour_info_service_server.entity.Board;
 import com.yayum.tour_info_service_server.entity.Member;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -10,10 +11,10 @@ import java.util.List;
 public interface BoardService {
 
     // 장소 등록
-    Long placeRegister(PlaceBoardDTO placeBoardDTO);
+    Long placeRegister(PlaceBoardDTO placeBoardDTO, MultipartFile[] imageFiles);
 
     // 코스 등록
-    Long courseRegister(CourseBoardDTO courseBoardDTO);
+    Long courseRegister(CourseBoardDTO courseBoardDTO, MultipartFile[] imageFiles);
 
     // 삭제
     Long remove(Long bno);

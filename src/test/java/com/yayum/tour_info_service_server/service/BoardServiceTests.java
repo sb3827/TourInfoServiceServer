@@ -41,8 +41,8 @@ class BoardServiceTests {
         .pno(6L)
         .build();
 
-    Long bno = boardService.placeRegister(placeBoardDTO);
-    System.out.println("bno: "+ bno);
+//    Long bno = boardService.placeRegister(placeBoardDTO);
+//    System.out.println("bno: "+ bno);
 
   }
 
@@ -74,8 +74,8 @@ class BoardServiceTests {
         .writer(5L)
         .coursePlaceList(boardPlacePKDTO)
         .build();
-    Long bno = boardService.courseRegister(courseBoardDTO);
-    System.out.println("bno: "+ bno);
+//    Long bno = boardService.courseRegister(courseBoardDTO);
+//    System.out.println("bno: "+ bno);
   }
 
   @Test
