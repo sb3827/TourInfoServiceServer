@@ -34,9 +34,9 @@ public class PlaceController {
 
 
     @GetMapping(value = "")
-    public ResponseEntity<List<Long>> findPlace(@RequestParam(value="filter") Category filter, @RequestParam(value = "search") String search ){
+    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") Category filter, @RequestParam(value = "search") String search ){
         log.info("findPlace...... filter :  " + filter + " search : " + search);
-        List<Long> placeList = placeService.findPlace(filter, search);
+        List<PlaceDTO> placeList = placeService.searchPlace(filter, search);
         return new ResponseEntity<>(placeList, HttpStatus.OK);
     }
 

@@ -28,11 +28,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     boolean existsByEmail(String email);
 
     // 회원 프로필 조회 ( mno, 이름, 팔로잉수, 팔로워수, 찜목록수, 이미지)
-    @Query(value = "select m.mno as mno, m.name, count(f1.followPk.follower.mno) as followings, count(f2.followPk.member.mno) as followers, " +
-            "count(c.cartPK.member.mno) as cart, m.image " +
-            "from Member m left outer join Follow f1 on m.mno = f1.followPk.member.mno  " +
-            "left outer join Follow f2 on m.mno = f2.followPk.follower.mno " +
-            "left outer join Cart c on m.mno = c.cartPK.member.mno "+
+    @Query(value = "select m.mno as mno, m.name, count( f1.followPk.follower.mno) as followings, count( f2.followPk.member.mno) as followers, " +
+            "count( c.cartPK.member.mno) as cart, m.image " +
+            "from Member m left outer join Follow f1 on m.mno = f1.followPk.follower.mno  " +
+            "left outer join Follow f2 on m.mno = f2.followPk.member.mno " +
+            "left outer join Cart c on m.mno = c.cartPK.member.mno " +
             "where m.name like %:name% " +
             "group by m.mno")
     List<Object[]> findProfileByName(@Param("name") String name);
@@ -55,4 +55,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m.mno, m.image, m.name, m.email, m.phone, m.birth, m.roleSet from Member m where m.mno = :mno ")
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Object[]> userInfo(Long mno);
+
+    // 팔로우 수 조회
+    @Query("select count(f.followPk.member.mno) from Follow f where f.followPk.member.mno = :mno")
+    Long showFollowers(Long mno);
+
+    // 팔로잉 수 조회
+    @Query("select count(f.followPk.follower.mno) from Follow f where f.followPk.follower.mno = :mno")
+    Long showFollowings(Long mno);
 }

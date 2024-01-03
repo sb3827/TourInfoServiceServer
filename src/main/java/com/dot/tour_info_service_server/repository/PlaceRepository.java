@@ -24,4 +24,10 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "order by count (b)desc " +
             "limit 3")
     List<Object[]> mostLikePlace();
+
+    @Query("select p.pno, p.name, p.lng, p.lat, p.roadAddress, p.localAddress, p.engAddress, p.category, p.cart, p.regDate, p.modDate" +
+            " from Place p  where :filter is null or p.category = :filter and " +
+            "(p.name like %:search% or p.localAddress like %:search% or " +
+            "p.roadAddress like %:search% or p.engAddress like %:search%)")
+    List<Object[]> searchPlace(Category filter, String search);
 }

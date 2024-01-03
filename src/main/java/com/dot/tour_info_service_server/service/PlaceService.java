@@ -13,6 +13,8 @@ public interface PlaceService {
 
     void removePlace(Long pno);
 
+    List<PlaceDTO> searchPlace(Category filter, String search);
+
     default Place dtoToEntity(PlaceDTO dto){
         Place place = Place.builder()
                 .pno(dto.getPno())
@@ -22,7 +24,7 @@ public interface PlaceService {
                 .roadAddress(dto.getRoadAddress())
                 .localAddress(dto.getLocalAddress())
                 .engAddress(dto.getEngAddress())
-                .category(Category.valueOf(dto.getCategory()))
+                .category(dto.getCategory())
                 .cart(dto.getCart())
                 .build();
         return place;
@@ -36,7 +38,7 @@ public interface PlaceService {
                 .roadAddress(dto.getRoadAddress())
                 .localAddress(dto.getLocalAddress())
                 .engAddress(dto.getEngAddress())
-                .category(String.valueOf(Category.valueOf(String.valueOf(dto.getCategory()))))
+                .category(dto.getCategory())
                 .cart(dto.getCart())
                 .regDate(dto.getRegDate())
                 .modDate(dto.getModDate())
