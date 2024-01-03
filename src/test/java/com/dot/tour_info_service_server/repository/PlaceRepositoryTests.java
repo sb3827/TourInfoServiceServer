@@ -22,15 +22,15 @@ public class PlaceRepositoryTests {
 
     @Test
     public void testInsertDummies(){
-        IntStream.rangeClosed(1, 25).forEach(i -> {
-            Place place = Place.builder().name("test"+ i).lng(300.0).lat(300.0).category(Category.valueOf("ETC")).localAddress("test" + i).roadAddress("test" + i).engAddress("test" + i).cart(i).build();
+        IntStream.rangeClosed(4, 5).forEach(i -> {
+            Place place = Place.builder().name("test"+ i).lng(300.0).lat(300.0).category(Category.valueOf("RESTAURANT")).localAddress("test" + i).roadAddress("test" + i).engAddress("test" + i).cart(i).build();
             placeRepository.save(place);
         });
     }
 
     @Test
     public void findPlaceTest(){
-        List<Place> list = placeRepository.findPlace(Category.RESTAURANT, "test");
+        List<Place> list = placeRepository.findPlace(null, "test");
         for(Place place : list){
             System.out.println(place);
         }

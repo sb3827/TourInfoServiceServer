@@ -48,7 +48,7 @@ class MemberServiceImplTests {
     // 회원 프로필 조회 테스트
     @Test
     void showUserProfileTest(){
-        log.info(memberService.showUserProfile("문영현"));
+        log.info(memberService.showUserProfile("이해창"));
     }
 
     // 회원 검색 테스트
