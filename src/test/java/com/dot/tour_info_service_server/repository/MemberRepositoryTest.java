@@ -108,4 +108,10 @@ class MemberRepositoryTest {
         log.info("class : " + user[6].getClass());
     }
 
+    @Test
+    void showFollowTest(){
+        log.info("팔로워 : " + memberRepository.showFollowers(23L));
+        log.info("팔로잉 : " + memberRepository.showFollowings(23L));
+    }
+
 }
