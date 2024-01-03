@@ -5,6 +5,7 @@ import com.dot.tour_info_service_server.dto.SearchUserListDTO;
 import com.dot.tour_info_service_server.dto.UserInfoDTO;
 import com.dot.tour_info_service_server.dto.UserProfileDTO;
 import com.dot.tour_info_service_server.entity.Member;
+import com.dot.tour_info_service_server.entity.Role;
 import com.dot.tour_info_service_server.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.sql.Array;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -28,16 +31,23 @@ public class MemberServiceImpl implements MemberService {
     private final FollowRepository followRepository;
     private final ReplyRepository replyRepository;
 
-    // 회원정보조회
+    //회원정보조회
     @Override
     public UserInfoDTO showUserInfo(Long mno) {
-        Optional<Member> result = memberRepository.findById(mno);
-        if (result.isPresent()) {
-            Member member = result.get();
-            UserInfoDTO userInfoDTO = entityToDto(member);
+        Object[] result = memberRepository.userInfo(mno).get(0);
+        if(result != null){
+            UserInfoDTO userInfoDTO = UserInfoDTO.builder()
+                    .mno((Long)result[0])
+                    .image((String)result[1])
+                    .name((String)result[2])
+                    .email((String)result[3])
+                    .phone((String)result[4])
+                    .birth((LocalDate)result[5])
+                    .role((Role)result[6])
+                    .build();
             return userInfoDTO;
         }
-        return null;
+            return null;
     }
 
     // 회원정보수정 ( 이름, 전화번호, 이미지 )
@@ -135,4 +145,6 @@ public class MemberServiceImpl implements MemberService {
     public void joinMember(Long mno) {
         memberRepository.joinMember(mno);
     }
+
+
 }
