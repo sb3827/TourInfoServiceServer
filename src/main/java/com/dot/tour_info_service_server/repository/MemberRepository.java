@@ -51,5 +51,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("update Member m set m.isApprove = true where m.mno = :mno")
     void joinMember(Long mno);
 
-
+    // 회원정보조회
+    @Query("select m.mno, m.image, m.name, m.email, m.phone, m.birth, m.roleSet from Member m where m.mno = :mno ")
+    @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
+    List<Object[]> userInfo(Long mno);
 }
