@@ -74,8 +74,8 @@ public class MemberServiceImpl implements MemberService {
             UserProfileDTO userProfileDTO = UserProfileDTO.builder()
                     .mno((Long)result.get(0)[0])
                     .name((String)result.get(0)[1])
-                    .followings(memberRepository.showFollowings((Long)result.get(0)[0]))
-                    .followers(memberRepository.showFollowers((Long)result.get(0)[0]))
+                    .followings((Long)result.get(0)[2])
+                    .followers((Long)result.get(0)[3])
                     .cart((Long)result.get(0)[4])
                     .image((String)result.get(0)[5])
                     .build();

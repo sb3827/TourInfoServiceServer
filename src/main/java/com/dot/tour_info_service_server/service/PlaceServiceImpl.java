@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,32 +47,6 @@ public class PlaceServiceImpl implements PlaceService {
         return pnoList;
     }
 
-    @Override
-    public List<PlaceDTO> searchPlace(Category filter, String search) {
-        List<Object[]> result = placeRepository.searchPlace(filter, search);
-        List<PlaceDTO> placeList = new ArrayList<>();
-        if(!result.isEmpty()){
-            for(Object[] list : result){
-                PlaceDTO placeDTO = PlaceDTO.builder()
-                        .pno((Long)list[0])
-                        .name((String)list[1])
-                        .lng((Double) list[2])
-                        .lat((Double)list[3])
-                        .roadAddress((String)list[4])
-                        .localAddress((String)list[5])
-                        .engAddress((String)list[6])
-                        .category((Category)list[7])
-                        .cart((int)list[8])
-                        .regDate((LocalDateTime) list[9])
-                        .modDate((LocalDateTime) list[10])
-                        .build();
-                placeList.add(placeDTO);
-            }
-            return placeList;
-        }
-        return null;
-
-    }
 
     @Override
     @Transactional
