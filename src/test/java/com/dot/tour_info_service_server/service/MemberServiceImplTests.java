@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.UserInfoDTO;
 import com.dot.tour_info_service_server.entity.Member;
+import com.dot.tour_info_service_server.entity.Role;
 import com.dot.tour_info_service_server.repository.MemberRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.Optional;
+
 
 @SpringBootTest
 @Log4j2
@@ -23,27 +25,21 @@ class MemberServiceImplTests {
 
     // 회원정보 조회 테스트
     @Test
-    void showUserInfoTest() {
-        log.info(memberService.showUserInfo(5L));
+    void userInfoTest(){
+        log.info("5L : " + memberService.showUserInfo(5L));
     }
 
     // 회원정보 수정 테스트
     @Test
     void modifyTest() {
         LocalDate date = LocalDate.of(2023, 12, 31);
-        UserInfoDTO userInfoDTO = new UserInfoDTO(5L, null, "문영현", "v@a.com", "010-0000-1111", date);
+        UserInfoDTO userInfoDTO = new UserInfoDTO(5L, null, "문영현", "v@a.com", "010-0000-1111", date, Role.MEMBER);
         Optional<Member> result = memberRepository.findById(userInfoDTO.getMno());
         if(result.isPresent()){
             Member member = result.get();
-            if(member.getName() != userInfoDTO.getName()){
                 member.changeName(userInfoDTO.getName());
-            }
-            if(member.getPhone() != userInfoDTO.getPhone()){
                 member.changePhone(userInfoDTO.getPhone());
-            }
-            if(member.getImage() != userInfoDTO.getImage()){
                 member.changeImage(userInfoDTO.getImage());
-            }
             memberRepository.save(member);
         }
 
@@ -74,10 +70,13 @@ class MemberServiceImplTests {
         memberService.joinMember(5L);
     }
 
+    // 회원탈퇴 테스트
     @Test
     void removeMemberTest(){
         memberService.deleteUserInfo(16L);
     }
+
+
 }
 
 
