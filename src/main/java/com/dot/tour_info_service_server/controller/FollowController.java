@@ -18,42 +18,42 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FollowController {
 
-  private final FollowService followService;
+    private final FollowService followService;
 
-  //   팔로우 버튼을 누르는 회원 -> followerMno    팔로우 당하는 회원-> memberMno
-  @PostMapping("/following")
-  public ResponseEntity<Map<String,Long>> follow(@RequestBody FollowDTO followDTO) {
-    log.info("follow : " + followDTO);
-    Map<String, Long> result = new HashMap<>();
-    Long mno = followDTO.getMemberMno();
-    result.put("mno", mno);
-    followService.follow(followDTO);
-    return new ResponseEntity<>(result, HttpStatus.OK);
-  }
+    //   팔로우 버튼을 누르는 회원 -> followerMno    팔로우 당하는 회원-> memberMno
+    @PostMapping("/following")
+    public ResponseEntity<Map<String, Long>> follow(@RequestBody FollowDTO followDTO) {
+        log.info("follow : " + followDTO);
+        Map<String, Long> result = new HashMap<>();
+        Long mno = followDTO.getMemberMno();
+        result.put("mno", mno);
+        followService.follow(followDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
-  //   언팔로우 버튼을 누르는 회원 -> followerMno    언팔로우 당하는 회원-> memberMno
-  @DeleteMapping("/following")
-  public ResponseEntity<Map<String,Long>> unFollow(@RequestBody FollowDTO followDTO) {
-    log.info("unfollow : " + followDTO);
-    followService.unFollow(followDTO.getMemberMno(), followDTO.getFollowerMno());
-    Map<String,Long> result = new HashMap<>();
-    result.put("mno", followDTO.getMemberMno());
-    return new ResponseEntity<>(result, HttpStatus.OK);
-  }
+    //   언팔로우 버튼을 누르는 회원 -> followerMno    언팔로우 당하는 회원-> memberMno
+    @DeleteMapping("/following")
+    public ResponseEntity<Map<String, Long>> unFollow(@RequestBody FollowDTO followDTO) {
+        log.info("unfollow : " + followDTO);
+        followService.unFollow(followDTO.getMemberMno(), followDTO.getFollowerMno());
+        Map<String, Long> result = new HashMap<>();
+        result.put("mno", followDTO.getMemberMno());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
-  // 회원이 팔로우 중인 사람들 조회(팔로잉 조회)        조회대상회원 -> memberMno 팔로잉->followerMno 로 나옴
-  @GetMapping("/following")
-  public ResponseEntity<List<FollowDTO>> getListOfFollowing(@RequestParam("mno") Long mno) {
-    log.info("List of Following : " + mno);
-    List<FollowDTO> result = followService.getListOfFollowing(mno);
-    return new ResponseEntity<>(result, HttpStatus.OK);
-  }
+    // 회원이 팔로우 중인 사람들 조회(팔로잉 조회)        조회대상회원 -> memberMno 팔로잉->followerMno 로 나옴
+    @GetMapping("/following")
+    public ResponseEntity<List<FollowDTO>> getListOfFollowing(@RequestParam("mno") Long mno) {
+        log.info("List of Following : " + mno);
+        List<FollowDTO> result = followService.getListOfFollowing(mno);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
-  // 회원을 팔로우 중인 사람들 조회(팔로워조회)       조회대상회원-> followerMno  팔로워->memberMno 로 나옴
-  @GetMapping("/follower")
-  public ResponseEntity<List<FollowDTO>> getListOfFollower(@RequestParam("mno") Long mno) {
-    log.info("List of follower : " + mno);
-    List<FollowDTO> result = followService.getListOfFollower(mno);
-    return new ResponseEntity<>(result, HttpStatus.OK);
-  }
+    // 회원을 팔로우 중인 사람들 조회(팔로워조회)       조회대상회원-> followerMno  팔로워->memberMno 로 나옴
+    @GetMapping("/follower")
+    public ResponseEntity<List<FollowDTO>> getListOfFollower(@RequestParam("mno") Long mno) {
+        log.info("List of follower : " + mno);
+        List<FollowDTO> result = followService.getListOfFollower(mno);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

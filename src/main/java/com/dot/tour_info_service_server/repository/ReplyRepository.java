@@ -43,6 +43,10 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   @Query("update Reply r set r.member.mno = null where r.member.mno= :mno")
   void setNullMno(Long mno);
 
+  @Query("select r.rno,r.member.mno, r.board.bno, b.title, r.text, r.regDate from Reply r " +
+          "left outer join Board b on r.board.bno = b.bno " +
+          "where r.member.mno = :mno")
+  List<Object[]> showReplyList(Long mno);
   //bno를 삭제했을때 해당 rno가 삭제됨
   @Modifying // update, delete를 할 때는 무조건 붙인다.
   @Query("delete from Reply r where r.board.bno=:bno")
