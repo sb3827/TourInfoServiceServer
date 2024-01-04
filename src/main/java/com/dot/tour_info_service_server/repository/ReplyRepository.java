@@ -42,4 +42,9 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   @Transactional
   @Query("update Reply r set r.member.mno = null where r.member.mno= :mno")
   void setNullMno(Long mno);
+
+  @Query("select r.rno,r.member.mno, r.board.bno, b.title, r.text, r.regDate from Reply r " +
+          "left outer join Board b on r.board.bno = b.bno " +
+          "where r.member.mno = :mno")
+  List<Object[]> showReplyList(Long mno);
 }
