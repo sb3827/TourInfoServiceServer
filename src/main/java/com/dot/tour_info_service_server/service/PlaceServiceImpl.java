@@ -38,17 +38,6 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Long> findPlace(Category filter, String search) {
-        List<Place> result = placeRepository.findPlace(filter, search);
-        List<Long> pnoList = new ArrayList<>();
-
-        for (Place place : result) {
-            pnoList.add(entityToDto(place).getPno());
-        }
-        return pnoList;
-    }
-
-    @Override
     public List<PlaceDTO> searchPlace(Category filter, String search) {
         List<Object[]> result = placeRepository.searchPlace(filter, search);
         List<PlaceDTO> placeList = new ArrayList<>();
@@ -64,8 +53,9 @@ public class PlaceServiceImpl implements PlaceService {
                         .engAddress((String)list[6])
                         .category((Category)list[7])
                         .cart((int)list[8])
-                        .regDate((LocalDateTime) list[9])
-                        .modDate((LocalDateTime) list[10])
+                        .regDate((LocalDateTime)list[9])
+                        .modDate((LocalDateTime)list[10])
+                        .image((String)list[11])
                         .build();
                 placeList.add(placeDTO);
             }
