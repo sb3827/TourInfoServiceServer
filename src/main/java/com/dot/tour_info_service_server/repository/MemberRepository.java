@@ -37,8 +37,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "group by m.mno")
     List<Object[]> findProfileByName(@Param("name") String name);
 
-    // 회원 검색 ( mno, 이미지, 이름 )
-    @Query("select m.mno, m.image, m.name from Member m where m.name like %:name%")
+    // 회원 검색 ( mno, 이미지, 이름 ) - 해당 부분 허가 된 사람+관리자 제외 검색 되도록 수정했습니다.
+    @Query("select m.mno, m.image, m.name from Member m join m.roleSet r where r!='ADMIN' and  m.isApprove=true and m.name like %:name%")
     List<Object[]> searchUser(@Param("name") String name);
 
     // 회원가입대기 조회
@@ -63,4 +63,38 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 팔로잉 수 조회
     @Query("select count(f.followPk.follower.mno) from Follow f where f.followPk.follower.mno = :mno")
     Long showFollowings(Long mno);
+
+
+
+    //회원 조회 - 전체 (관리자)
+    @Transactional
+    @Query("select m.mno,m.name,m.email,m.phone,m.regDate,m.roleSet,d.expDate " +
+            "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno " +
+            "where r!='ADMIN' and  m.isApprove=true and m.name like concat('%',:name,'%') " +
+            "group by m.mno")
+    List<Object[]> searchMemberAll(String name);
+
+    // 회원 조회 - 사업자 (관리자)
+    @Transactional
+    @Query ("select m.mno,m.name,m.email,m.phone,m.regDate,m.roleSet,d.expDate " +
+            "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno " +
+            "where r='BUSINESSPERSON' and m.isApprove=true and m.name like concat('%',:name,'%') " +
+            "group by m.mno")
+    List<Object[]> searchBusiness(String name);
+
+    //회원 조회 - 일반 유저 (관리자)
+    @Transactional
+    @Query("select m.mno,m.name,m.email,m.phone,m.regDate,m.roleSet,d.expDate " +
+            "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno " +
+            "where r='MEMBER' and m.isApprove=true and m.name like concat('%',:name,'%') " +
+            "group by m.mno")
+    List<Object[]> searchNomal(String name);
+
+    //회원 조회 - 정지된 유저
+    @Transactional
+    @Query("select m.mno,m.name,m.email,m.phone,m.regDate,m.roleSet,d.expDate " +
+            "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno  " +
+            "where r!='ADMIN' and m.isApprove=true and d.expDate>=now() and m.name like %:name% " +
+            "group by m.mno")
+    List<Object[]> searchDisciplinary(String name);
 }
