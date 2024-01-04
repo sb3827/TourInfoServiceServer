@@ -1,9 +1,6 @@
 package com.dot.tour_info_service_server.controller;
 
-import com.dot.tour_info_service_server.dto.JoinWaitingDTO;
-import com.dot.tour_info_service_server.dto.SearchUserListDTO;
-import com.dot.tour_info_service_server.dto.UserInfoDTO;
-import com.dot.tour_info_service_server.dto.UserProfileDTO;
+import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -99,6 +96,15 @@ public class MemberController {
         memberService.joinMember(mno);
         result.put("mno", mno);
         return new ResponseEntity<>(result , HttpStatus.OK);
+    }
+
+    //회원 검색 관리자
+    @GetMapping(value = "/filter-find")
+    public ResponseEntity<List<MemberDetailDTO>> managerSearchUser(@RequestParam("filter") String filter, @RequestParam("search")String name){
+        log.info(filter +" , "+ name);
+        List<MemberDetailDTO> result=memberService.managerToSearchUser(filter,name);
+        log.info(result);
+        return new ResponseEntity<>(result,HttpStatus.OK);
     }
 }
 

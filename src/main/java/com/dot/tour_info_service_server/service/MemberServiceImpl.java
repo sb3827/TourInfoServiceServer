@@ -1,9 +1,6 @@
 package com.dot.tour_info_service_server.service;
 
-import com.dot.tour_info_service_server.dto.JoinWaitingDTO;
-import com.dot.tour_info_service_server.dto.SearchUserListDTO;
-import com.dot.tour_info_service_server.dto.UserInfoDTO;
-import com.dot.tour_info_service_server.dto.UserProfileDTO;
+import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Role;
 import com.dot.tour_info_service_server.repository.*;
@@ -146,5 +143,36 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.joinMember(mno);
     }
 
+    //회원 조회 - 관리자
+    @Override
+    public List<MemberDetailDTO> managerToSearchUser(String filter,String name) {
+        List<Object[]> member=new ArrayList<>();
+        List<MemberDetailDTO> memberDetailDTOS=new ArrayList<>();
 
+        if (filter.equals("all")){
+            member=memberRepository.searchMemberAll(name);
+        }else if(filter.equals("normal")){
+            member=memberRepository.searchNomal(name);
+        }else if(filter.equals("business")){
+            member=memberRepository.searchBusiness(name);
+        }else if(filter.equals("disciplinary")){
+            member=memberRepository.searchDisciplinary(name);
+        }
+
+        log.info(filter +" , " +member);
+        for(Object[] objects : member){
+            String roleName = objects[5] instanceof Role ? ((Role) objects[5]).name() : null;
+            MemberDetailDTO memberDetailDTO=MemberDetailDTO.builder()
+                    .mno((Long)objects[0])
+                    .name((String)objects[1])
+                    .email((String)objects[2])
+                    .phone((String)objects[3])
+                    .regDate((LocalDateTime) objects[4])
+                    .role(roleName)
+                    .expDate((LocalDateTime) objects[6])
+                    .build();
+            memberDetailDTOS.add(memberDetailDTO);
+        }
+        return memberDetailDTOS;
+    }
 }

@@ -30,6 +30,9 @@ public interface MemberService {
     // 회원가입승인 ( is_approve를 true로 )
     void joinMember(Long mno);
 
+    //회원 조회(관리자)
+    List<MemberDetailDTO> managerToSearchUser(String filter,String name);
+
     default UserInfoDTO entityToDto(Member member){
         UserInfoDTO userInfoDTO = UserInfoDTO.builder()
                 .mno(member.getMno())
