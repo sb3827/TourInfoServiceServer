@@ -32,7 +32,7 @@ import java.util.*;
 public class BoardController {
     private final BoardService boardService;
 
-    @Value("${org.zerock.upload.path}")
+    @Value("${com.dot.upload.path}")
     private String uploadPath;
 
     // 장소 포스팅 등록
