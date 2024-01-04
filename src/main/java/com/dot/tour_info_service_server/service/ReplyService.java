@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
+import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
@@ -11,6 +12,8 @@ public interface ReplyService {
   List<ReplyDTO> getListOfReplyByBoard(Long bno);    // board 의 댓글목록 불러오기
 
   List<ReplyDTO> getListOfReplyByMember(Long mno);    // 회원이 작성한 댓글 목록
+
+  List<ReplyListDTO> showReplyList(Long mno);
 
   void saveReply(ReplyDTO replyDTO);
 
