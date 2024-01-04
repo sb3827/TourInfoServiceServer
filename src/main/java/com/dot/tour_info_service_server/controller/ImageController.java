@@ -28,7 +28,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @Value("${org.zerock.upload.path}")
+    @Value("${com.dot.upload.path}")
     private String uploadPath;
 
     //이미지파일 업로드

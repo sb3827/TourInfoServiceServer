@@ -76,6 +76,11 @@ class MemberServiceImplTests {
         memberService.deleteUserInfo(16L);
     }
 
+    @Test
+    void managerSearchTest(){
+        log.info(memberService.managerToSearchUser("all",""));
+    }
+
 
 }
 
