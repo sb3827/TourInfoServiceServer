@@ -76,10 +76,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> adBoard();
 
 
-    //   회원별 장소 포스팅 조회
-    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.mno from Board b " +
+    //   회원별 장소 포스팅 조회, 이름도 추가했음
+    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.mno, m.name from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
+            "left outer join Member m on b.writer.mno = m.mno " +
             "where b.writer.mno =:mno and b.isCourse = false " +
             "group by b.bno")
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
@@ -93,10 +94,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "group by b.bno")
     List<Object[]> getBoardByPno(Long pno);
 
-    // 회원별 코스 포스팅 조회
-    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.mno from Board b " +
+    // 회원별 코스 포스팅 조회, 이름도 추가
+    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.mno, m.name from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
+            "left outer join Member m on b.writer.mno = m.mno " +
             "where b.writer.mno =:mno and b.isCourse = true " +
             "group by b.bno")
     List<Object[]> getCourseBoardByMno(@Param("mno") Long mno);

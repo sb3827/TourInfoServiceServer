@@ -22,5 +22,6 @@ public class BoardReplyCountDTO {
     private int likes;
     private Double score;
     private Long writer;
+    private String name;
 
 }

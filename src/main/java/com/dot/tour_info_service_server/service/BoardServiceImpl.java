@@ -293,6 +293,7 @@ public class BoardServiceImpl implements BoardService {
               .likes((Integer)object[5])
               .score((Double) object[6])
               .writer((Long) object[7])
+              .name((String) object[8])
               .build();
       boardReplyCountDTOS.add(boardReplyCountDTO);
     }
@@ -342,6 +343,7 @@ public class BoardServiceImpl implements BoardService {
               .likes((Integer)object[5])
               .score((Double) object[6])
               .writer((Long) object[7])
+              .name((String) object[8])
               .build();
       boardReplyCountDTOS.add(boardReplyCountDTO);
     }
