@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @ToString
-public class Image {
+public class Image extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ino;
