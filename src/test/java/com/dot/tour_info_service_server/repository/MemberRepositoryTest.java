@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Role;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ class MemberRepositoryTest {
     // 회원 검색 테스트
     @Test
     public void searchUserTest(){
-        List<Object[]> userlist= memberRepository.searchUser("백");
+        List<Object[]> userlist= memberRepository.searchUser("");
         for(Object[] list : userlist){
             log.info("user mno : " + list[0]);
             log.info("user image : " + list[1]);
@@ -114,4 +115,14 @@ class MemberRepositoryTest {
         log.info("팔로잉 : " + memberRepository.showFollowings(23L));
     }
 
+
+    //관리자 회원 검색
+    @Test
+    @Transactional
+    void searchAll(){
+        log.info("모두 검색 : "+memberRepository.searchMemberAll("이"));
+        log.info("사업자 검색 : "+memberRepository.searchBusiness(""));
+        log.info("일반 유저 검색 : "+memberRepository.searchNomal(""));
+        log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary(""));
+    }
 }
