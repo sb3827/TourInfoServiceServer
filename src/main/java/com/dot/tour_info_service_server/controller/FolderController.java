@@ -55,7 +55,7 @@ public class FolderController {
                 return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
     //폴더명 수정 - valid 완료
@@ -73,7 +73,7 @@ public class FolderController {
                 return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
             }
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
     //폴더 삭제 -service에서 valid 완료
@@ -86,7 +86,7 @@ public class FolderController {
             response.setData(data);
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
     //스팟 등록 -value 완료
@@ -102,7 +102,7 @@ public class FolderController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
     //스팟 삭제 - valid완료
@@ -117,7 +117,7 @@ public class FolderController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
 }

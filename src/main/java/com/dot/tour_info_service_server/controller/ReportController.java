@@ -49,7 +49,7 @@ public class ReportController {
             ResponseWrapDTO<List<DisciplinaryDTO>> response = new ResponseWrapDTO<>(true, data);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
     }
 
     //신고 -valid체크
@@ -67,7 +67,7 @@ public class ReportController {
         }
         //만약 신고한 유저가 존재하지 않는다면 null을 전달받음
 
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
     //신고 확인(신고 상태 업데이트) -service에서 valid 체크
@@ -82,7 +82,7 @@ public class ReportController {
             response.setData(data);
             return new ResponseEntity<>(response,HttpStatus.OK);
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 
     //제재 -valid 체크
@@ -106,6 +106,6 @@ public class ReportController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(response,HttpStatus.UNAUTHORIZED);
     }
 }
