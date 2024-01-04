@@ -6,6 +6,7 @@ import com.dot.tour_info_service_server.dto.FolderRegistDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.repository.FolderRepository;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -77,11 +78,14 @@ public class FolderServiceImpl implements FolderService{
     //폴더 삭제
     @Override
     public Long remove(Long fno) {
-        if (folderRepository.findById(fno).isPresent()) {
-            folderRepository.deleteById(fno);
-            return fno;
+        Optional<Folder> result=folderRepository.findById(fno);
+        if(result.isPresent()){
+            Folder folder=result.get();
+            if(SecurityUtil.validateMno(folder.getMember().getMno())){
+                folderRepository.deleteById(fno);
+                return fno;
+            }
         }
         return -1l;
     }
-
 }
