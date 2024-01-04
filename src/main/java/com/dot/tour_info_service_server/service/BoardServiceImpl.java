@@ -36,7 +36,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   @Transactional
-  public Long placeRegister(PlaceBoardDTO placeBoardDTO, MultipartFile[] imageFiles) {
+  public Long placeRegister(PlaceBoardDTO placeBoardDTO) {
     Board board = placeDtoToEntity(placeBoardDTO);
     boardRepository.save(board);
     log.info("board 저장");
@@ -60,25 +60,7 @@ public class BoardServiceImpl implements BoardService {
         log.info("image 저장");
       }
     }
-
-    //이미지 파일을 업로드하고 저장
-    if (imageFiles != null) {
-      for (MultipartFile file : imageFiles) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        try {
-          // 데이터베이스에는 경로를 저장
-          Image image = Image.builder()
-                  .src(fileName) // 이미지 경로 설정
-                  .board(board)
-                  .build();
-          imageRepository.save(image);
-          log.info("이미지 저장: " + fileName);
-        } catch (Exception e) {
-          log.error("이미지 저장 중 오류 발생: " + e.getMessage());
-        }
-      }
-    }
-
+    imageRepository.deleteByNullBno();
     return board.getBno();
   }
 

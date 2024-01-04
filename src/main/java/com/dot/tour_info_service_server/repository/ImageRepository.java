@@ -34,6 +34,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
   @Query("SELECT i FROM Image i WHERE i.board.bno=:bno")
   List<Image> selectImageByBno(@Param("bno") Long bno);
 
+  //bno가 null값은 삭제
+    @Query("select i from Image i where i.board.bno = null ")
+    void deleteByNullBno();
+
   List<Image> findAllByBoard(Board board);
 
 }

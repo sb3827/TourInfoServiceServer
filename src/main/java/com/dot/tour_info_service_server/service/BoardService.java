@@ -11,7 +11,7 @@ import java.util.List;
 public interface BoardService {
 
     // 장소 등록
-    Long placeRegister(PlaceBoardDTO placeBoardDTO, MultipartFile[] imageFiles);
+    Long placeRegister(PlaceBoardDTO placeBoardDTO);
 
     // 코스 등록
     Long courseRegister(CourseBoardDTO courseBoardDTO, MultipartFile[] imageFiles);

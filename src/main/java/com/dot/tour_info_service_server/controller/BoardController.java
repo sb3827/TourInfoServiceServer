@@ -36,33 +36,11 @@ public class BoardController {
     private String uploadPath;
 
     // 장소 포스팅 등록
-    @PostMapping(value = {"/place/posting/register"} , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestPart PlaceBoardDTO placeBoardDTO,
-                                                               @RequestPart MultipartFile[] imageFiles ) {
-        for (MultipartFile imageFile: imageFiles) {
-
-            String originalName = imageFile.getOriginalFilename();
-            String fileName = originalName.substring(originalName.lastIndexOf("\\")+1);
-            log.info("fileName: "+ fileName );
-            String folderPath = makeFolder();
-            String uuid = UUID.randomUUID().toString();
-            String saveName = uploadPath + File.separator + folderPath + File.separator +
-                     uuid + "_" + fileName;
-
-            Path savePath = Paths.get(saveName); // Path : 파일 올리는 지정된 경로를 가리킬 때 사용
-
-            try {
-                imageFile.transferTo(savePath);
-                Files.write(savePath, imageFile.getBytes());
-                log.info("savePath: "+ savePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+    @PostMapping(value = {"/place/posting/register"})
+    public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
         log.info("DTO: " + placeBoardDTO);
         Map<String, Long> result = new HashMap<>();
-        Long bno = boardService.placeRegister(placeBoardDTO, imageFiles);
+        Long bno = boardService.placeRegister(placeBoardDTO);
         log.info("bno: "+ bno);
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
