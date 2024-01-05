@@ -86,7 +86,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
 
     // 장소별 장소 포스팅 조회
-    @Query("select bp.place.pno, b.bno, b.title , i.src, count(r.rno), b.writer.mno, b.regDate, b.likes, b.score from Board b " +
+    @Query("select bp.place.pno, b.bno, b.title , i.src, count(r.rno), b.writer.name, b.regDate, b.likes, b.score from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
@@ -94,8 +94,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "group by b.bno")
     List<Object[]> getBoardByPno(Long pno);
 
-    // 회원별 코스 포스팅 조회, 이름도 추가
-    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.mno, m.name from Board b " +
+    // 회원별 코스 포스팅 조회
+    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
             "left outer join Member m on b.writer.mno = m.mno " +
@@ -104,9 +104,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getCourseBoardByMno(@Param("mno") Long mno);
 
     //코스 검색 조회
-    @Query("select b.bno, b.title, b.likes, b.score, b.writer.mno, b.regDate from Board b " +
+    @Query("select b.bno, b.title, b.likes, b.score, b.writer.name, b.regDate from Board b " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
-            "where (b.title like %:search% or b.content like %:search% or bp.place.name like %:search%) and b.isCourse = true ")
+            "where (b.title like %:search% or b.content like %:search% or " +
+            "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true ")
     List<Object[]> findCourseBoard(String search);
 
 }

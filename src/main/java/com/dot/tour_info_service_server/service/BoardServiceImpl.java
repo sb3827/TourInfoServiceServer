@@ -313,7 +313,7 @@ public class BoardServiceImpl implements BoardService {
               .title((String) objects[2])
               .src((String) objects[3])
               .replyCount((Long) objects[4])
-              .mno((Long) objects[5])
+              .writer((String) objects[5])
               .regdate((LocalDateTime) objects[6])
               .likes((Integer) objects[7])
               .score((Double) objects[8])
@@ -361,7 +361,7 @@ public class BoardServiceImpl implements BoardService {
               .title((String) objects[1])
               .likes((Integer) objects[2])
               .score((Double) objects[3])
-              .mno((Long) objects[4])
+              .writer((String) objects[4])
               .regDate((LocalDateTime) objects[5])
               .build();
       boardSearchDTOS.add(boardSearchDTO);
