@@ -30,7 +30,7 @@ public class BoardDTO {
 
   private int likes;
 
-  private Long writer;
+  private String writer;
 
   private LocalDateTime regDate, modDate;
 }

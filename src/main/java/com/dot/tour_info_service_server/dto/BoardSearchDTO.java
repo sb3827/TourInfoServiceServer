@@ -16,6 +16,6 @@ public class BoardSearchDTO {
     String title;
     int likes;
     Double score;
-    Long mno;
+    String writer;
     LocalDateTime regDate;
 }

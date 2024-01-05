@@ -82,7 +82,7 @@ public interface BoardService {
                 .content(board.getContent())
                 .score(board.getScore())
                 .likes(board.getLikes())
-                .writer(board.getWriter().getMno())
+                .writer(board.getWriter().getName())
                 .modDate(board.getModDate())
                 .regDate(board.getRegDate())
                 .build();
