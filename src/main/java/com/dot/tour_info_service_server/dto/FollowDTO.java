@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class FollowDTO {
   private Long memberMno;
   private Long followerMno;
+  private String name;
 }

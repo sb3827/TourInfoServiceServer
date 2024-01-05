@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,15 +22,37 @@ public class FollowServiceImpl implements FollowService {
   @Override
   public List<FollowDTO> getListOfFollower(Long mno) {
     Member member = Member.builder().mno(mno).build();
-    List<Follow> result = followRepository.getFollowersByMember(member);
-    return result.stream().map(follow -> entityToDto(follow)).collect(Collectors.toList());
+    List<Object[]> result = followRepository.getFollowersByMember(member);
+    List<FollowDTO> followerList = new ArrayList<>();
+    if (!result.isEmpty()) {
+      for (Object[] list : result) {
+        FollowDTO followDTO = FollowDTO.builder()
+            .memberMno((long)list[0])
+            .name((String) list[1])
+            .build();
+        followerList.add(followDTO);
+      }
+      return followerList;
+    }
+    return null;
   }
 
   @Override
   public List<FollowDTO> getListOfFollowing(Long mno) {
     Member member = Member.builder().mno(mno).build();
-    List<Follow> result = followRepository.getMembersByFollower(member);
-    return result.stream().map(follow -> entityToDto(follow)).collect(Collectors.toList());
+    List<Object[]> result = followRepository.getMembersByFollower(member);
+    List<FollowDTO> followingList = new ArrayList<>();
+    if (!result.isEmpty()){
+      for (Object[] list : result) {
+        FollowDTO followDTO = FollowDTO.builder()
+            .followerMno((Long)list[0])
+            .name((String) list[1])
+            .build();
+        followingList.add(followDTO);
+      }
+      return followingList;
+    }
+    return null;
   }
 
   @Override
