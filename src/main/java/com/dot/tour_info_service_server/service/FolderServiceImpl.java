@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.FolderAllDTO;
 import com.dot.tour_info_service_server.dto.FolderDTO;
+import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.dto.FolderRegistDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
@@ -45,9 +46,17 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더명 조회
     @Override
-    public List<String> getTitle(Long mno) {
-        List<String> result=folderRepository.getFolderTitle(mno);
-        return result;
+    public List<FolderNameDTO> getTitle(Long mno) {
+        List<Folder> result=folderRepository.getFolderTitle(mno);
+        List<FolderNameDTO>folderNameDTOS=new ArrayList<>();
+        for (Folder folder:result){
+            FolderNameDTO folderNameDTO=FolderNameDTO.builder()
+                    .fno(folder.getFno())
+                    .title(folder.getTitle())
+                    .build();
+            folderNameDTOS.add(folderNameDTO);
+        }
+        return folderNameDTOS;
     }
 
     //폴더 등록

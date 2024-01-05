@@ -1,13 +1,9 @@
 package com.dot.tour_info_service_server.controller;
 
+import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.CartService;
 import com.dot.tour_info_service_server.service.FolderService;
-import com.dot.tour_info_service_server.dto.CartDTO;
-import com.dot.tour_info_service_server.dto.FolderAllDTO;
-import com.dot.tour_info_service_server.dto.FolderDTO;
-import com.dot.tour_info_service_server.dto.FolderRegistDTO;
-import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,9 +31,9 @@ public class FolderController {
 
     //폴더명 모두 조회
     @GetMapping(value = "/title/{mno}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseWrapDTO<List<String>>>folderNames(@PathVariable Long mno){
-        List<String> data=folderService.getTitle(mno);
-        ResponseWrapDTO<List<String>> response=new ResponseWrapDTO<>(true,data);
+    public ResponseEntity<ResponseWrapDTO<List<FolderNameDTO>>>folderNames(@PathVariable Long mno){
+        List<FolderNameDTO> data=folderService.getTitle(mno);
+        ResponseWrapDTO<List<FolderNameDTO>> response=new ResponseWrapDTO<>(true,data);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
