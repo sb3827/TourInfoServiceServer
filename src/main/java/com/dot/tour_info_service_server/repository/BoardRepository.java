@@ -76,8 +76,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> adBoard();
 
 
-    //   회원별 장소 포스팅 조회, 이름도 추가했음
-    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.mno, m.name from Board b " +
+    //   회원별 장소 포스팅 조회
+    @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
             "left outer join Member m on b.writer.mno = m.mno " +
