@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
+import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
@@ -8,7 +9,13 @@ import com.dot.tour_info_service_server.entity.Reply;
 import java.util.List;
 
 public interface ReplyService {
-  List<ReplyDTO> getListOfReplyByBoard(Long bno);    // board 의 댓글목록 불러오기
+//  List<ReplyDTO> getListOfReplyByBoard(Long bno);    // board 의 댓글목록 불러오기
+
+  //부모 댓글 조회
+  List<ReplyMemberDTO> parentReply(Long bno);
+
+  //자식 댓글 조회
+  List<ReplyMemberDTO> childReply(Long bno,Long rno);
 
   List<ReplyDTO> getListOfReplyByMember(Long mno);    // 회원이 작성한 댓글 목록
 

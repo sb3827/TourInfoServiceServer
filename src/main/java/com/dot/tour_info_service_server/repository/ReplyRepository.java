@@ -32,8 +32,17 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   //게시글에 해당하는 것 삭제
   void deleteAllByBoard(Board board);
 
-  // 게시글 댓글 목록 불러오기
-  List<Reply> getRepliesByBoardOrderByRnoAsc(Board board);
+  //게시글 상위 댓글 불러오기
+  @Query("select r.rno,r.text,r.parent.rno,r.regDate,r.member.mno,m.name,m.image " +
+          "from Reply r left outer join Member m on m.mno=r.member.mno " +
+          "where r.board.bno=:bno and r.parent is null")
+  List<Object[]> getParentReply(Long bno);
+
+  //게시글 대댓글 불러오기
+  @Query("select r.rno,r.text,r.parent.rno,r.regDate,r.member.mno,m.name,m.image " +
+          "from Reply r left outer join Member m on m.mno=r.member.mno " +
+          "where r.board.bno=:bno and r.parent.rno=:rno")
+  List<Object[]> getChildReply(Long bno,Long rno);
 
   // 회원이 작성한 댓글 목록 불러오기
   List<Reply> getRepliesByMemberOrderByRegDate(Member member);

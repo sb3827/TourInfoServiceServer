@@ -51,22 +51,6 @@ class ReplyRepositoryTest {
     replyRepository.save(reply);
   }
 
-
-  @Test
-  public void getListByBno() {
-    Board board = Board.builder().bno(2L).build();
-    List<Reply> replies = replyRepository.getRepliesByBoardOrderByRnoAsc(board);
-    replies.forEach(reply -> {
-      System.out.println("rno : "+reply.getRno());
-      System.out.println("text : "+reply.getText());
-      System.out.println("regDate : "+reply.getRegDate());
-      System.out.println("modDate : "+reply.getModDate());
-      System.out.println("mno : "+reply.getMember().getMno());
-      System.out.println("=======================================");
-    });
-  }
-
-
   @Test
   public void getListByMno() {
     Member member = Member.builder().mno(1L).build();
@@ -84,5 +68,13 @@ class ReplyRepositoryTest {
   @Test
   void setNullTest(){
     replyRepository.setNullMno(16L);
+  }
+
+
+  @Test
+  public void parentTest(){
+    List<Object[]>result=replyRepository.getParentReply(1l);
+    System.out.println(result);
+
   }
 }
