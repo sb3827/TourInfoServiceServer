@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
+import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
@@ -22,15 +23,6 @@ import java.util.stream.Collectors;
 public class ReplyServiceImpl implements ReplyService {
   private final ReplyRepository replyRepository;
 
-//  @Override
-//  public List<ReplyDTO> getListOfReplyByBoard(Long bno) {
-//    Board board = Board.builder().bno(bno).build();
-//    List<Reply> result = replyRepository.getRepliesByBoardOrderByRnoAsc(board);
-//    return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
-//  }
-
-
-  //부모 댓글 조회
   @Override
   public List<ReplyMemberDTO> parentReply(Long bno) {
     List<Object[]> result=replyRepository.getParentReply(bno);
@@ -76,6 +68,28 @@ public class ReplyServiceImpl implements ReplyService {
     Member member = Member.builder().mno(mno).build();
     List<Reply> result = replyRepository.getRepliesByMemberOrderByRegDate(member);
     return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
+  }
+
+  @Override
+  public List<ReplyListDTO> showReplyList(Long mno) {
+    List<Object[]> result = replyRepository.showReplyList(mno);
+    List<ReplyListDTO> replyList = new ArrayList<>();
+
+    if(!result.isEmpty()){
+      for(Object[] list : result){
+        ReplyListDTO replyListDTO = ReplyListDTO.builder()
+                .rno((Long)list[0])
+                .mno((Long)list[1])
+                .bno((Long)list[2])
+                .title((String)list[3])
+                .text((String)list[4])
+                .regdate((LocalDateTime)list[5])
+                .build();
+        replyList.add(replyListDTO);
+      }
+      return replyList;
+    }
+    return null;
   }
 
   @Override

@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
+import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
@@ -18,6 +19,8 @@ public interface ReplyService {
   List<ReplyMemberDTO> childReply(Long bno,Long rno);
 
   List<ReplyDTO> getListOfReplyByMember(Long mno);    // 회원이 작성한 댓글 목록
+
+  List<ReplyListDTO> showReplyList(Long mno);
 
   void saveReply(ReplyDTO replyDTO);
 
