@@ -1,8 +1,11 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
+<<<<<<<<< Temporary merge branch 1
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
+=========
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+>>>>>>>>> Temporary merge branch 2
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;

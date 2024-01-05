@@ -23,6 +23,15 @@ import java.util.stream.Collectors;
 public class ReplyServiceImpl implements ReplyService {
   private final ReplyRepository replyRepository;
 
+//  @Override
+//  public List<ReplyDTO> getListOfReplyByBoard(Long bno) {
+//    Board board = Board.builder().bno(bno).build();
+//    List<Reply> result = replyRepository.getRepliesByBoardOrderByRnoAsc(board);
+//    return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
+//  }
+
+
+  //부모 댓글 조회
   @Override
   public List<ReplyMemberDTO> parentReply(Long bno) {
     List<Object[]> result=replyRepository.getParentReply(bno);

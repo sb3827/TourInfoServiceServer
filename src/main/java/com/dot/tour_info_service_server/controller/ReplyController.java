@@ -1,6 +1,13 @@
 package com.dot.tour_info_service_server.controller;
 
-import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.ReplyDTO;
+<<<<<<<<< Temporary merge branch 1
+import com.dot.tour_info_service_server.dto.ReplyListDTO;
+=========
+import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+>>>>>>>>> Temporary merge branch 2
+import com.dot.tour_info_service_server.dto.ReportRequestDTO;
+import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.ReplyService;
 import com.dot.tour_info_service_server.service.ReportService;
@@ -11,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +61,8 @@ public class ReplyController {
     }
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
+
+
 
   @PostMapping("/register")
   public ResponseEntity<Map<String, Long>> register(@RequestBody ReplyDTO replyDTO) {
