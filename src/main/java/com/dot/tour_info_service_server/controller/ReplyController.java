@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
+import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReportRequestDTO;
 import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
@@ -25,10 +26,18 @@ public class ReplyController {
   private final ReplyService replyService;
   private final ReportService reportService;
 
+
+//  @GetMapping("/member")
+//  public ResponseEntity<List<ReplyDTO>> getListByMno(@RequestParam("mno") Long mno) {
+//    log.info("getReplyListByMno....");
+//    List<ReplyDTO> result = replyService.getListOfReplyByMember(mno);
+//    return new ResponseEntity<>(result, HttpStatus.OK);
+//  }
+
   @GetMapping("/member")
-  public ResponseEntity<List<ReplyDTO>> getListByMno(@RequestParam("mno") Long mno) {
+  public ResponseEntity<List<ReplyListDTO>> getListByMno(@RequestParam("mno") Long mno) {
     log.info("getReplyListByMno....");
-    List<ReplyDTO> result = replyService.getListOfReplyByMember(mno);
+    List<ReplyListDTO> result = replyService.showReplyList(mno);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
