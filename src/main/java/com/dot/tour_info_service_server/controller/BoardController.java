@@ -134,13 +134,30 @@ public class BoardController {
         }
     }
 
-    // 장소, 코스 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/bno", "/course/posting/bno"})
-    public ResponseEntity<BoardDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
+    // 장소 포스팅 정보 조회
+    @GetMapping(value = {"/place/posting/bno"})
+    public ResponseEntity<BoardAllDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
-        BoardDTO boardDTO = boardService.getBoardByBno(bno);
-        return new ResponseEntity<>(boardDTO, HttpStatus.OK);
+        try {
+            BoardAllDTO boardAllDTO = boardService.getBoardByBno(bno);
+            return new ResponseEntity<>(boardAllDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
+
+    // 코스 포스팅 정보 조회
+    @GetMapping(value = {"/course/posting/bno"})
+    public ResponseEntity<BoardAllDTO> getCourseBoard(@RequestParam("bno") Long bno) {
+        log.info("getPlaceBoard... bno: " + bno);
+        try {
+            BoardAllDTO boardAllDTO = boardService.getCourseByBno(bno);
+        return new ResponseEntity<>(boardAllDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 
     // 보드 메인페이지 정보 조회
     @GetMapping(value = "/main")

@@ -37,4 +37,5 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Query("SELECT bp FROM BoardPlace bp WHERE bp.boardPlacePK.board.bno=:bno")
     List<BoardPlace> selectBPbyBno(@Param("bno") Long bno);
 
+
 }
