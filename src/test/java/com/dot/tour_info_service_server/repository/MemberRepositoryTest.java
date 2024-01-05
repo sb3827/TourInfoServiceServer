@@ -125,4 +125,9 @@ class MemberRepositoryTest {
         log.info("일반 유저 검색 : "+memberRepository.searchNomal(""));
         log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary(""));
     }
+
+    @Test
+    void showCart(){
+        log.info("카트" + memberRepository.showCart(2L));
+    }
 }

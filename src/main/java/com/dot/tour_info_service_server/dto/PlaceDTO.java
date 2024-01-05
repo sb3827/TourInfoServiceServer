@@ -23,4 +23,5 @@ public class PlaceDTO {
     private Category category;
     private int cart;
     private LocalDateTime regDate, modDate;
+    private String image;
 }

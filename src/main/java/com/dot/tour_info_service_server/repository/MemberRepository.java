@@ -64,7 +64,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select count(f.followPk.follower.mno) from Follow f where f.followPk.follower.mno = :mno")
     Long showFollowings(Long mno);
 
-
+    // 찜목록 수 조회
+    @Query("select count(c.cartPK.member.mno) from Cart c where c.cartPK.member.mno = :mno")
+    Long showCart(Long mno);
 
     //회원 조회 - 전체 (관리자)
     @Transactional

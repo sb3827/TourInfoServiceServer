@@ -80,6 +80,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
+            "left outer join Member m on b.writer.mno = m.mno " +
             "where b.writer.mno =:mno and b.isCourse = false " +
             "group by b.bno")
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
@@ -97,6 +98,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
+            "left outer join Member m on b.writer.mno = m.mno " +
             "where b.writer.mno =:mno and b.isCourse = true " +
             "group by b.bno")
     List<Object[]> getCourseBoardByMno(@Param("mno") Long mno);
