@@ -1,5 +1,6 @@
 package com.dot.tour_info_service_server.repository;
 
+import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
 import org.junit.jupiter.api.Test;
@@ -41,8 +42,14 @@ class FolderRepositoryTest {
     //폴더명 조회
     @Test
     public void getTitle(){
-        List<String>result=folderRepository.getFolderTitle(2l);
-        System.out.println(result);
+        List<Folder>result=folderRepository.getFolderTitle(2l);
+        for(Folder folder:result){
+            FolderNameDTO folderNameDTO=FolderNameDTO.builder()
+                    .fno(folder.getFno())
+                    .title(folder.getTitle())
+                    .build();
+            System.out.println(folderNameDTO);
+        }
     }
 
     @Test

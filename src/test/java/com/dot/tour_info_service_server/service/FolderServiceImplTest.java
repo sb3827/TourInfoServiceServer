@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.FolderAllDTO;
 import com.dot.tour_info_service_server.dto.FolderDTO;
+import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.repository.CartRepository;
 import com.dot.tour_info_service_server.repository.FolderRepository;
@@ -46,8 +47,14 @@ class FolderServiceImplTest{
     @Test
     public void testFolderName(){
         Long mno=2l;
-        List<String> result=folderRepository.getFolderTitle(mno);
-        System.out.println(result);
+        List<Folder> result=folderRepository.getFolderTitle(mno);
+        for (Folder folder:result){
+            FolderNameDTO folderNameDTO=FolderNameDTO.builder()
+                    .fno(folder.getFno())
+                    .title(folder.getTitle())
+                    .build();
+            System.out.println(folderNameDTO);
+        }
     }
 
     //폴더명 수정 테스트
