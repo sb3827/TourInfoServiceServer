@@ -19,7 +19,7 @@ public class BoardPlaceReplyCountDTO {
     private String title;
     private String src;
     private Long replyCount;
-    private Long mno;
+    private String writer;
     private LocalDateTime regdate;
     private int likes;
     private Double score;

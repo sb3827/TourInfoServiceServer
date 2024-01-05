@@ -3,6 +3,7 @@ package com.dot.tour_info_service_server.repository;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Reply;
 import com.dot.tour_info_service_server.entity.Member;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 @SpringBootTest
+@Log4j2
 class ReplyRepositoryTests {
 
   @Autowired
@@ -67,4 +69,8 @@ class ReplyRepositoryTests {
   }
 
 
+    @Test
+    void showReplyListTest(){
+        log.info("replyList : " + replyRepository.showReplyList(2L));
+    }
 }

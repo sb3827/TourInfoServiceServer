@@ -22,7 +22,6 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
-
     @PostMapping(value = "/register")
     public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody PlaceDTO placeDTO){
         log.info("registerPlace: " + placeDTO);
@@ -32,11 +31,14 @@ public class PlaceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-
     @GetMapping(value = "")
-    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") Category filter, @RequestParam(value = "search") String search ){
+    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") String filter, @RequestParam(value = "search") String search ){
         log.info("findPlace...... filter :  " + filter + " search : " + search);
-        List<PlaceDTO> placeList = placeService.searchPlace(filter, search);
+        Category category=null;
+        if(!filter.isEmpty()) {
+            category = Category.valueOf(filter);
+        }
+        List<PlaceDTO> placeList = placeService.searchPlace(category, search);
         return new ResponseEntity<>(placeList, HttpStatus.OK);
     }
 
