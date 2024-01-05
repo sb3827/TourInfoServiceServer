@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class FollowDTO {
-  private Long memberMno;
-  private Long followerMno;
+public class FollowResponseDTO {
+  private Long mno;
+  private String name;
 }
