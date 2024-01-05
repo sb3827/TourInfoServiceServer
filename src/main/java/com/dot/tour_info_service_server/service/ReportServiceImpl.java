@@ -3,6 +3,7 @@ package com.dot.tour_info_service_server.service;
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.repository.*;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -96,7 +97,9 @@ public class ReportServiceImpl implements ReportService{
         Optional<Report> result=reportRepository.findById(sno);
         if (result.isPresent()){
             Report report=result.get();
-            return entityToDto(report);
+            if(SecurityUtil.validateMno(report.getDefendant_mno())) {
+                return entityToDto(report);
+            }
         }
         return null;
     }
@@ -153,9 +156,11 @@ public class ReportServiceImpl implements ReportService{
         Optional<Report> result=reportRepository.findById(sno);
         if (result.isPresent()){
             Report report=result.get();
-            report.changeIsDone(true);
-            reportRepository.save(report);
-            return report.getSno();
+            if(SecurityUtil.validateMno(report.getDefendant_mno())) {
+                report.changeIsDone(true);
+                reportRepository.save(report);
+                return report.getSno();
+            }
         }
         return -1l;
     }
