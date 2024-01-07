@@ -34,24 +34,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("update Board b set b.writer.mno = null where b.writer.mno = :mno ")
     void setNullMno(Long mno);
 
-    // 장소 포스팅 정보 조회 board - place - image - boardLike 순으로
+    // 장소 포스팅 정보 조회 board, place, image, boardLike repository 처리
     @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
             "b.isAd, b.likes, b.score " +
             "from Board b where b.bno =:bno and b.isCourse = false ")
     List<Object[]> getPlaceBoardByBno(Long bno);
-
-//    @Query("SELECT b.title as title, b.content as content, b.writer.mno as mno, b.writer.name as writer, b.isCourse as is_course, " +
-//            "b.isAd as is_ad, b.likes as likes, b.score as score, b.regDate as regdate, " +
-//            "b.modDate as moddate, " +
-//            "bl.boardLikePK.member.mno as likeMember, i.src as src " +
-//            "from Board b " +
-//            "left join BoardLike bl on b.bno = bl.boardLikePK.board.bno " +
-//            "left join Image i on b.bno = i.board.bno " +
-//            "where b.bno =:bno " +
-//            "and b.isCourse = false "
-//    )
-//    List<Object[]> getPlaceBoardByBno(@Param("bno") Long bno);
-
 
     // 코스 포스팅 정보 조회
     @Transactional
