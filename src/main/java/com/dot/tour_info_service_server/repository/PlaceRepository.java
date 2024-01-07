@@ -1,5 +1,6 @@
 package com.dot.tour_info_service_server.repository;
 
+import com.dot.tour_info_service_server.dto.BoardDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -30,4 +31,13 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "(p.name like %:search% or p.localAddress like %:search% or " +
             "p.roadAddress like %:search% or p.engAddress like %:search%)")
     List<Object[]> searchPlace(Category filter, String search);
+
+
+    // 보드에 해당하는 place 반환
+    @Query("select p.pno, p.name, p.category, p.lng, p.lat, p.roadAddress, p.localAddress, " +
+            "p.engAddress,  p.cart ,p.regDate, p.modDate from Place p " +
+            "left outer join BoardPlace bp on bp.place.pno= p.pno " +
+            "left outer join Board b on b.bno = bp.boardPlacePK.board.bno " +
+            "where b.bno =:bno ")
+    List<Object[]> getPlaceByBoard(Long bno);
 }

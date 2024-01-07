@@ -1,6 +1,9 @@
 package com.dot.tour_info_service_server.dto;
 
+import com.dot.tour_info_service_server.entity.BoardLike;
+import com.dot.tour_info_service_server.entity.Image;
 import com.dot.tour_info_service_server.entity.Member;
+import com.dot.tour_info_service_server.entity.Place;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,5 +36,12 @@ public class BoardDTO {
   private String writer;
 
   private LocalDateTime regDate, modDate;
+
+  private List<PlaceDTO> places;
+
+  private List<String> imageList;
+
+  private List<String> boardLikeName;
+
 }
 

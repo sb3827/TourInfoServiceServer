@@ -1,11 +1,13 @@
 package com.dot.tour_info_service_server.repository;
 
+import com.dot.tour_info_service_server.dto.BoardDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -33,6 +35,14 @@ public class PlaceRepositoryTests {
         List<Place> list = placeRepository.findPlace(null, "test");
         for(Place place : list){
             System.out.println(place);
+        }
+    }
+
+    @Test
+    public void testboard() {
+        List<Object[]> result = placeRepository.getPlaceByBoard(8L);
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
         }
     }
 

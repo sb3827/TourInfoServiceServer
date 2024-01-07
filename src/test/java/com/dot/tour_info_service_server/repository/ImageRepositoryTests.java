@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -21,7 +22,7 @@ class ImageRepositoryTests {
     IntStream.rangeClosed(1, 3).forEach(i -> {
 //            long bno = (long) (Math.random()* 3) + 10;
 
-      Board board = Board.builder().bno(5L).build();
+      Board board = Board.builder().bno(8L).build();
       Image image = Image.builder().board(board).src("test" + i).build();
 
       imageRepository.save(image);
@@ -40,4 +41,12 @@ class ImageRepositoryTests {
     System.out.println(result);
   }
 
+  @Transactional
+  @Test
+  public void srcByBnotest() {
+    List<Object[]> result = imageRepository.getImageByBno(8L);
+    for (Object[] objects : result){
+      System.out.println(Arrays.toString(objects));
+    }
+  }
 }
