@@ -17,7 +17,7 @@ public class BoardPlaceReplyCountDTO {
     private Long pno;
     private Long bno;
     private String title;
-    private String src;
+    private String[] src;
     private Long replyCount;
     private String writer;
     private LocalDateTime regdate;

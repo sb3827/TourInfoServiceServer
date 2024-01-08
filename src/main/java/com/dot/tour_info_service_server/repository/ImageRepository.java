@@ -40,4 +40,8 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
 
   List<Image> findAllByBoard(Board board);
 
+  //bno 넣을때 경로만 반환
+    @Transactional
+    @Query("SELECT i.src FROM Image i WHERE i.board.bno=:bno")
+    List<Object[]> getImageByBno(@Param("bno") Long bno);
 }

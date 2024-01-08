@@ -18,7 +18,7 @@ class BoardLikeRepositoryTest {
     @Rollback(false)
     public void deleteTest(){
         boardLikeRepository.deleteAllByBoardLikePKBoard(Board.builder()
-                .bno(1l)
+                .bno(8l)
                 .build());
     }
 }

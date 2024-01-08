@@ -32,9 +32,20 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("update Board b set b.writer.mno = null where b.writer.mno = :mno ")
     void setNullMno(Long mno);
 
-    // 장소,코스 포스팅 모든 정보 조회
-    @Query("SELECT b FROM Board b WHERE b.bno =:bno ")
+    // 장소 포스팅 정보 조회 board, place, image, boardLike repository 처리
+    @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
+            "b.isAd, b.likes, b.score, count(bl.boardLikePK.member.mno) " +
+            "from Board b left outer join BoardLike bl on (b.bno = bl.boardLikePK.board.bno) " +
+            "where b.bno =:bno and b.isCourse = false ")
     List<Object[]> getPlaceBoardByBno(Long bno);
+
+    // 코스 포스팅 정보 조회
+    @Transactional
+    @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
+            "b.isAd, b.likes, b.score, count(bl.boardLikePK.member.mno) " +
+            "from Board b left outer join BoardLike bl on (b.bno = bl.boardLikePK.board.bno) " +
+            "where b.bno =:bno and b.isCourse = true ")
+    List<Object[]> getCourseBoardByBno(Long bno);
 
     Optional<Board> findBoardByBno(Long bno);
 
@@ -85,7 +96,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
 
     // 장소별 장소 포스팅 조회
-    @Query("select bp.place.pno, b.bno, b.title , i.src, count(r.rno), b.writer.name, b.regDate, b.likes, b.score from Board b " +
+    @Query("select bp.place.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate, b.likes, b.score from Board b " +
             "left outer join Image i on b.bno = i.board.bno " +
             "left outer join Reply r on b.bno = r.board.bno " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +

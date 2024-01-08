@@ -1,9 +1,18 @@
 package com.dot.tour_info_service_server.repository;
 
+import com.dot.tour_info_service_server.dto.BoardDTO;
+import com.dot.tour_info_service_server.dto.BoardInfoDTO;
+import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+@Log4j2
 @SpringBootTest
 class BoardRepositoryTests {
 
@@ -32,4 +41,34 @@ class BoardRepositoryTests {
     void setNullTest(){
         boardRepository.setNullMno(16L);
     }
+
+
+    @Test
+    @Transactional
+    void test2() {
+        List<Object[]> result = boardRepository.getPlaceBoardByBno(8L);
+        result.forEach(objects -> {
+            System.out.println(Arrays.toString(objects));
+        });
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+
+    }
+
+    @Test
+    void getPlaceBoardByBnoTest() {
+//        Object result = boardRepository.getPlaceBoardByBno(1L);
+//
+//        System.out.println(result);
+//
+//        if(result.isEmpty()){
+//            log.error("empty");
+//            return;
+//        }
+//
+//        log.info(result.get());
+
+    }
+
 }

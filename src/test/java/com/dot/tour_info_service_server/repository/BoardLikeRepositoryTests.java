@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -25,13 +27,11 @@ class BoardLikeRepositoryTests {
 
       long bno = (long) (Math.random() * 3) + 10;
 
-      Board board = Board.builder().bno(1L).build();
-
-      Member member = Member.builder().mno(1L).build();
+      Board board = Board.builder().bno(8L).build();
 
       BoardLikePK boardLikePK = BoardLikePK.builder()
           .board(board)
-          .member(member)
+          .member(null)
           .build();
 
       BoardLike boardLike = BoardLike.builder()
@@ -44,6 +44,14 @@ class BoardLikeRepositoryTests {
   @Test
   public void deleteTest () {
     boardLikeRepository.deleteByBno(12L);
+  }
+
+  @Test
+    void test() {
+      List<Object[]> result = boardLikeRepository.getBoardLikeByBno(8L);
+      for (Object[] objects: result) {
+          System.out.println(Arrays.toString(objects));
+      }
   }
 
 }
