@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.FollowDTO;
+import com.dot.tour_info_service_server.dto.FollowResponseDTO;
 import com.dot.tour_info_service_server.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -43,17 +44,17 @@ public class FollowController {
 
     // 회원이 팔로우 중인 사람들 조회(팔로잉 조회)        조회대상회원 -> memberMno 팔로잉->followerMno 로 나옴
     @GetMapping("/following")
-    public ResponseEntity<List<FollowDTO>> getListOfFollowing(@RequestParam("mno") Long mno) {
+    public ResponseEntity<List<FollowResponseDTO>> getListOfFollowing(@RequestParam("mno") Long mno) {
         log.info("List of Following : " + mno);
-        List<FollowDTO> result = followService.getListOfFollowing(mno);
+        List<FollowResponseDTO> result = followService.getListOfFollowing(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // 회원을 팔로우 중인 사람들 조회(팔로워조회)       조회대상회원-> followerMno  팔로워->memberMno 로 나옴
     @GetMapping("/follower")
-    public ResponseEntity<List<FollowDTO>> getListOfFollower(@RequestParam("mno") Long mno) {
+    public ResponseEntity<List<FollowResponseDTO>> getListOfFollower(@RequestParam("mno") Long mno) {
         log.info("List of follower : " + mno);
-        List<FollowDTO> result = followService.getListOfFollower(mno);
+        List<FollowResponseDTO> result = followService.getListOfFollower(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

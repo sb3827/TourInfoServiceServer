@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.FollowDTO;
+import com.dot.tour_info_service_server.dto.FollowResponseDTO;
 import com.dot.tour_info_service_server.entity.Follow;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.repository.FollowRepository;
@@ -9,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2
@@ -19,17 +20,39 @@ public class FollowServiceImpl implements FollowService {
   private final FollowRepository followRepository;
 
   @Override
-  public List<FollowDTO> getListOfFollower(Long mno) {
+  public List<FollowResponseDTO> getListOfFollower(Long mno) {
     Member member = Member.builder().mno(mno).build();
-    List<Follow> result = followRepository.getFollowersByMember(member);
-    return result.stream().map(follow -> entityToDto(follow)).collect(Collectors.toList());
+    List<Object[]> result = followRepository.getFollowersByMember(member);
+    List<FollowResponseDTO> followerList = new ArrayList<>();
+    if (!result.isEmpty()) {
+      for (Object[] list : result) {
+        FollowResponseDTO followResponseDTO = FollowResponseDTO.builder()
+            .mno((Long) list[0])
+            .name((String) list[1])
+            .build();
+        followerList.add(followResponseDTO);
+      }
+      return followerList;
+    }
+    return null;
   }
 
   @Override
-  public List<FollowDTO> getListOfFollowing(Long mno) {
+  public List<FollowResponseDTO> getListOfFollowing(Long mno) {
     Member member = Member.builder().mno(mno).build();
-    List<Follow> result = followRepository.getMembersByFollower(member);
-    return result.stream().map(follow -> entityToDto(follow)).collect(Collectors.toList());
+    List<Object[]> result = followRepository.getMembersByFollower(member);
+    List<FollowResponseDTO> followingList = new ArrayList<>();
+    if (!result.isEmpty()){
+      for (Object[] list : result) {
+        FollowResponseDTO followResponseDTO = FollowResponseDTO.builder()
+            .mno((Long) list[0])
+            .name((String) list[1])
+            .build();
+        followingList.add(followResponseDTO);
+      }
+      return followingList;
+    }
+    return null;
   }
 
   @Override
