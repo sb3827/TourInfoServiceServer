@@ -48,32 +48,10 @@ public class BoardController {
 
     // 코스포스팅 등록
     @PostMapping(value = {"/course/posting/register"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestPart CourseBoardDTO courseBoardDTO,
-                                                                @RequestPart MultipartFile[] imageFiles) {
-
-        for (MultipartFile imageFile: imageFiles) {
-
-            String originalName = imageFile.getOriginalFilename();
-            String fileName = originalName.substring(originalName.lastIndexOf("\\")+1);
-            log.info("fileName: "+ fileName );
-            String folderPath = makeFolder();
-            String uuid = UUID.randomUUID().toString();
-            String saveName = uploadPath + File.separator + folderPath + File.separator +
-                    uuid + "_" + fileName;
-
-            Path savePath = Paths.get(saveName); // Path : 파일 올리는 지정된 경로를 가리킬 때 사용
-
-            try {
-                imageFile.transferTo(savePath);
-                Files.write(savePath, imageFile.getBytes());
-                log.info("savePath: "+ savePath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
 
         Map<String, Long> result = new HashMap<>();
-        Long bno = boardService.courseRegister(courseBoardDTO, imageFiles);
+        Long bno = boardService.courseRegister(courseBoardDTO);
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -136,11 +114,11 @@ public class BoardController {
 
     // 장소 포스팅 정보 조회
     @GetMapping(value = {"/place/posting/bno"})
-    public ResponseEntity<BoardAllDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
+    public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
         try {
-            BoardAllDTO boardAllDTO = boardService.getBoardByBno(bno);
-            return new ResponseEntity<>(boardAllDTO, HttpStatus.OK);
+            BoardInfoDTO boardInfoDTO = boardService.getBoardByBno(bno);
+            return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -148,11 +126,11 @@ public class BoardController {
 
     // 코스 포스팅 정보 조회
     @GetMapping(value = {"/course/posting/bno"})
-    public ResponseEntity<BoardAllDTO> getCourseBoard(@RequestParam("bno") Long bno) {
-        log.info("getPlaceBoard... bno: " + bno);
+    public ResponseEntity<BoardInfoDTO> getCourseBoard(@RequestParam("bno") Long bno) {
+        log.info("getCourseBoard... bno: " + bno);
         try {
-            BoardAllDTO boardAllDTO = boardService.getCourseByBno(bno);
-        return new ResponseEntity<>(boardAllDTO, HttpStatus.OK);
+            BoardInfoDTO boardInfoDTO = boardService.getCourseByBno(bno);
+        return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
