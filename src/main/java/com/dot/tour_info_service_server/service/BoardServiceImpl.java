@@ -65,7 +65,7 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   @Transactional
-  public Long courseRegister(CourseBoardDTO courseBoardDTO, MultipartFile[] imageFiles) {
+  public Long courseRegister(CourseBoardDTO courseBoardDTO) {
     Board board = courseDtoToEntity(courseBoardDTO);
     board = boardRepository.save(board);
     log.info("board 저장" + board);
@@ -93,25 +93,6 @@ public class BoardServiceImpl implements BoardService {
         log.info("image 저장");
       }
     }
-
-    //이미지 파일을 업로드하고 저장
-    if (imageFiles != null) {
-      for (MultipartFile file : imageFiles) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        try {
-          // 데이터베이스에는 경로를 저장
-          Image image = Image.builder()
-                  .src(fileName) // 이미지 경로 설정
-                  .board(board)
-                  .build();
-          imageRepository.save(image);
-          log.info("이미지 저장: " + fileName);
-        } catch (Exception e) {
-          log.error("이미지 저장 중 오류 발생: " + e.getMessage());
-        }
-      }
-    }
-
     return board.getBno();
   }
 
@@ -265,98 +246,66 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   @Transactional
-  public BoardAllDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
+  public BoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
     List<Object[]> result = boardRepository.getPlaceBoardByBno(bno);
-    List<BoardInfoDTO> boardInfoDTOS = new ArrayList<>();
       if (result.isEmpty()) {
         throw new IllegalArgumentException("없는 게시글입니다.");
       }
+      List<Object[]> result2 = placeRepository.getPlaceByBoard(bno);
+      List<Object[]> result3 = imageRepository.getImageByBno(bno);
 
-    for (Object[] object: result) {
-      BoardInfoDTO boardInfoDTO = BoardInfoDTO.builder()
-              .title((String) object[0])
-              .content((String) object[1])
-              .mno((Long) object[2])
-              .writer((String)object[3])
-              .isCourse((Boolean) object[4])
-              .regdate((LocalDateTime) object[5])
-              .isAd((Boolean) object[6])
-              .likes((Integer) object[7])
-              .score((Double) object[8])
-              .build();
-      boardInfoDTOS.add(boardInfoDTO);
-    }
+      List<PlaceDTO> placeDTOS = new ArrayList<>();
 
-    List<Object[]> result2 = placeRepository.getPlaceByBoard(bno);
-    List<PlaceDTO> placeDTOS = new ArrayList<>();
-    for (Object[] objects: result2) {
-      PlaceDTO placeDTO = PlaceDTO.builder()
-              .pno((Long) objects[0])
-              .name((String) objects[1])
-              .category((Category) objects[2])
-              .lng((Double) objects[3])
-              .lat((Double) objects[4])
-              .roadAddress((String) objects[5])
-              .localAddress((String) objects[6])
-              .engAddress((String) objects[7])
-              .cart((Integer) objects[8])
-              .regDate((LocalDateTime) objects[9])
-              .modDate((LocalDateTime) objects[10])
-              .build();
-      placeDTOS.add(placeDTO);
-    }
-    List<Object[]> result3 = imageRepository.getImageByBno(bno);
-    List<ImageDTO> imageDTOS = new ArrayList<>();
-    for (Object[] objects: result3) {
-      ImageDTO imageDTO = ImageDTO.builder()
-              .src((String) objects[0])
-              .build();
-      imageDTOS.add(imageDTO);
-    }
+      for (Object[] objects: result2) {
+        PlaceDTO placeDTO = PlaceDTO.builder()
+                .pno((Long) objects[0])
+                .name((String) objects[1])
+                .category((Category) objects[2])
+                .lng((Double) objects[3])
+                .lat((Double) objects[4])
+                .roadAddress((String) objects[5])
+                .localAddress((String) objects[6])
+                .engAddress((String) objects[7])
+                .cart((Integer) objects[8])
+                .regDate((LocalDateTime) objects[9])
+                .modDate((LocalDateTime) objects[10])
+                .build();
+        placeDTOS.add(placeDTO);
+      }
 
-    List<Object[]> result4 = boardLikeRepository.getBoardLikeByBno(bno);
-    List<BoardLikeCntDTO> boardLikeNameDTOS = new ArrayList<>();
-    for (Object[] objects: result4) {
-      BoardLikeCntDTO boardLikeNameDTO = BoardLikeCntDTO.builder()
-              .mnoCnt((Long) objects[0])
+      List<String> imageUrls = new ArrayList<>();
+      for (Object[] image : result3) {
+        String src = (String) image[0];
+        imageUrls.add(src);
+      }
+      BoardInfoDTO nboardInfoDTO = BoardInfoDTO.builder()
+              .title((String) result.get(0)[0])
+              .content((String) result.get(0)[1])
+              .mno((Long) result.get(0)[2])
+              .writer((String)result.get(0)[3])
+              .isCourse((Boolean) result.get(0)[4])
+              .regdate((LocalDateTime) result.get(0)[5])
+              .isAd((Boolean) result.get(0)[6])
+              .likes((Integer) result.get(0)[7])
+              .score((Double) result.get(0)[8])
+              .mnoCnt((Long) result.get(0)[9])
+              .placeDTOS(placeDTOS)
+              .images(imageUrls.toArray(new String[0]))
               .build();
-      boardLikeNameDTOS.add(boardLikeNameDTO);
-    }
-
-    BoardAllDTO boardAllDTO = BoardAllDTO.builder()
-            .boardInfoDTOS(boardInfoDTOS)
-            .placeDTOS(placeDTOS)
-            .imageDTOS(imageDTOS)
-            .boardLikeNameDTOS(boardLikeNameDTOS)
-            .build();
-    return boardAllDTO;
+    return nboardInfoDTO;
   }
 
   @Override
-  public BoardAllDTO getCourseByBno (Long bno) throws IllegalAccessException, SQLException {
+  public BoardInfoDTO getCourseByBno (Long bno) throws IllegalAccessException, SQLException {
     List<Object[]> result = boardRepository.getCourseBoardByBno(bno);
-    List<BoardInfoDTO> boardInfoDTOS = new ArrayList<>();
     if (result.isEmpty()) {
       throw new IllegalArgumentException("없는 게시글입니다.");
     }
-
-    for (Object[] object: result) {
-      BoardInfoDTO boardInfoDTO = BoardInfoDTO.builder()
-              .title((String) object[0])
-              .content((String) object[1])
-              .mno((Long) object[2])
-              .writer((String)object[3])
-              .isCourse((Boolean) object[4])
-              .regdate((LocalDateTime) object[5])
-              .isAd((Boolean) object[6])
-              .likes((Integer) object[7])
-              .score((Double) object[8])
-              .build();
-      boardInfoDTOS.add(boardInfoDTO);
-    }
-
     List<Object[]> result2 = placeRepository.getPlaceByBoard(bno);
+    List<Object[]> result3 = imageRepository.getImageByBno(bno);
+
     List<PlaceDTO> placeDTOS = new ArrayList<>();
+
     for (Object[] objects: result2) {
       PlaceDTO placeDTO = PlaceDTO.builder()
               .pno((Long) objects[0])
@@ -373,31 +322,27 @@ public class BoardServiceImpl implements BoardService {
               .build();
       placeDTOS.add(placeDTO);
     }
-    List<Object[]> result3 = imageRepository.getImageByBno(bno);
-    List<ImageDTO> imageDTOS = new ArrayList<>();
-    for (Object[] objects: result3) {
-      ImageDTO imageDTO = ImageDTO.builder()
-              .src((String) objects[0])
-              .build();
-      imageDTOS.add(imageDTO);
-    }
 
-    List<Object[]> result4 = boardLikeRepository.getBoardLikeByBno(bno);
-    List<BoardLikeCntDTO> boardLikeNameDTOS = new ArrayList<>();
-    for (Object[] objects: result4) {
-      BoardLikeCntDTO boardLikeNameDTO = BoardLikeCntDTO.builder()
-              .mnoCnt((Long) objects[0])
-              .build();
-      boardLikeNameDTOS.add(boardLikeNameDTO);
+    List<String> imageUrls = new ArrayList<>();
+    for (Object[] image : result3) {
+      String src = (String) image[0];
+      imageUrls.add(src);
     }
-
-    BoardAllDTO boardAllDTO = BoardAllDTO.builder()
-            .boardInfoDTOS(boardInfoDTOS)
+    BoardInfoDTO nboardInfoDTO = BoardInfoDTO.builder()
+            .title((String) result.get(0)[0])
+            .content((String) result.get(0)[1])
+            .mno((Long) result.get(0)[2])
+            .writer((String)result.get(0)[3])
+            .isCourse((Boolean) result.get(0)[4])
+            .regdate((LocalDateTime) result.get(0)[5])
+            .isAd((Boolean) result.get(0)[6])
+            .likes((Integer) result.get(0)[7])
+            .score((Double) result.get(0)[8])
+            .mnoCnt((Long) result.get(0)[9])
             .placeDTOS(placeDTOS)
-            .imageDTOS(imageDTOS)
-            .boardLikeNameDTOS(boardLikeNameDTOS)
+            .images(imageUrls.toArray(new String[0]))
             .build();
-    return boardAllDTO;
+    return nboardInfoDTO;
   }
 
 
@@ -425,25 +370,35 @@ public class BoardServiceImpl implements BoardService {
     return boardReplyCountDTOS;
   }
 
+  //장소별 장소 포스팅 조회
   @Override
   public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno) {
     List<Object[]> result = boardRepository.getBoardByPno(pno);
     List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTOS = new ArrayList<>();
+
     if (result.isEmpty()) {
       return null;
     }
-    for (Object[] objects: result){
+
+    for (Object[] objects : result) {
+      // bno을 보내주면 image 배열을 받아오는 작업
+      Long bno = (Long) objects[1];
+      List<Object[]> images = imageRepository.getImageByBno(bno);
+      List<String> imageUrls = new ArrayList<>();
+      for (Object[] image : images) {
+        String src = (String) image[0];
+        imageUrls.add(src);
+      }
       BoardPlaceReplyCountDTO boardPlaceReplyCountDTO = BoardPlaceReplyCountDTO.builder()
               .pno((Long)objects[0])
               .bno((Long) objects[1])
+              .src(imageUrls.toArray(new String[0]))
               .title((String) objects[2])
-              .src((String) objects[3])
-              .replyCount((Long) objects[4])
-              .writer((String) objects[5])
-              .regdate((LocalDateTime) objects[6])
-              .likes((Integer) objects[7])
-              .score((Double) objects[8])
-
+              .replyCount((Long) objects[3])
+              .writer((String) objects[4])
+              .regdate((LocalDateTime) objects[5])
+              .likes((Integer) objects[6])
+              .score((Double) objects[7])
               .build();
       boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
 

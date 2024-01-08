@@ -15,7 +15,7 @@ public interface BoardService {
     Long placeRegister(PlaceBoardDTO placeBoardDTO);
 
     // 코스 등록
-    Long courseRegister(CourseBoardDTO courseBoardDTO, MultipartFile[] imageFiles);
+    Long courseRegister(CourseBoardDTO courseBoardDTO);
 
     // 삭제
     Long remove(Long bno);
@@ -27,10 +27,10 @@ public interface BoardService {
     Long modifyCourse(CourseBoardDTO courseBoardDTO) throws IllegalAccessException, SQLException;
 
     // 장소 포스팅 정보 조회
-    BoardAllDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException;
+    BoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException;
 
     // 코스 포스팅 정보 조회
-    BoardAllDTO getCourseByBno(Long bno) throws IllegalAccessException, SQLException;
+    BoardInfoDTO getCourseByBno(Long bno) throws IllegalAccessException, SQLException;
 
     // 메인 포스팅 조회
     MainResponseDTO mainBoard(Long mno);
