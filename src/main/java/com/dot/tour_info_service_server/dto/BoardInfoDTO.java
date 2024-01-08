@@ -24,9 +24,8 @@ public class BoardInfoDTO {
   private Double score;
   private LocalDateTime regdate;
   private LocalDateTime moddate;
-//  private Member[] likeMember;
-//  private String[] src;
-//  private List<Member> likeMember;
-//  private List<String> src;
+  private List<PlaceDTO> placeDTOS;
+  private String[] images;
+  private Long mnoCnt;
 }
 
