@@ -112,9 +112,10 @@ public class BoardController {
         }
     }
 
-    // 장소 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/bno"})
-    public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
+
+    // 장소, 코스 포스팅 정보 조회
+    @GetMapping(value = {"/place/posting", "/course/posting"})
+    public ResponseEntity<BoardDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
         try {
             BoardInfoDTO boardInfoDTO = boardService.getBoardByBno(bno);
@@ -146,7 +147,7 @@ public class BoardController {
 
 
     //   회원별 장소 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/mno"})
+    @GetMapping(value = {"/place/posting/member"})
     public ResponseEntity<List<BoardReplyCountDTO>> getBoardByMno(@RequestParam("mno") Long mno) {
         log.info("getBoardByMno... bno: " + mno);
         List<BoardReplyCountDTO> boardReplyCountDTO = boardService.getBoardByMno(mno);
@@ -162,7 +163,7 @@ public class BoardController {
     }
 
     // 회원별 코스 포스팅 정보 조회
-    @GetMapping(value = {"/course/posting/mno"})
+    @GetMapping(value = {"/course/posting/member"})
     public ResponseEntity<List<BoardReplyCountDTO>> getCourseBoardByMno(@RequestParam("mno") Long mno) {
         log.info("getBoardByMno... bno: " + mno);
         List<BoardReplyCountDTO> boardReplyCountDTO = boardService.getCourseBoardByMno(mno);
