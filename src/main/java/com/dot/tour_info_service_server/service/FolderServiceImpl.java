@@ -2,10 +2,12 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.FolderAllDTO;
 import com.dot.tour_info_service_server.dto.FolderDTO;
+import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.dto.FolderRegistDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.repository.FolderRepository;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -44,9 +46,17 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더명 조회
     @Override
-    public List<String> getTitle(Long mno) {
-        List<String> result=folderRepository.getFolderTitle(mno);
-        return result;
+    public List<FolderNameDTO> getTitle(Long mno) {
+        List<Folder> result=folderRepository.getFolderTitle(mno);
+        List<FolderNameDTO>folderNameDTOS=new ArrayList<>();
+        for (Folder folder:result){
+            FolderNameDTO folderNameDTO=FolderNameDTO.builder()
+                    .fno(folder.getFno())
+                    .title(folder.getTitle())
+                    .build();
+            folderNameDTOS.add(folderNameDTO);
+        }
+        return folderNameDTOS;
     }
 
     //폴더 등록
@@ -77,11 +87,14 @@ public class FolderServiceImpl implements FolderService{
     //폴더 삭제
     @Override
     public Long remove(Long fno) {
-        if (folderRepository.findById(fno).isPresent()) {
-            folderRepository.deleteById(fno);
-            return fno;
+        Optional<Folder> result=folderRepository.findById(fno);
+        if(result.isPresent()){
+            Folder folder=result.get();
+            if(SecurityUtil.validateMno(folder.getMember().getMno())){
+                folderRepository.deleteById(fno);
+                return fno;
+            }
         }
         return -1l;
     }
-
 }

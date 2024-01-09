@@ -23,8 +23,8 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
 
 
     //폴더명 조회
-    @Query("select f.title from Folder f where f.member.mno=:mno")
-    List<String> getFolderTitle(Long mno);
+    @Query("select f from Folder f where f.member.mno=:mno")
+    List<Folder> getFolderTitle(Long mno);
 
     @Modifying
     @Transactional

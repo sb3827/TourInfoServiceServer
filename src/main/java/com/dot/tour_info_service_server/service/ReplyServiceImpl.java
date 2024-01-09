@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
+import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
@@ -22,12 +23,54 @@ import java.util.stream.Collectors;
 public class ReplyServiceImpl implements ReplyService {
   private final ReplyRepository replyRepository;
 
+//  @Override
+//  public List<ReplyDTO> getListOfReplyByBoard(Long bno) {
+//    Board board = Board.builder().bno(bno).build();
+//    List<Reply> result = replyRepository.getRepliesByBoardOrderByRnoAsc(board);
+//    return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
+//  }
+
+
+  //부모 댓글 조회
   @Override
-  public List<ReplyDTO> getListOfReplyByBoard(Long bno) {
-    Board board = Board.builder().bno(bno).build();
-    List<Reply> result = replyRepository.getRepliesByBoardOrderByRnoAsc(board);
-    return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
+  public List<ReplyMemberDTO> parentReply(Long bno) {
+    List<Object[]> result=replyRepository.getParentReply(bno);
+    List<ReplyMemberDTO> replyMemberDTOS=new ArrayList<>();
+    for(Object[] object:result){
+      ReplyMemberDTO replyMemberDTO=ReplyMemberDTO.builder()
+              .rno((Long)object[0])
+              .text((String)object[1])
+              .parent_rno((Long)object[2])
+              .regDate((LocalDateTime) object[3])
+              .mno((Long)object[4])
+              .name((String)object[5])
+              .src((String)object[6])
+              .build();
+      replyMemberDTOS.add(replyMemberDTO);
+    }
+    return replyMemberDTOS;
   }
+
+  //자식 댓글 조회
+  @Override
+  public List<ReplyMemberDTO> childReply(Long bno, Long rno) {
+    List<Object[]> result=replyRepository.getChildReply(bno,rno);
+    List<ReplyMemberDTO> replyMemberDTOS=new ArrayList<>();
+    for(Object[] object:result){
+      ReplyMemberDTO replyMemberDTO=ReplyMemberDTO.builder()
+              .rno((Long)object[0])
+              .text((String)object[1])
+              .parent_rno((Long)object[2])
+              .regDate((LocalDateTime) object[3])
+              .mno((Long)object[4])
+              .name((String)object[5])
+              .src((String)object[6])
+              .build();
+      replyMemberDTOS.add(replyMemberDTO);
+    }
+    return replyMemberDTOS;
+  }
+
 
   @Override
   public List<ReplyDTO> getListOfReplyByMember(Long mno) {

@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.ReplyDTO;
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
+import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
 import com.dot.tour_info_service_server.dto.ReportRequestDTO;
 import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +43,23 @@ public class ReplyController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+  //수정 시작 게시글 댓글 조회
   @GetMapping("/board")
-  public ResponseEntity<List<ReplyDTO>> getListByBno(@RequestParam("bno") Long bno) {
+  public ResponseEntity<List<ReplyMemberDTO>> getListByBno(@RequestParam("bno") Long bno, @RequestParam(value = "rno", required = false)Long rno) {
     log.info("getReplyListByBno....");
-    List<ReplyDTO> result = replyService.getListOfReplyByBoard(bno);
+    List<ReplyMemberDTO> result;
+    //상위 댓글만 조회
+    if(rno==null) {
+      result = replyService.parentReply(bno);
+    }
+    //대댓글 조회
+    else{
+      result=replyService.childReply(bno,rno);
+    }
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
+
+
 
   @PostMapping("/register")
   public ResponseEntity<Map<String, Long>> register(@RequestBody ReplyDTO replyDTO) {
