@@ -17,53 +17,55 @@ import java.util.List;
 @Log4j2
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
-  private final FollowRepository followRepository;
+    private final FollowRepository followRepository;
 
-  @Override
-  public List<FollowResponseDTO> getListOfFollower(Long mno) {
-    Member member = Member.builder().mno(mno).build();
-    List<Object[]> result = followRepository.getFollowersByMember(member);
-    List<FollowResponseDTO> followerList = new ArrayList<>();
-    if (!result.isEmpty()) {
-      for (Object[] list : result) {
-        FollowResponseDTO followResponseDTO = FollowResponseDTO.builder()
-            .mno((Long) list[0])
-            .name((String) list[1])
-            .build();
-        followerList.add(followResponseDTO);
-      }
-      return followerList;
+    @Override
+    public List<FollowResponseDTO> getListOfFollower(Long mno) {
+        Member member = Member.builder().mno(mno).build();
+        List<Object[]> result = followRepository.getFollowersByMember(member);
+        List<FollowResponseDTO> followerList = new ArrayList<>();
+        if (!result.isEmpty()) {
+            for (Object[] list : result) {
+                FollowResponseDTO followResponseDTO = FollowResponseDTO.builder()
+                        .mno((Long) list[0])
+                        .name((String) list[1])
+                        .image((String) list[2])
+                        .build();
+                followerList.add(followResponseDTO);
+            }
+            return followerList;
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public List<FollowResponseDTO> getListOfFollowing(Long mno) {
-    Member member = Member.builder().mno(mno).build();
-    List<Object[]> result = followRepository.getMembersByFollower(member);
-    List<FollowResponseDTO> followingList = new ArrayList<>();
-    if (!result.isEmpty()){
-      for (Object[] list : result) {
-        FollowResponseDTO followResponseDTO = FollowResponseDTO.builder()
-            .mno((Long) list[0])
-            .name((String) list[1])
-            .build();
-        followingList.add(followResponseDTO);
-      }
-      return followingList;
+    @Override
+    public List<FollowResponseDTO> getListOfFollowing(Long mno) {
+        Member member = Member.builder().mno(mno).build();
+        List<Object[]> result = followRepository.getMembersByFollower(member);
+        List<FollowResponseDTO> followingList = new ArrayList<>();
+        if (!result.isEmpty()) {
+            for (Object[] list : result) {
+                FollowResponseDTO followResponseDTO = FollowResponseDTO.builder()
+                        .mno((Long) list[0])
+                        .name((String) list[1])
+                        .image((String) list[2])
+                        .build();
+                followingList.add(followResponseDTO);
+            }
+            return followingList;
+        }
+        return null;
     }
-    return null;
-  }
 
-  @Override
-  public void follow(FollowDTO followDTO) {
-    Follow follow = dtoToEntity(followDTO);
-    followRepository.save(follow);
-  }
+    @Override
+    public void follow(FollowDTO followDTO) {
+        Follow follow = dtoToEntity(followDTO);
+        followRepository.save(follow);
+    }
 
-  @Override
-  @Transactional
-  public void unFollow(Long mno,Long follower) {
-    followRepository.deleteByMemberAndFollower(Member.builder().mno(mno).build(), Member.builder().mno(follower).build());
-  }
+    @Override
+    @Transactional
+    public void unFollow(Long mno, Long follower) {
+        followRepository.deleteByMemberAndFollower(Member.builder().mno(mno).build(), Member.builder().mno(follower).build());
+    }
 }
