@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootTest
+@Log4j2
 public class PlaceRepositoryTests {
 
     @Autowired
@@ -30,11 +32,11 @@ public class PlaceRepositoryTests {
     }
 
     @Test
-    public void findPlaceTest(){
-        List<Place> list = placeRepository.findPlace(null, "test");
-        for(Place place : list){
-            System.out.println(place);
-        }
+    public void placeWithImageTest(){
+        log.info("cart : " + placeRepository.searchPlace(null, "test").get(0)[8]);
+        log.info("cart : " + placeRepository.searchPlace(null, "test").get(2)[8]);
+        log.info("image src : " + placeRepository.searchPlace(null, "test").get(0)[11]);
+
     }
 
     @Test

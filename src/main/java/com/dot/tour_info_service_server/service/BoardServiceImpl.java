@@ -363,7 +363,7 @@ public class BoardServiceImpl implements BoardService {
               .src((String) object[4])
               .likes((Integer)object[5])
               .score((Double) object[6])
-              .writer((String) object[7])
+              .writer((String)object[7])
               .build();
       boardReplyCountDTOS.add(boardReplyCountDTO);
     }

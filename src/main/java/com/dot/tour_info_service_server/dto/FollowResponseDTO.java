@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class FollowResponseDTO {
   private Long mno;
   private String name;
+  private String image;
 }

@@ -54,7 +54,7 @@ class MemberServiceImplTests {
     // 회원 검색 테스트
     @Test
     void searchUserTest(){
-        log.info(memberService.searchUser("백"));
+        log.info(memberService.searchUser("이해창"));
 
     }
 

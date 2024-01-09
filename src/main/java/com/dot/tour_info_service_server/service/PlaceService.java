@@ -9,8 +9,6 @@ import java.util.List;
 public interface PlaceService {
     Long registerPlace(PlaceDTO dto);
 
-    List<Long> findPlace(Category filter, String search);
-
     void removePlace(Long pno);
 
     List<PlaceDTO> searchPlace(Category filter, String search);
