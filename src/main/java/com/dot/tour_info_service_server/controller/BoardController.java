@@ -47,7 +47,7 @@ public class BoardController {
     }
 
     // 코스포스팅 등록
-    @PostMapping(value = {"/course/posting/register"}, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = {"/course/posting/register"})
     public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
 
         Map<String, Long> result = new HashMap<>();
