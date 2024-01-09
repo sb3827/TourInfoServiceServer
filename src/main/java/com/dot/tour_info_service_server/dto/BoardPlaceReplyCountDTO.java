@@ -23,5 +23,12 @@ public class BoardPlaceReplyCountDTO {
     private LocalDateTime regdate;
     private int likes;
     private Double score;
+    private boolean isAd;
+    private Double lng;
+    private Double lat;
+    private String roadAddress;
+    private String localAddress;
+    private String engAddress;
+    private String name;
 
 }
