@@ -14,7 +14,9 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SearchUserListDTO {
-    Long mno;
-    String image;
-    String name;
+    private Long mno;
+    private String image;
+    private String name;
+    private Long followings;
+    private Long followers;
 }

@@ -108,6 +108,8 @@ public class MemberServiceImpl implements MemberService {
                         .mno((Long)list[0])
                         .image((String)list[1])
                         .name((String)list[2])
+                        .followings(memberRepository.showFollowingsByName(name))
+                        .followers(memberRepository.showFollowersByName(name))
                         .build();
                 userlist.add(searchUserListDTO);
             }

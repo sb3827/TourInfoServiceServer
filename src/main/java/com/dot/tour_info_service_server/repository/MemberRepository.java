@@ -37,7 +37,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "group by m.mno")
     List<Object[]> findProfileByName(@Param("name") String name);
 
-    // 회원 검색 ( mno, 이미지, 이름 ) - 해당 부분 허가 된 사람+관리자 제외 검색 되도록 수정했습니다.
+    // 회원 검색 ( mno, 이미지, 이름 ) - 해당 부분 허가 된 사람+관리자 제외 검색 되도록 수정했습니다. + 팔로잉, 팔로워 수 추가
     @Query("select m.mno, m.image, m.name from Member m join m.roleSet r where r!='ADMIN' and  m.isApprove=true and m.name like %:name%")
     List<Object[]> searchUser(@Param("name") String name);
 
@@ -56,13 +56,23 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Object[]> userInfo(Long mno);
 
-    // 팔로우 수 조회
+    // 팔로워 수 조회
     @Query("select count(f.followPk.member.mno) from Follow f where f.followPk.member.mno = :mno")
     Long showFollowers(Long mno);
+
+    @Query("select count(f.followPk.member.mno) from Follow f " +
+            "left outer join Member m on m.mno = f.followPk.member.mno " +
+            "where m.name = :name")
+    Long showFollowersByName(String name);
 
     // 팔로잉 수 조회
     @Query("select count(f.followPk.follower.mno) from Follow f where f.followPk.follower.mno = :mno")
     Long showFollowings(Long mno);
+
+    @Query("select count(f.followPk.follower.mno) from Follow f " +
+            "left outer join Member m on m.mno = f.followPk.follower.mno " +
+            "where m.name = :name")
+    Long showFollowingsByName(String name);
 
     // 찜목록 수 조회
     @Query("select count(c.cartPK.member.mno) from Cart c where c.cartPK.member.mno = :mno")
