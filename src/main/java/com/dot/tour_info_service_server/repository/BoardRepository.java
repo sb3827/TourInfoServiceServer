@@ -96,8 +96,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
 
     // 장소별 장소 포스팅 조회
-    @Query("select bp.place.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate, b.likes, b.score from Board b " +
-            "left outer join Image i on b.bno = i.board.bno " +
+    @Query("select bp.place.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate, b.likes, b.score ,b.isAd, " +
+            "bp.place.lat, bp.place.lng, bp.place.engAddress, bp.place.localAddress, bp.place.roadAddress, bp.place.name  " +
+            "from Board b " +
             "left outer join Reply r on b.bno = r.board.bno " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
             "where bp.place.pno = :pno " +
@@ -113,7 +114,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getCourseBoardByMno(@Param("mno") Long mno);
 
     //코스 검색 조회
-    @Query("select b.bno, b.title, b.likes, b.score, b.writer.name, b.regDate from Board b " +
+    @Query("select b.bno, b.title, b.likes, b.score, b.writer.name, b.regDate, b.isAd from Board b " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
             "where (b.title like %:search% or b.content like %:search% or " +
             "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true ")
