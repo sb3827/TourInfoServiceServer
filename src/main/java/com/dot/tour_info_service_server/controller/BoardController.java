@@ -56,17 +56,6 @@ public class BoardController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    private String makeFolder() {
-        String str = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        String folderPath = str.replace("/", File.separator);
-
-        File uploadPathFolder = new File(uploadPath, folderPath);
-        if (uploadPathFolder.exists() == false) {
-            uploadPathFolder.mkdirs();
-        }
-        return folderPath;
-    }
-
     // 장소,코스 포스팅 삭제
     @DeleteMapping(value = {"/place/posting/delete", "/course/posting/delete"})
     public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) {
@@ -113,9 +102,9 @@ public class BoardController {
     }
 
 
-    // 장소, 코스 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting", "/course/posting"})
-    public ResponseEntity<BoardDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
+    // 장소 포스팅 정보 조회
+    @GetMapping(value = {"/place/posting/bno"})
+    public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
         try {
             BoardInfoDTO boardInfoDTO = boardService.getBoardByBno(bno);

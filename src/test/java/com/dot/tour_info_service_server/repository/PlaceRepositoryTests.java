@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.repository;
 
-import com.dot.tour_info_service_server.dto.BoardDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
 import org.junit.jupiter.api.Test;

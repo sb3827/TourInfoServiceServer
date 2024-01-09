@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.repository;
 
-import com.dot.tour_info_service_server.dto.BoardDTO;
 import com.dot.tour_info_service_server.dto.BoardInfoDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;

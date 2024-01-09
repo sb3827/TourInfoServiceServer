@@ -76,22 +76,5 @@ public interface BoardService {
         return board;
     }
 
-    default BoardDTO entityToDto(Board board) {
-        BoardDTO boardDTO = BoardDTO.builder()
-                .bno(board.getBno())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .isAd(board.getIsAd())
-                .isCourse(board.getIsCourse())
-                .content(board.getContent())
-                .score(board.getScore())
-                .likes(board.getLikes())
-                .writer(board.getWriter().getName())
-                .modDate(board.getModDate())
-                .regDate(board.getRegDate())
-                .build();
-        return boardDTO;
-    }
-
 
 }
