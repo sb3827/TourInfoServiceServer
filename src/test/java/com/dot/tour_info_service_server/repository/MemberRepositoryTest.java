@@ -111,8 +111,10 @@ class MemberRepositoryTest {
 
     @Test
     void showFollowTest(){
-        log.info("팔로워 : " + memberRepository.showFollowers(23L));
-        log.info("팔로잉 : " + memberRepository.showFollowings(23L));
+        log.info("팔로워 : " + memberRepository.showFollowers(2L));
+        log.info("팔로워 : " + memberRepository.showFollowersByName("이해창"));
+        log.info("팔로잉 : " + memberRepository.showFollowings(2L));
+        log.info("팔로워 : " + memberRepository.showFollowingsByName("이해창"));
     }
 
 
@@ -124,5 +126,10 @@ class MemberRepositoryTest {
         log.info("사업자 검색 : "+memberRepository.searchBusiness(""));
         log.info("일반 유저 검색 : "+memberRepository.searchNomal(""));
         log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary(""));
+    }
+
+    @Test
+    void showCart(){
+        log.info("카트" + memberRepository.showCart(2L));
     }
 }
