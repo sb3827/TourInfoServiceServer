@@ -27,8 +27,8 @@ class BoardPlaceRepositoryTests {
 //            long bno = (long) (Math.random()* 3) + 10;
 //            long pno = (long) (Math.random()* 5) + 20;
 
-      Member member = Member.builder().mno(3L).build();
-      Board board = Board.builder().bno(2L).writer(member).build();
+      Member member = Member.builder().mno(1L).build();
+      Board board = Board.builder().bno(8L).writer(member).build();
       Place place = Place.builder().pno(4L).build();
 
       BoardPlacePK boardPlacePK = BoardPlacePK.builder().board(board).build();

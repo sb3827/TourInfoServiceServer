@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -36,6 +37,14 @@ public class PlaceRepositoryTests {
         log.info("cart : " + placeRepository.searchPlace(null, "test").get(2)[8]);
         log.info("image src : " + placeRepository.searchPlace(null, "test").get(0)[11]);
 
+    }
+
+    @Test
+    public void testboard() {
+        List<Object[]> result = placeRepository.getPlaceByBoard(8L);
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
     }
 
 }
