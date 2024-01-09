@@ -399,6 +399,13 @@ public class BoardServiceImpl implements BoardService {
               .regdate((LocalDateTime) objects[5])
               .likes((Integer) objects[6])
               .score((Double) objects[7])
+              .isAd((Boolean) objects[8])
+              .lat((Double) objects[9])
+              .lng((Double) objects[10])
+              .engAddress((String) objects[11])
+              .localAddress((String) objects[12])
+              .roadAddress((String) objects[13])
+              .name((String) objects[14])
               .build();
       boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
 
@@ -437,6 +444,15 @@ public class BoardServiceImpl implements BoardService {
       return null;
     }
     for (Object[] objects: result) {
+      // bno을 보내주면 image 배열을 받아오는 작업
+      Long bno = (Long) objects[0];
+      List<Object[]> images = imageRepository.getImageByBno(bno);
+      List<String> imageUrls = new ArrayList<>();
+      for (Object[] image : images) {
+        String src = (String) image[0];
+        imageUrls.add(src);
+      }
+
       BoardSearchDTO boardSearchDTO = BoardSearchDTO.builder()
               .bno((Long) objects[0])
               .title((String) objects[1])
@@ -444,6 +460,8 @@ public class BoardServiceImpl implements BoardService {
               .score((Double) objects[3])
               .writer((String) objects[4])
               .regDate((LocalDateTime) objects[5])
+              .isAd((Boolean) objects[6])
+              .srcList(imageUrls.toArray(new String[0]))
               .build();
       boardSearchDTOS.add(boardSearchDTO);
     }
