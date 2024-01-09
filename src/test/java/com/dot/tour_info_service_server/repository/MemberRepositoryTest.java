@@ -111,8 +111,10 @@ class MemberRepositoryTest {
 
     @Test
     void showFollowTest(){
-        log.info("팔로워 : " + memberRepository.showFollowers(23L));
-        log.info("팔로잉 : " + memberRepository.showFollowings(23L));
+        log.info("팔로워 : " + memberRepository.showFollowers(2L));
+        log.info("팔로워 : " + memberRepository.showFollowersByName("이해창"));
+        log.info("팔로잉 : " + memberRepository.showFollowings(2L));
+        log.info("팔로워 : " + memberRepository.showFollowingsByName("이해창"));
     }
 
 
