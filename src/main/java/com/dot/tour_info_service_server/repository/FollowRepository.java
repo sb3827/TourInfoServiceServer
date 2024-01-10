@@ -13,11 +13,17 @@ import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
 
-  @Query("SELECT f FROM Follow f WHERE f.followPk.member = :member")
-  List<Follow> getFollowersByMember(@Param("member") Member follower);
+  //조회대상회원-> followerMno  팔로워->memberMno
+  @Query("select f.followPk.follower.mno,f.followPk.follower.name, m.image from Follow f " +
+          "left outer join Member m on m.mno = f.followPk.follower.mno " +
+          "where f.followPk.member = :member")
+  List<Object[]> getFollowersByMember(@Param("member") Member follower);
 
-  @Query("SELECT f FROM Follow f WHERE f.followPk.follower = :follower")
-  List<Follow> getMembersByFollower(@Param("follower") Member member);
+  //조회대상회원 -> memberMno 팔로잉->followerMno
+  @Query("select f.followPk.member.mno,f.followPk.member.name, m.image from Follow f " +
+          "left outer join Member m on m.mno = f.followPk.member.mno " +
+          "where f.followPk.follower =:follower")
+  List<Object[]> getMembersByFollower(@Param("follower") Member member);
 
   @Modifying
   @Query("DELETE FROM Follow f WHERE f.followPk.member = :member AND f.followPk.follower = :follower")

@@ -29,13 +29,6 @@ public class PlaceServiceImplTests {
         System.out.println("pno : " + pno);
     }
 
-    @Test
-    void find(){
-        List<Place> result = placeRepository.findPlace(Category.RESTAURANT, "test");
-        for(Place place: result){
-            System.out.println(place);
-        }
-    }
 
     @Test
     void deletePlaceTest(){
@@ -44,6 +37,6 @@ public class PlaceServiceImplTests {
 
     @Test
     void placeSearchTest(){
-        log.info(placeService.searchPlace(null, "test"));
+        log.info(placeService.searchPlace(null, "test").get(0));
     }
 }

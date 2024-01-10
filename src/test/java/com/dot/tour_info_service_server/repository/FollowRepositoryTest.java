@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -32,14 +33,24 @@ class FollowRepositoryTest {
 
   @Test
   public void getFollowerList() {
-    Member member = Member.builder().mno(8L).build();
-    List<Follow> result = followRepository.getFollowersByMember(member);
+    Member member = Member.builder().mno(1L).build();
+    List<Object[]> result = followRepository.getFollowersByMember(member);
+    System.out.println("=======================FollowerList=======================");
+    for (Object[] item : result) {
+      System.out.println("* "+ Arrays.toString(item));
+    }
+    System.out.println("===========================================================");
   }
 
   @Test
   public void getFollowingList() {
-    Member member = Member.builder().mno(8L).build();
-    List<Follow> result = followRepository.getMembersByFollower(member);
+    Member member = Member.builder().mno(2L).build();
+    List<Object[]> result = followRepository.getMembersByFollower(member);
+    System.out.println("=======================FollowingList=======================");
+    for (Object[] item : result) {
+      System.out.println("* "+ Arrays.toString(item));
+    }
+    System.out.println("===========================================================");
   }
 
   @Test

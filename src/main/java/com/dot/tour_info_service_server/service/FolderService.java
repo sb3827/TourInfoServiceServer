@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.FolderAllDTO;
 import com.dot.tour_info_service_server.dto.FolderDTO;
+import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.dto.FolderRegistDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
@@ -14,7 +15,7 @@ public interface FolderService {
     List<FolderAllDTO> getAllFolder(Long mno);
 
     //폴더명 조회
-    List<String> getTitle(Long mno);
+    List<FolderNameDTO> getTitle(Long mno);
 
     //폴더 등록
     Long register(FolderRegistDTO folderRegistDTO);

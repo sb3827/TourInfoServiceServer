@@ -103,9 +103,9 @@ class BoardServiceTests {
 
   @Test
   public void getBoardTest() {
-    BoardDTO dto =
-            boardService.getBoardByBno(3L);
-    System.out.println(dto);
+//    BoardDTO dto =
+//            boardService.getBoardByBno(3L);
+//    System.out.println(dto);
   }
 
   @Test

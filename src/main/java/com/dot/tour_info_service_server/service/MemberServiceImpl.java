@@ -106,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
                     .name((String) result.get(0)[1])
                     .followings(memberRepository.showFollowings((Long) result.get(0)[0]))
                     .followers(memberRepository.showFollowers((Long) result.get(0)[0]))
-                    .cart((Long) result.get(0)[4])
+                    .cart(memberRepository.showCart((Long) result.get(0)[0]))
                     .image((String) result.get(0)[5])
                     .build();
             return userProfileDTO;
@@ -138,9 +138,11 @@ public class MemberServiceImpl implements MemberService {
         if (!result.isEmpty()) {
             for (Object[] list : result) {
                 SearchUserListDTO searchUserListDTO = SearchUserListDTO.builder()
-                        .mno((Long) list[0])
-                        .image((String) list[1])
-                        .name((String) list[2])
+                        .mno((Long)list[0])
+                        .image((String)list[1])
+                        .name((String)list[2])
+                        .followings(memberRepository.showFollowingsByName(name))
+                        .followers(memberRepository.showFollowersByName(name))
                         .build();
                 userlist.add(searchUserListDTO);
             }

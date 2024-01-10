@@ -46,6 +46,7 @@ public class MemberController {
             UserInfoDTO changedUserInfo = memberService.modifyUserInfo(requestMemberDTO);
             return new ResponseEntity<>(changedUserInfo, HttpStatus.OK);
         } else {
+            log.error("token is not valid");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -90,7 +91,7 @@ public class MemberController {
 
     // 회원가입 승인 ( 관리자만 )
     @PutMapping(value = "/approve")
-    public ResponseEntity<Map<String, Long>> joinMember(@RequestParam("mno") Long mno) {
+    public ResponseEntity<Map<String,Long>> joinMember(@RequestParam("mno") Long mno){
         log.info("Join..............");
         Map<String, Long> result = new HashMap<>();
         memberService.joinMember(mno);
