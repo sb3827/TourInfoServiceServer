@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -56,9 +57,10 @@ class BoardPlaceRepositoryTests {
   @Test
   @Transactional
   public void selectByBno() {
-    List<BoardPlace> result = boardPlaceRepository.selectBPbyBno(3L);
-
-    System.out.println(result);
+    List<Object[]> result = boardPlaceRepository.selectBPbyBno(28L);
+    for (Object[] objects: result) {
+      System.out.println(Arrays.toString(objects));
+    }
   }
 
 }

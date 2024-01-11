@@ -34,16 +34,16 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 장소 포스팅 정보 조회 board, place, image, boardLike repository 처리
     @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
-            "b.isAd, b.likes, b.score, count(bl.boardLikePK.member.mno) " +
-            "from Board b left outer join BoardLike bl on (b.bno = bl.boardLikePK.board.bno) " +
+            "b.isAd, b.likes, b.score, b.modDate " +
+            "from Board b " +
             "where b.bno =:bno and b.isCourse = false ")
     List<Object[]> getPlaceBoardByBno(Long bno);
 
     // 코스 포스팅 정보 조회
     @Transactional
     @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
-            "b.isAd, b.likes, b.score, count(bl.boardLikePK.member.mno) " +
-            "from Board b left outer join BoardLike bl on (b.bno = bl.boardLikePK.board.bno) " +
+            "b.isAd, b.likes, b.score, b.modDate " +
+            "from Board b  " +
             "where b.bno =:bno and b.isCourse = true ")
     List<Object[]> getCourseBoardByBno(Long bno);
 

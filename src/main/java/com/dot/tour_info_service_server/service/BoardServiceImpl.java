@@ -3,12 +3,11 @@ package com.dot.tour_info_service_server.service;
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.repository.*;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -244,103 +243,170 @@ public class BoardServiceImpl implements BoardService {
     return board.getBno();
   }
 
+  //장소 포스팅 정보 조회
   @Override
   @Transactional
-  public BoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
-    List<Object[]> result = boardRepository.getPlaceBoardByBno(bno);
+  public PlaceBoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
+      List<Object[]> result = boardRepository.getPlaceBoardByBno(bno);
       if (result.isEmpty()) {
-        throw new IllegalArgumentException("없는 게시글입니다.");
+          throw new IllegalArgumentException("없는 게시글입니다.");
       }
       List<Object[]> result2 = placeRepository.getPlaceByBoard(bno);
       List<Object[]> result3 = imageRepository.getImageByBno(bno);
+      List<Object[]> dayOrder = boardPlaceRepository.selectBPbyBno(bno);
 
-      List<PlaceDTO> placeDTOS = new ArrayList<>();
-
-      for (Object[] objects: result2) {
-        PlaceDTO placeDTO = PlaceDTO.builder()
-                .pno((Long) objects[0])
-                .name((String) objects[1])
-                .category((Category) objects[2])
-                .lng((Double) objects[3])
-                .lat((Double) objects[4])
-                .roadAddress((String) objects[5])
-                .localAddress((String) objects[6])
-                .engAddress((String) objects[7])
-                .cart((Integer) objects[8])
-                .regDate((LocalDateTime) objects[9])
-                .modDate((LocalDateTime) objects[10])
-                .build();
-        placeDTOS.add(placeDTO);
+      PostingPlaceDTO[][] postingPlaceDTOS=new PostingPlaceDTO[dayOrder.size()][dayOrder.size()];
+      for(Object[] objects:dayOrder){
+        for (Object[] objects1:result2){
+          PostingPlaceDTO postingPlaceDTO = PostingPlaceDTO
+                  .builder()
+                  .pno((Long) objects1[0])
+                  .name((String) objects1[1])
+                  .lng((Double) objects1[2])
+                  .lat((Double) objects1[3])
+                  .roadAddress((String) objects1[4])
+                  .localAddress((String) objects1[5])
+                  .engAddress((String) objects1[6])
+                  .build();
+          try {
+            log.error(objects[0] + " ,,,, " + objects[1]);
+            int a = ((Number) objects[0]).intValue() - 1;
+            int b = ((Number) objects[1]).intValue() - 1;
+            postingPlaceDTOS[a][b] = postingPlaceDTO;
+          } catch (Exception e) {
+            log.error(e);
+          }
+        }
       }
+
+      Boolean isLiked;
+
 
       List<String> imageUrls = new ArrayList<>();
       for (Object[] image : result3) {
-        String src = (String) image[0];
-        imageUrls.add(src);
+          String src = (String) image[0];
+          imageUrls.add(src);
       }
-      BoardInfoDTO nboardInfoDTO = BoardInfoDTO.builder()
+
+      PlaceBoardInfoDTO nboardInfoDTO = PlaceBoardInfoDTO.builder()
               .title((String) result.get(0)[0])
               .content((String) result.get(0)[1])
               .mno((Long) result.get(0)[2])
-              .writer((String)result.get(0)[3])
+              .writer((String) result.get(0)[3])
               .isCourse((Boolean) result.get(0)[4])
               .regdate((LocalDateTime) result.get(0)[5])
               .isAd((Boolean) result.get(0)[6])
               .likes((Integer) result.get(0)[7])
               .score((Double) result.get(0)[8])
-              .mnoCnt((Long) result.get(0)[9])
-              .placeDTOS(placeDTOS)
+              .moddate((LocalDateTime) result.get(0)[9])
+//              .isLiked(isLiked)
               .images(imageUrls.toArray(new String[0]))
+              .postingPlaceDTOS(postingPlaceDTOS)
               .build();
-    return nboardInfoDTO;
+      return nboardInfoDTO;
   }
 
+  //코스 포스팅 정보 조회 // 미구현
   @Override
-  public BoardInfoDTO getCourseByBno (Long bno) throws IllegalAccessException, SQLException {
+  public PlaceBoardInfoDTO getCourseByBno (Long bno) throws IllegalAccessException, SQLException {
+//    List<Object[]> result = boardRepository.getCourseBoardByBno(bno);
+//    if (result.isEmpty()) {
+//      throw new IllegalArgumentException("없는 게시글입니다.");
+//    }
+//    List<Object[]> result2 = placeRepository.getPlaceByBoard(bno);
+//    List<Object[]> result3 = imageRepository.getImageByBno(bno);
+//
+//    List<PlaceDTO> placeDTOS = new ArrayList<>();
+//
+//    for (Object[] objects: result2) {
+//      PlaceDTO placeDTO = PlaceDTO.builder()
+//              .pno((Long) objects[0])
+//              .name((String) objects[1])
+//              .category((Category) objects[2])
+//              .lng((Double) objects[3])
+//              .lat((Double) objects[4])
+//              .roadAddress((String) objects[5])
+//              .localAddress((String) objects[6])
+//              .engAddress((String) objects[7])
+//              .cart((Integer) objects[8])
+//              .regDate((LocalDateTime) objects[9])
+//              .image((String) objects[10])
+//              .build();
+//      placeDTOS.add(placeDTO);
+//    }
+//
+//    List<String> imageUrls = new ArrayList<>();
+//    for (Object[] image : result3) {
+//      String src = (String) image[0];
+//      imageUrls.add(src);
+//    }
+//    PlaceBoardInfoDTO nboardInfoDTO = PlaceBoardInfoDTO.builder()
+//            .title((String) result.get(0)[0])
+//            .content((String) result.get(0)[1])
+//            .mno((Long) result.get(0)[2])
+//            .writer((String)result.get(0)[3])
+//            .isCourse((Boolean) result.get(0)[4])
+//            .regdate((LocalDateTime) result.get(0)[5])
+//            .isAd((Boolean) result.get(0)[6])
+//            .likes((Integer) result.get(0)[7])
+//            .score((Double) result.get(0)[8])
+//            .moddate((LocalDateTime) result.get(0)[9])
+//            .images(imageUrls.toArray(new String[0]))
+//            .build();
+//    return nboardInfoDTO;
     List<Object[]> result = boardRepository.getCourseBoardByBno(bno);
     if (result.isEmpty()) {
       throw new IllegalArgumentException("없는 게시글입니다.");
     }
     List<Object[]> result2 = placeRepository.getPlaceByBoard(bno);
     List<Object[]> result3 = imageRepository.getImageByBno(bno);
+    List<Object[]> dayOrder = boardPlaceRepository.selectBPbyBno(bno);
 
-    List<PlaceDTO> placeDTOS = new ArrayList<>();
+    PostingPlaceDTO[][] postingPlaceDTOS=new PostingPlaceDTO[dayOrder.size()][dayOrder.size()];
+    for(Object[] objects:dayOrder){
+      for (Object[] objects1:result2){
+        PostingPlaceDTO postingPlaceDTO = PostingPlaceDTO
+                .builder()
+                .pno((Long) objects1[0])
+                .name((String) objects1[1])
+                .lng((Double) objects1[2])
+                .lat((Double) objects1[3])
+                .roadAddress((String) objects1[4])
+                .localAddress((String) objects1[5])
+                .engAddress((String) objects1[6])
+                .build();
 
-    for (Object[] objects: result2) {
-      PlaceDTO placeDTO = PlaceDTO.builder()
-              .pno((Long) objects[0])
-              .name((String) objects[1])
-              .category((Category) objects[2])
-              .lng((Double) objects[3])
-              .lat((Double) objects[4])
-              .roadAddress((String) objects[5])
-              .localAddress((String) objects[6])
-              .engAddress((String) objects[7])
-              .cart((Integer) objects[8])
-              .regDate((LocalDateTime) objects[9])
-              .modDate((LocalDateTime) objects[10])
-              .build();
-      placeDTOS.add(placeDTO);
+          log.error(objects[0] + " ,,,, " + objects[1]);
+          int a = ((Number) objects[0]).intValue() - 1;
+          int b = ((Number) objects[1]).intValue() - 1;
+          postingPlaceDTOS[a][b] = postingPlaceDTO;
+
+      }
     }
+
+    Boolean isLiked;
+
 
     List<String> imageUrls = new ArrayList<>();
     for (Object[] image : result3) {
       String src = (String) image[0];
       imageUrls.add(src);
     }
-    BoardInfoDTO nboardInfoDTO = BoardInfoDTO.builder()
+
+    PlaceBoardInfoDTO nboardInfoDTO = PlaceBoardInfoDTO.builder()
             .title((String) result.get(0)[0])
             .content((String) result.get(0)[1])
             .mno((Long) result.get(0)[2])
-            .writer((String)result.get(0)[3])
+            .writer((String) result.get(0)[3])
             .isCourse((Boolean) result.get(0)[4])
             .regdate((LocalDateTime) result.get(0)[5])
             .isAd((Boolean) result.get(0)[6])
             .likes((Integer) result.get(0)[7])
             .score((Double) result.get(0)[8])
-            .mnoCnt((Long) result.get(0)[9])
-            .placeDTOS(placeDTOS)
+            .moddate((LocalDateTime) result.get(0)[9])
+//              .isLiked(isLiked)
             .images(imageUrls.toArray(new String[0]))
+            .postingPlaceDTOS(postingPlaceDTOS)
             .build();
     return nboardInfoDTO;
   }
@@ -372,12 +438,12 @@ public class BoardServiceImpl implements BoardService {
 
   //장소별 장소 포스팅 조회
   @Override
-  public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno) {
+  public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno )throws IllegalAccessException, SQLException {
     List<Object[]> result = boardRepository.getBoardByPno(pno);
     List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTOS = new ArrayList<>();
 
     if (result.isEmpty()) {
-      return null;
+      throw new IllegalArgumentException("게시글이 없습니다.");
     }
 
     for (Object[] objects : result) {

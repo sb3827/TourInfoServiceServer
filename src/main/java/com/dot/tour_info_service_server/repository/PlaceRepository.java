@@ -34,11 +34,20 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
 
 
 
-    // 보드에 해당하는 place 반환
-    @Query("select p.pno, p.name, p.category, p.lng, p.lat, p.roadAddress, p.localAddress, " +
-            "p.engAddress,  p.cart ,p.regDate, p.modDate from Place p " +
+    // 장소보드에 해당하는 place 반환
+    @Query("select p.pno, p.name, p.lng, p.lat, p.roadAddress, p.localAddress, " +
+            "p.engAddress from Place p " +
             "left outer join BoardPlace bp on bp.place.pno= p.pno " +
             "left outer join Board b on b.bno = bp.boardPlacePK.board.bno " +
             "where b.bno =:bno ")
     List<Object[]> getPlaceByBoard(Long bno);
+
+    // 코스보드에 해당하는 place 반환
+    @Query("select p.pno, p.name, p.category, p.lng, p.lat, p.roadAddress, p.localAddress, " +
+            "p.engAddress,  p.cart ,p.regDate, p.modDate, i.src from Place p " +
+            "left outer join BoardPlace bp on bp.place.pno= p.pno " +
+            "left outer join Image i on bp.boardPlacePK.board.bno = i.board.bno " +
+            "left outer join Board b on b.bno = bp.boardPlacePK.board.bno " +
+            "where b.bno =:bno ")
+    List<Object[]> getPlaceByCourseBoard(Long bno);
 }

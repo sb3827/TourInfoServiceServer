@@ -1,28 +1,14 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
-import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -103,24 +89,24 @@ public class BoardController {
 
 
     // 장소 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/bno"})
-    public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
+    @GetMapping(value = {"/place/posting"})
+    public ResponseEntity<PlaceBoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
         try {
-            BoardInfoDTO boardInfoDTO = boardService.getBoardByBno(bno);
-            return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
+            PlaceBoardInfoDTO placeBoardInfoDTO = boardService.getBoardByBno(bno);
+            return new ResponseEntity<>(placeBoardInfoDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     // 코스 포스팅 정보 조회
-    @GetMapping(value = {"/course/posting/bno"})
-    public ResponseEntity<BoardInfoDTO> getCourseBoard(@RequestParam("bno") Long bno) {
+    @GetMapping(value = {"/course/posting"})
+    public ResponseEntity<PlaceBoardInfoDTO> getCourseBoard(@RequestParam("bno") Long bno) {
         log.info("getCourseBoard... bno: " + bno);
         try {
-            BoardInfoDTO boardInfoDTO = boardService.getCourseByBno(bno);
-        return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
+            PlaceBoardInfoDTO placeBoardInfoDTO = boardService.getCourseByBno(bno);
+        return new ResponseEntity<>(placeBoardInfoDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -147,8 +133,12 @@ public class BoardController {
     @GetMapping(value = {"/place"})
     public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno) {
         log.info("getBoardByMno... bno: " + pno);
-        List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno);
-        return new ResponseEntity<>(boardPlaceReplyCountDTO, HttpStatus.OK);
+        try {
+            List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno);
+            return new ResponseEntity<>(boardPlaceReplyCountDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     // 회원별 코스 포스팅 정보 조회

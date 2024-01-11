@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.dto;
 
-import com.dot.tour_info_service_server.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardInfoDTO {
+public class PlaceBoardInfoDTO {
   private String title;
   private String content;
   private Long mno;
@@ -24,8 +23,8 @@ public class BoardInfoDTO {
   private Double score;
   private LocalDateTime regdate;
   private LocalDateTime moddate;
-  private List<PlaceDTO> placeDTOS;
+  private PostingPlaceDTO[][] postingPlaceDTOS;
   private String[] images;
-  private Long mnoCnt;
+  private Boolean isLiked;
 }
 

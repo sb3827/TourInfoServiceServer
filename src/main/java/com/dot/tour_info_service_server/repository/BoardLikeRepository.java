@@ -39,4 +39,7 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeP
             "where b.bno =:bno")
     List<Object[]> getBoardLikeByBno(Long bno);
 
+    boolean existsByBoardLikePK(BoardLikePK boardLikePK);
+
+
 }
