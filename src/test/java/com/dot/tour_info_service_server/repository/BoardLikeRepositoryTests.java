@@ -56,12 +56,6 @@ class BoardLikeRepositoryTests {
     boardLikeRepository.deleteByBno(12L);
   }
 
-  @Test
-    void test() {
-      List<Object[]> result = boardLikeRepository.getBoardLikeByBno(8L);
-      for (Object[] objects: result) {
-          System.out.println(Arrays.toString(objects));
-      }
-  }
+
 
 }

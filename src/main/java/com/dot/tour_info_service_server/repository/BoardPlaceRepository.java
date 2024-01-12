@@ -32,10 +32,20 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Query("Delete from BoardPlace bp where bp.boardPlacePK.board.bno = :bno")
     void deleteByBno(Long bno);
 
-    // bno 넣을때 해당하는 day, order 반환
-    @Transactional
-    @Query("SELECT bp.boardPlacePK.day, bp.boardPlacePK.orderNumber FROM BoardPlace bp WHERE bp.boardPlacePK.board.bno=:bno")
-    List<Object[]> selectBPbyBno(@Param("bno") Long bno);
 
+//    // 장소 대표이미지 조회
+    @Query("select i.src " +
+            "from BoardPlace bp left outer join Place p on (bp.place.pno = p.pno) " +
+            "left outer join Image i on (bp.boardPlacePK.board.bno = i.board.bno) " +
+            "left outer join Board b on (bp.boardPlacePK.board.bno = b.bno) " +
+            "where b.isCourse = false and p.pno =:pno " +
+            "group by p.pno")
+    List<Object[]> loadRepresentPlaceImageByPno(@Param("pno") Long pno);
 
+    // 코스 장소 리스트 조회
+    @Query("select bp.boardPlacePK.day, bp.boardPlacePK.orderNumber, bp.place.pno , p.name, p.lat, p.lng, " +
+            "p.roadAddress, p.localAddress, p.engAddress " +
+            "from BoardPlace bp left join Place p on bp.place.pno = p.pno " +
+            "where bp.boardPlacePK.board.bno = :bno")
+    List<Object[]> loadListByBno(@Param("bno") Long bno);
 }
