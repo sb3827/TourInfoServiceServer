@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class PostingPlaceDTO {
+public class PostingPlaceBoardDTO {
     private Long pno;
     private String name;
     private Double lng;
     private Double lat;
+    private String src;
     private String roadAddress;
     private String localAddress;
     private String engAddress;
