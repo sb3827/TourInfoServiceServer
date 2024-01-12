@@ -3,8 +3,6 @@ package com.dot.tour_info_service_server.service;
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
-import com.dot.tour_info_service_server.entity.Place;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -36,13 +34,13 @@ public interface BoardService {
     MainResponseDTO mainBoard(Long mno);
 
     // 회원별 장소 포스팅 정보 조회, 실패시 null 반환
-    List<BoardReplyCountDTO> getBoardByMno(Long mno);
+    List<BoardMemberDTO> getBoardByMno(Long mno);
 
     // 장소별 장소 포스팅 정보 조회
-    List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno);
+    List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno) throws IllegalAccessException, SQLException;
 
     // 회원별 코스 포스팅 정보 조회
-    List<BoardReplyCountDTO> getCourseBoardByMno(Long mno);
+    List<BoardMemberDTO> getCourseBoardByMno(Long mno);
 
     // 코스 검색 조회
     List<BoardSearchDTO> findCourseBoard(String search);

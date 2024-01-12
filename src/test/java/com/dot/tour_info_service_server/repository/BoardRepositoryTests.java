@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.repository;
 
-import com.dot.tour_info_service_server.dto.BoardInfoDTO;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @SpringBootTest

@@ -34,9 +34,8 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeP
     @Query("delete from BoardLike bl where bl.boardLikePK.member.mno = :mno")
     void removeBoardLIkeByMno(Long mno);
 
-    @Query("select count(bl.boardLikePK.member.mno) from BoardLike bl " +
-            "left outer join Board b on b.bno = bl.boardLikePK.board.bno " +
-            "where b.bno =:bno")
-    List<Object[]> getBoardLikeByBno(Long bno);
+
+    boolean existsByBoardLikePK(BoardLikePK boardLikePK);
+
 
 }
