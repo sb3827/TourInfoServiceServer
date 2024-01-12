@@ -128,9 +128,14 @@ public class BoardController {
 
 
     // 보드 메인페이지 정보 조회
-    @GetMapping(value = "/main")
-    public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody MnoDTO mnoDTO) {
-        ResponseWrapDTO response = new ResponseWrapDTO(true, boardService.mainBoard(mnoDTO.getMno()));
+    @PostMapping(value = "/main")
+    public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoDTO mnoDTO) {
+        ResponseWrapDTO response;
+        if(mnoDTO==null){
+            response=new ResponseWrapDTO(true,boardService.mainBoard(-1l));
+        }else {
+            response = new ResponseWrapDTO(true, boardService.mainBoard(mnoDTO.getMno()));
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
