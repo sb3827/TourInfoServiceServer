@@ -103,7 +103,7 @@ public class BoardController {
 
 
     // 장소 포스팅 정보 조회
-    @GetMapping(value = {"/place/posting/bno"})
+    @GetMapping(value = {"/place/posting"})
     public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
         try {
@@ -115,13 +115,14 @@ public class BoardController {
     }
 
     // 코스 포스팅 정보 조회
-    @GetMapping(value = {"/course/posting/bno"})
+    @GetMapping(value = {"/course/posting"})
     public ResponseEntity<BoardInfoDTO> getCourseBoard(@RequestParam("bno") Long bno) {
         log.info("getCourseBoard... bno: " + bno);
         try {
             BoardInfoDTO boardInfoDTO = boardService.getCourseByBno(bno);
-        return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
+            return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

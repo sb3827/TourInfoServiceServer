@@ -59,7 +59,7 @@ public class BoardServiceImpl implements BoardService {
         log.info("image 저장");
       }
     }
-    imageRepository.deleteByNullBno();
+//    imageRepository.deleteByNullBno();
     return board.getBno();
   }
 
