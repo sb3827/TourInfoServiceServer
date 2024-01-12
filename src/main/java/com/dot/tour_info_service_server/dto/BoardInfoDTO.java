@@ -12,18 +12,17 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceBoardInfoDTO {
+public class BoardInfoDTO {
   private String title;
   private String content;
-  private Long mno;
-  private String writer;
+  private WriterDTO writerDTO;
   private Boolean isCourse;
   private Boolean isAd;
   private int likes;
   private Double score;
   private LocalDateTime regdate;
   private LocalDateTime moddate;
-  private PostingPlaceDTO[][] postingPlaceDTOS;
+  private List<List<PostingPlaceBoardDTO>> postingPlaceBoardDTOS;
   private String[] images;
   private Boolean isLiked;
 }
