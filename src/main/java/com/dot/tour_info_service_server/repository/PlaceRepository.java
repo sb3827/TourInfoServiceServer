@@ -32,13 +32,4 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "group by p.pno")
     List<Object[]> searchPlace(Category filter, String search);
 
-
-
-    // 보드에 해당하는 place 반환
-    @Query("select p.pno, p.name, p.category, p.lng, p.lat, p.roadAddress, p.localAddress, " +
-            "p.engAddress,  p.cart ,p.regDate, p.modDate from Place p " +
-            "left outer join BoardPlace bp on bp.place.pno= p.pno " +
-            "left outer join Board b on b.bno = bp.boardPlacePK.board.bno " +
-            "where b.bno =:bno ")
-    List<Object[]> getPlaceByBoard(Long bno);
 }

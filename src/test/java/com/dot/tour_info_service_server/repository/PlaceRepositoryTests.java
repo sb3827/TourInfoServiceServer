@@ -39,12 +39,4 @@ public class PlaceRepositoryTests {
 
     }
 
-    @Test
-    public void testboard() {
-        List<Object[]> result = placeRepository.getPlaceByBoard(8L);
-        for (Object[] objects: result) {
-            System.out.println(Arrays.toString(objects));
-        }
-    }
-
 }
