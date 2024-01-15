@@ -13,4 +13,5 @@ public class MainBoardResponseDTO {
     private Long bno;
     private String title;
     private String src;
+    private boolean isCourse;
 }
