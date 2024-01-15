@@ -5,6 +5,7 @@ import com.dot.tour_info_service_server.dto.PlaceDTO;
 import com.dot.tour_info_service_server.entity.Place;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PlaceService {
     Long registerPlace(PlaceDTO dto);
@@ -12,6 +13,8 @@ public interface PlaceService {
     void removePlace(Long pno);
 
     List<PlaceDTO> searchPlace(Category filter, String search);
+
+    Map<String, Object> getPlaceCount(Long mno);
 
     default Place dtoToEntity(PlaceDTO dto){
         Place place = Place.builder()
