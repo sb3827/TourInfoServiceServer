@@ -82,6 +82,7 @@ class MemberRepositoryTest {
             log.info("user mno : " + list[0]);
             log.info("user image : " + list[1]);
             log.info("user name : " + list[2]);
+            log.info("user 팔로잉 : " + list[3]);
         }
     }
 
