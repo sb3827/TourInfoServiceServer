@@ -9,7 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 @Log4j2
@@ -38,5 +40,18 @@ public class PlaceServiceImplTests {
     @Test
     void placeSearchTest(){
         log.info(placeService.searchPlace(null, "test").get(0));
+    }
+
+    @Test
+    void getPlaceCountTest(){
+//        List<Object[]> result = placeRepository.getPlaceCount(2L);
+//        Map<String, Object> placeCount= new HashMap<>();
+//        for(Object[] list: result){
+//            for(int i = 0; i < list.length; i += 2){
+//                placeCount.put((String)list[i], list[i+1]);
+//            }
+//        }
+//        log.info("결과는 : " + placeCount);
+        log.info(placeService.getPlaceCount(2L));
     }
 }
