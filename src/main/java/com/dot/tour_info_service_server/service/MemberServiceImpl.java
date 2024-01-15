@@ -98,8 +98,8 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 검색
     @Override
-    public List<SearchUserListDTO> searchUser(String name) {
-        List<Object[]> result = memberRepository.searchUser(name);
+    public List<SearchUserListDTO> searchUser(String name,Long mno) {
+        List<Object[]> result = memberRepository.searchUser(name,mno);
         List<SearchUserListDTO> userlist = new ArrayList<>();
 
         if(!result.isEmpty()){
@@ -108,8 +108,11 @@ public class MemberServiceImpl implements MemberService {
                         .mno((Long)list[0])
                         .image((String)list[1])
                         .name((String)list[2])
-                        .followings(memberRepository.showFollowings((Long)list[0]))
-                        .followers(memberRepository.showFollowers((Long)list[0]))
+//                        .followings(memberRepository.showFollowings((Long)list[0]))
+//                        .followers(memberRepository.showFollowers((Long)list[0]))
+                        .followers((Long)list[3])
+                        .followings((Long)list[4])
+                        .followCheck((Boolean) list[5])
                         .build();
                 userlist.add(searchUserListDTO);
             }

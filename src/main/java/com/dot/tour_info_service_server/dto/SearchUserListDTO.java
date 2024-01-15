@@ -19,4 +19,5 @@ public class SearchUserListDTO {
     private String name;
     private Long followings;
     private Long followers;
+    private boolean followCheck;
 }

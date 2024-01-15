@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MainBoardResponseDTO {
-    private Long bno;
-    private String title;
-    private String src;
-    private boolean isCourse;
+public class WriterDTO {
+    private Long mno;
+    private String name;
 }

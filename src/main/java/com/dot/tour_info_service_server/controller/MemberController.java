@@ -72,10 +72,15 @@ public class MemberController {
     }
 
     // 회원 검색
-    @GetMapping(value = "/find")
-    public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search) {
+    @PostMapping(value = "/find")
+    public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search,@RequestBody(required = false)MnoDTO mnoDTO) {
         log.info("Searching User.......");
-        List<SearchUserListDTO> userlist = memberService.searchUser(search);
+        List<SearchUserListDTO> userlist;
+        if(mnoDTO.getMno()==null){
+            userlist=memberService.searchUser(search,null);
+        }else {
+            userlist = memberService.searchUser(search, mnoDTO.getMno());
+        }
         return new ResponseEntity<>(userlist, HttpStatus.OK);
     }
 

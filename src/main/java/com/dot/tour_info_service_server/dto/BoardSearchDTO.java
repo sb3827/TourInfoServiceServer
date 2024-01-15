@@ -12,10 +12,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardSearchDTO {
-    Long bno;
-    String title;
-    int likes;
-    Double score;
-    String writer;
-    LocalDateTime regDate;
+    private Long bno;
+    private String title;
+    private int likes;
+    private Double score;
+    private String writer;
+    private LocalDateTime regDate;
+    private String[] srcList;
+    private boolean isAd;
+
 }

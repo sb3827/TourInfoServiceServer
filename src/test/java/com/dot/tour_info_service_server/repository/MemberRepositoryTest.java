@@ -77,7 +77,7 @@ class MemberRepositoryTest {
     // 회원 검색 테스트
     @Test
     public void searchUserTest(){
-        List<Object[]> userlist= memberRepository.searchUser("");
+        List<Object[]> userlist= memberRepository.searchUser("",null);
         for(Object[] list : userlist){
             log.info("user mno : " + list[0]);
             log.info("user image : " + list[1]);

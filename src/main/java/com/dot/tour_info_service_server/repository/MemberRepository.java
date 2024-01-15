@@ -37,9 +37,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "group by m.mno")
     List<Object[]> findProfileByName(@Param("name") String name);
 
-    // 회원 검색 ( mno, 이미지, 이름 ) - 해당 부분 허가 된 사람+관리자 제외 검색 되도록 수정했습니다. + 팔로잉, 팔로워 수 추가
-    @Query("select m.mno, m.image, m.name from Member m join m.roleSet r where r!='ADMIN' and  m.isApprove=true and m.name like :name%")
-    List<Object[]> searchUser(@Param("name") String name);
+    // 회원 검색 ( mno, 이미지, 이름 ,팔로워 수 , 팔로잉 수, 팔로우 여부) - 해당 부분 허가 된 사람+관리자 제외 검색 되도록 수정했습니다. + 팔로잉, 팔로워 수 추가
+    @Query("select m.mno, m.image, m.name, " +
+            "(SELECT COUNT(*) FROM Follow f2  LEFT OUTER JOIN Member m3 ON m3.mno=f2.followPk.member.mno WHERE m3.mno=m.mno GROUP BY m3.mno), " +
+            "(SELECT COUNT(*) FROM Follow f2  LEFT OUTER JOIN Member m3 ON m3.mno=f2.followPk.follower.mno WHERE m3.mno=m.mno GROUP BY m3.mno), " +
+            "exists (select m2  from Member m2 left outer join Follow f on f.followPk.member.mno=m2.mno where f.followPk.follower.mno=:mno and m2.mno=m.mno) as followCheck " +
+            "from Member m join m.roleSet r " +
+            "where r!='ADMIN' and  m.isApprove=true and m.name like %:name%")
+    List<Object[]> searchUser(@Param("name") String name,Long mno);
 
     // 회원가입대기 조회
     @Query("select m.mno, m.name, m.email, m.businessId from Member m where m.isApprove = false")

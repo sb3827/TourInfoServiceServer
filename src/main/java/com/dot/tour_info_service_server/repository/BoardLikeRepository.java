@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikePK> {
 
 
@@ -31,4 +33,9 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeP
     @Transactional
     @Query("delete from BoardLike bl where bl.boardLikePK.member.mno = :mno")
     void removeBoardLIkeByMno(Long mno);
+
+
+    boolean existsByBoardLikePK(BoardLikePK boardLikePK);
+
+
 }
