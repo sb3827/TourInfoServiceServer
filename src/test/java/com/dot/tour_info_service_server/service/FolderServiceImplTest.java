@@ -74,9 +74,7 @@ class FolderServiceImplTest{
     //폴더 삭제 테스트
     @Test
     public void testFolderDelete(){
-        Long fno=1l;
-        folderRepository.deleteById(fno);
-        System.out.println(fno+" 제거");
+        folderService.remove(583l);
     }
 
 

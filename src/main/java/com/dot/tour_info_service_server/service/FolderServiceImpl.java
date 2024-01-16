@@ -6,6 +6,7 @@ import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.dto.FolderRegistDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
+import com.dot.tour_info_service_server.repository.CartRepository;
 import com.dot.tour_info_service_server.repository.FolderRepository;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,9 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 repository
     private final FolderRepository folderRepository;
+
+    //장바구니 repository
+    private final CartRepository cartRepository;
 
     //폴더 전부 조회
     @Override
@@ -91,6 +95,7 @@ public class FolderServiceImpl implements FolderService{
         if(result.isPresent()){
             Folder folder=result.get();
             if(SecurityUtil.validateMno(folder.getMember().getMno())){
+                cartRepository.deleteAllByCartPK_Folder(folder);
                 folderRepository.deleteById(fno);
                 return fno;
             }
