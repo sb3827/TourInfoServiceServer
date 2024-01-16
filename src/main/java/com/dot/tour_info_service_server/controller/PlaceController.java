@@ -42,6 +42,14 @@ public class PlaceController {
         return new ResponseEntity<>(placeList, HttpStatus.OK);
     }
 
+    // 지역별 방문수
+    @GetMapping(value="/placecount")
+    public ResponseEntity<Map<String, Object>> getPlaceCount(@RequestParam(value="mno") Long mno){
+        Map<String, Object> result = placeService.getPlaceCount(mno);
+        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+    }
+
+
     @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> removePlace(@RequestParam("pno") Long pno){
         log.info("delete..............");
@@ -50,4 +58,5 @@ public class PlaceController {
         result.put("pno", pno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 }

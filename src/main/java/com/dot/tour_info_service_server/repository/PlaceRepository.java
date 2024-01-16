@@ -3,9 +3,15 @@ package com.dot.tour_info_service_server.repository;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
@@ -31,5 +37,9 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "p.roadAddress like %:search% or p.engAddress like %:search%) " +
             "group by p.pno")
     List<Object[]> searchPlace(Category filter, String search);
+
+    // 프로시저 실행
+    @Procedure("Count_pno")
+    List<Object[]> getPlaceCount(Long mno);
 
 }
