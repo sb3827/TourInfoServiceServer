@@ -122,4 +122,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true ")
     List<Object[]> findCourseBoard(String search);
 
+    // place 검색
+    Optional<Board> findBoardByBnoAndIsCourseIsFalse(Long bno);
+
+    // course 검색
+    Optional<Board> findBoardByBnoAndIsCourseIsTrue(Long bno);
 }
