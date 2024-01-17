@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.dot.tour_info_service_server.dto.FileDTO;
 import com.dot.tour_info_service_server.dto.ResponseUploadDTO;
+import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Image;
 import com.dot.tour_info_service_server.repository.ImageRepository;
 import jakarta.transaction.Transactional;
@@ -77,6 +78,25 @@ public class ImageServiceImpl implements ImageService {
                             .build());
         }
         return files;
+    }
+
+    // image ino board bno 연결
+    @Override
+    public void linkBoard(Long ino, Board board){
+        Optional<Image> result = imageRepository.findById(ino);
+        if(result.isEmpty()){
+            log.info("image not found");
+            return;
+        }
+
+        Image image = result.get();
+        // 이미 연결된 image 연결 취소
+        if(image.getBoard().getBno() != null){
+            return;
+        }
+
+        image.changeBoard(board);
+        imageRepository.save(image);
     }
 
     @Override
