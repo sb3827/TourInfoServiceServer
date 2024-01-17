@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardPlacePKDTO {
   private Long pno;
-
   private int day;
-
   private int orderNumber;
-
 }
