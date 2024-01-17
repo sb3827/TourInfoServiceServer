@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,10 +25,11 @@ public class BoardController {
     // 장소 포스팅 등록
     @PostMapping(value = {"/place/posting/register"})
     public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
-        log.info("DTO: " + placeBoardDTO);
-        Map<String, Long> result = new HashMap<>();
+        if(!SecurityUtil.validateMno(placeBoardDTO.getWriter()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Long bno = boardService.placeRegister(placeBoardDTO);
-        log.info("bno: "+ bno);
+        Map<String, Long> result = new HashMap<>();
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -35,9 +37,11 @@ public class BoardController {
     // 코스포스팅 등록
     @PostMapping(value = {"/course/posting/register"})
     public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
+        if(!SecurityUtil.validateMno(courseBoardDTO.getWriter()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        Map<String, Long> result = new HashMap<>();
         Long bno = boardService.courseRegister(courseBoardDTO);
+        Map<String, Long> result = new HashMap<>();
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

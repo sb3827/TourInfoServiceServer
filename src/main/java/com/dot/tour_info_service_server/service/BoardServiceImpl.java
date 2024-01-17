@@ -25,6 +25,7 @@ public class BoardServiceImpl implements BoardService {
     private final ReplyRepository replyRepository;
 
     private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     private final ReportRepository reportRepository;
 
@@ -37,63 +38,115 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long placeRegister(PlaceBoardDTO placeBoardDTO) {
-        Board board = placeDtoToEntity(placeBoardDTO);
-        boardRepository.save(board);
-        log.info("board 저장");
-        BoardPlacePK boardPlacePK = BoardPlacePK.builder()
-                .day(1)
-                .orderNumber(1)
-                .board(board)
+        // boardDTO to Entity
+        Board board = Board.builder()
+                .title(placeBoardDTO.getTitle())
+                .content(placeBoardDTO.getContent())
+                .isAd(SecurityUtil.isBusinessman())
+                .isCourse(false)
+                .score(placeBoardDTO.getScore())
+                .likes(0)
+                .writer(Member.builder().mno(SecurityUtil.getCurrentMemberMno()).build())
                 .build();
-        BoardPlace boardPlace = BoardPlace.builder()
-                .boardPlacePK(boardPlacePK)
-                .place(Place.builder().pno(placeBoardDTO.getPno()).build())
-                .build();
-        boardPlaceRepository.save(boardPlace);
-        if (placeBoardDTO.getSrcList() != null) {
-            for (String src : placeBoardDTO.getSrcList()) {
-                Image image = Image.builder()
-                        .src(src)
-                        .board(board)
-                        .build();
-                imageRepository.save(image);
-                log.info("image 저장");
-            }
+        try {
+            board = boardRepository.save(board);
+            log.info("board 저장");
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            log.error(e.getMessage());
+            throw new RuntimeException("board 저장 불가");
         }
-//    imageRepository.deleteByNullBno();
+
+        // board - place fk 연결
+        BoardPlace boardPlace = BoardPlace.builder()
+                .boardPlacePK(BoardPlacePK.builder()
+                        .day(0)
+                        .orderNumber(0)
+                        .board(board)
+                        .build())
+                .place(Place.builder()
+                        .pno(placeBoardDTO.getPno())
+                        .build())
+                .build();
+        try {
+            boardPlaceRepository.save(boardPlace);
+            log.info("board-place 저장");
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            log.error(e.getMessage());
+            throw new RuntimeException("board-place 저장 불가");
+        }
+
+        // 미사용 image 삭제
+        for (String src : placeBoardDTO.getDeleteImages()) {
+            imageService.deleteImage(src);
+        }
+
+        // image - board 연결
+        for (Long ino : placeBoardDTO.getImages()) {
+            imageService.linkBoard(ino, board);
+        }
+
         return board.getBno();
     }
 
     @Override
     @Transactional
     public Long courseRegister(CourseBoardDTO courseBoardDTO) {
-        Board board = courseDtoToEntity(courseBoardDTO);
-        board = boardRepository.save(board);
-        log.info("board 저장" + board);
-
-        for (BoardPlacePKDTO boardPlacePKDTO : courseBoardDTO.getCoursePlaceList()) {
-            BoardPlacePK boardPlacePK = BoardPlacePK.builder()
-                    .day(boardPlacePKDTO.getDay())
-                    .orderNumber(boardPlacePKDTO.getOrderNumber())
-                    .board(Board.builder().bno(board.getBno()).build())
-                    .build();
-            BoardPlace boardPlace = BoardPlace.builder()
-                    .boardPlacePK(boardPlacePK)
-                    .place(Place.builder().pno(boardPlacePKDTO.getPno()).build())
-                    .build();
-            boardPlaceRepository.save(boardPlace);
+        // boardDTO to entity
+        Board board = Board.builder()
+                .title(courseBoardDTO.getTitle())
+                .content(courseBoardDTO.getContent())
+                .isAd(SecurityUtil.isBusinessman())
+                .isCourse(true)
+                .score(courseBoardDTO.getScore())
+                .likes(0)
+                .writer(Member.builder().mno(SecurityUtil.getCurrentMemberMno()).build())
+                .build();
+        try {
+            board = boardRepository.save(board);
+            log.info("board 저장" + board);
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            log.error(e.getMessage());
+            throw new RuntimeException("board 저장 불가");
         }
 
-        if (courseBoardDTO.getSrcList() != null) {
-            for (String src : courseBoardDTO.getSrcList()) {
-                Image image = Image.builder()
-                        .src(src)
-                        .board(Board.builder().bno(board.getBno()).build())
+        // course place list  처리
+        List<List<Long>> coursePlaceList = courseBoardDTO.getCoursePlaceList();
+        for (int i = 0; i < coursePlaceList.size(); i++) {
+            List<Long> dailyPlace = coursePlaceList.get(i);
+            for (int j = 0; j < dailyPlace.size(); j++) {
+                BoardPlace boardPlace = BoardPlace.builder()
+                        .boardPlacePK(BoardPlacePK.builder()
+                                .day(i)
+                                .orderNumber(j)
+                                .board(Board.builder().bno(board.getBno()).build())
+                                .build())
+                        .place(Place.builder()
+                                .pno(dailyPlace.get(j))
+                                .build())
                         .build();
-                imageRepository.save(image);
-                log.info("image 저장");
+                try {
+                    boardPlaceRepository.save(boardPlace);
+                } catch (Exception e) {
+                    e.fillInStackTrace();
+                    log.error(e.getMessage());
+                    throw new RuntimeException("board-place 저장 불가");
+                }
             }
         }
+
+        // 미사용 image 삭제
+        for (String src : courseBoardDTO.getDeleteImages()) {
+            imageService.deleteImage(src);
+        }
+
+        // image - board 연결
+        for (Long ino : courseBoardDTO.getImages()) {
+            imageService.linkBoard(ino, board);
+        }
+
         return board.getBno();
     }
 
@@ -116,130 +169,141 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public Long placeBoardModify(PlaceBoardDTO placeBoardDTO) {
-        Optional<Board> result = boardRepository.findById(placeBoardDTO.getBno());
+        Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsFalse(placeBoardDTO.getBno());
+
+        // 게시글 존재 여부
         if (result.isEmpty()) {
-            return -1L;
+            throw new RuntimeException("존재하지 않는 게시글");
         }
         Board board = result.get();
+
+        // 작성자 일치 여부
+        if (!Objects.equals(board.getWriter().getMno(), placeBoardDTO.getWriter())) {
+            throw new RuntimeException("Bad Request");
+        }
+
         // dto to entity
         board.changeTitle(placeBoardDTO.getTitle());
         board.changeContent(placeBoardDTO.getContent());
+        board.changeScore(placeBoardDTO.getScore());
 
-        boardRepository.save(board);
+        try {
+            boardRepository.save(board);
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            log.error("Board 수정 불가");
+            throw new RuntimeException("Board 수정 불가");
+        }
 
-        if (!(placeBoardDTO.getSrcList().isEmpty() || placeBoardDTO.getSrcList().equals(""))) {
+        //board - place builder
+        BoardPlacePK boardPlacePK = BoardPlacePK.builder()
+                .day(0)
+                .orderNumber(0)
+                .board(board)
+                .build();
 
-            // db search
-            List<Image> images = imageRepository.selectImageByBno(placeBoardDTO.getBno());
-            Set<Image> imageSet = new HashSet<>(images);
+        // 기존의 board - place 일치 여부 조회
+        if (!boardPlaceRepository.existsByBoardPlacePK(boardPlacePK)) {
+            BoardPlace boardPlace = BoardPlace.builder()
+                    .boardPlacePK(boardPlacePK)
+                    .place(Place.builder()
+                            .pno(placeBoardDTO.getPno())
+                            .build())
+                    .build();
 
-            for (String img : placeBoardDTO.getSrcList()) {
-                // setdb에서 DTO와 겹치는 것은 제거
-                if (imageSet.contains(img)) {
-                    imageSet.remove(img);
-                } else { // 겹치지 않은 부분은 추가
-                    Image image = Image.builder()
-                            .board(Board.builder().bno(placeBoardDTO.getBno()).build())
-                            .src(img)
-                            .build();
-                    imageRepository.save(image);
-                }
-            }
-            // set에 저장된 데이터를 삭제 처리
-            for (Image img : imageSet) {
-                imageRepository.deleteById(img.getIno());
+            try {
+                // board - place 수정
+                boardPlaceRepository.deleteAllByBoardPlacePKBoard(board);
+                boardPlaceRepository.save(boardPlace);
+                log.info("board-place 저장");
+            } catch (Exception e) {
+                e.fillInStackTrace();
+                log.error(e.getMessage());
+                throw new RuntimeException("board-place 저장 불가");
             }
         }
+
+
+        // 미사용 image 삭제
+        for (String src : placeBoardDTO.getDeleteImages()) {
+            imageService.deleteImage(src);
+        }
+
+        // image - board 연결
+        for (Long ino : placeBoardDTO.getImages()) {
+            imageService.linkBoard(ino, board);
+        }
+
         return board.getBno();
     }
 
     @Transactional
     @Override
     public Long modifyCourse(CourseBoardDTO courseBoardDTO) throws IllegalAccessException, SQLException {
-        Optional<Board> result = boardRepository.findBoardByBno(courseBoardDTO.getBno());
+        Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsTrue(courseBoardDTO.getBno());
 
         if (result.isEmpty()) {
             throw new IllegalArgumentException("없는 게시글입니다.");
         }
 
         Board board = result.get();
-        if (!board.getIsCourse()) {
-            throw new IllegalAccessException("코스 게시글이 아닙니다.");
+        // 작성자 일치 여부
+        if (!Objects.equals(board.getWriter().getMno(), courseBoardDTO.getWriter())) {
+            throw new RuntimeException("Bad Request");
         }
 
-        // 수정된 board update
-        Board nBoard = Board.builder()
-                .bno(courseBoardDTO.getBno())
-                .title(courseBoardDTO.getTitle())
-                .content(courseBoardDTO.getContent())
-                .isAd(courseBoardDTO.getIsAd())
-                .isCourse(board.getIsCourse())
-                .score(courseBoardDTO.getScore())
-                .likes(board.getLikes())
-                .writer(Member.builder().mno(board.getWriter().getMno()).build())
-                .build();
+        // dto to entity
+        board.changeTitle(courseBoardDTO.getTitle());
+        board.changeContent(courseBoardDTO.getContent());
+        board.changeScore(courseBoardDTO.getScore());
+
         try {
-            boardRepository.save(nBoard);
+            boardRepository.save(board);
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new SQLException("board 갱신 실패");
+            e.fillInStackTrace();
+            log.error("Board 수정 불가");
+            throw new RuntimeException("Board 수정 불가");
         }
 
+        // course place list  처리
         try {
-            //BoardPlacePK 삭제 후 다시 생성 => update
-            boardPlaceRepository.deleteAllByBoardPlacePKBoard(Board.builder().bno(board.getBno()).build());
+            // board - place 삭제
+            boardPlaceRepository.deleteAllByBoardPlacePKBoard(board);
 
-            for (BoardPlacePKDTO coursePlace : courseBoardDTO.getCoursePlaceList()) {
-                BoardPlace boardPlace = BoardPlace.builder()
-                        .boardPlacePK(BoardPlacePK.builder()
-                                .board(Board.builder()
-                                        .bno(board.getBno())
-                                        .build())
-                                .day(coursePlace.getDay())
-                                .orderNumber(coursePlace.getOrderNumber())
-                                .build())
-                        .place(Place.builder()
-                                .pno(coursePlace.getPno())
-                                .build())
-                        .build();
+            // 전체 일정
+            List<List<Long>> coursePlaceList = courseBoardDTO.getCoursePlaceList();
+            for (int i = 0; i < coursePlaceList.size(); i++) {
+                // 일자별 일정
+                List<Long> dailyPlace = coursePlaceList.get(i);
+                for (int j = 0; j < dailyPlace.size(); j++) {
+                    BoardPlace boardPlace = BoardPlace.builder()
+                            .boardPlacePK(BoardPlacePK.builder()
+                                    .day(i)
+                                    .orderNumber(j)
+                                    .board(Board.builder().bno(board.getBno()).build())
+                                    .build())
+                            .place(Place.builder()
+                                    .pno(dailyPlace.get(j))
+                                    .build())
+                            .build();
 
-                boardPlaceRepository.save(boardPlace);
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new SQLException("BoardPlace 갱신 실패");
-        }
-
-        try {
-            // 기존에 저장된 이미지와 변경된 이미지 변경 후 삭제 및 등록
-            List<Image> imageList = imageRepository.findAllByBoard(Board.builder().bno(board.getBno()).build());
-            Set<String> images = new HashSet<>(courseBoardDTO.getSrcList());
-
-            for (Image img : imageList) {
-                if (images.contains(img.getSrc())) {
-                    // dto의 src가 저장된 src일 경우
-                    images.remove(img.getSrc());
-                } else {
-                    // dto에 없고, DB에 있는 경우
-                    // todo 실제 저장소에서 src로 삭제하는 logic 추가
-                    imageRepository.deleteById(img.getIno());
+                    boardPlaceRepository.save(boardPlace);
                 }
             }
-
-            for (String img : images) {
-                Image image = Image.builder()
-                        .board(Board.builder()
-                                .bno(board.getBno())
-                                .build())
-                        .src(img)
-                        .build();
-
-                // todo src에 해당하는 주소에 실제 저장하는 logic 추가
-                imageRepository.save(image);
-            }
         } catch (Exception e) {
+            e.fillInStackTrace();
             log.error(e.getMessage());
-            throw new SQLException("image 갱신 실패");
+            throw new RuntimeException("board-place 수정 불가");
+        }
+
+        // 미사용 image 삭제
+        for (String src : courseBoardDTO.getDeleteImages()) {
+            imageService.deleteImage(src);
+        }
+
+        // image - board 연결
+        for (Long ino : courseBoardDTO.getImages()) {
+            imageService.linkBoard(ino, board);
         }
 
         return board.getBno();
@@ -256,9 +320,8 @@ public class BoardServiceImpl implements BoardService {
         if (result.isEmpty()) {
             throw new IllegalArgumentException("없는 게시글입니다.");
         }
-
-        Boolean isLiked;
-        if (SecurityUtil.getCurrentMemberMno() == null) {
+        boolean isLiked;
+        if (!SecurityUtil.existAuthentiaction()) {
             isLiked = false;
         } else {
             isLiked = boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
@@ -346,7 +409,7 @@ public class BoardServiceImpl implements BoardService {
         }
 
         Boolean isLiked;
-        if (SecurityUtil.getCurrentMemberMno() == null) {
+        if (!SecurityUtil.existAuthentiaction()) {
             isLiked = false;
         } else {
             isLiked = boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
@@ -379,7 +442,7 @@ public class BoardServiceImpl implements BoardService {
                             .engAddress((String) tuple[8])
                             .src((String) placeImage.get(0)[0])
                             .build();
-                placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
+                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
                 } else {
                     PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
                             .pno((Long) tuple[2])
