@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.*;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,5 +40,11 @@ class CartRepositoryTest {
                 .build();
 
         cartRepository.delete(cart);
+    }
+
+    @Test
+    public void deleteAll(){
+        Folder folder=Folder.builder().fno(583l).build();
+        cartRepository.deleteAllByCartPK_Folder(folder);
     }
 }
