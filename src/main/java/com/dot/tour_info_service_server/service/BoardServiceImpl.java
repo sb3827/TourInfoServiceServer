@@ -8,8 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -62,10 +60,12 @@ public class BoardServiceImpl implements BoardService {
                 .boardPlacePK(BoardPlacePK.builder()
                         .day(0)
                         .orderNumber(0)
-                        .board(board)
+                        .board(Board.builder()
+                                .bno(board.getBno())
+                                .build())
                         .build())
                 .place(Place.builder()
-                        .pno(placeBoardDTO.getPno())
+                        .pno(placeBoardDTO.getPlace())
                         .build())
                 .build();
         try {
@@ -207,7 +207,7 @@ public class BoardServiceImpl implements BoardService {
             BoardPlace boardPlace = BoardPlace.builder()
                     .boardPlacePK(boardPlacePK)
                     .place(Place.builder()
-                            .pno(placeBoardDTO.getPno())
+                            .pno(placeBoardDTO.getPlace())
                             .build())
                     .build();
 
@@ -377,7 +377,7 @@ public class BoardServiceImpl implements BoardService {
             imageUrls.add(src);
         }
 
-        BoardInfoDTO nboardInfoDTO = BoardInfoDTO.builder()
+        return BoardInfoDTO.builder()
                 .title((String) result.get(0)[0])
                 .content((String) result.get(0)[1])
                 .writerDTO(WriterDTO.builder()
@@ -394,7 +394,6 @@ public class BoardServiceImpl implements BoardService {
                 .images(imageUrls.toArray(new String[0]))
                 .postingPlaceBoardDTOS(placeDTOS)
                 .build();
-        return nboardInfoDTO;
     }
 
     //코스 포스팅 정보 조회
@@ -408,7 +407,7 @@ public class BoardServiceImpl implements BoardService {
             throw new IllegalArgumentException("없는 게시글입니다.");
         }
 
-        Boolean isLiked;
+        boolean isLiked;
         if (!SecurityUtil.existAuthentiaction()) {
             isLiked = false;
         } else {
@@ -465,7 +464,7 @@ public class BoardServiceImpl implements BoardService {
             imageUrls.add(src);
         }
 
-        BoardInfoDTO nboardInfoDTO = BoardInfoDTO.builder()
+        return BoardInfoDTO.builder()
                 .title((String) result.get(0)[0])
                 .content((String) result.get(0)[1])
                 .writerDTO(WriterDTO.builder()
@@ -482,7 +481,6 @@ public class BoardServiceImpl implements BoardService {
                 .images(imageUrls.toArray(new String[0]))
                 .postingPlaceBoardDTOS(placeDTOS)
                 .build();
-        return nboardInfoDTO;
     }
 
 
