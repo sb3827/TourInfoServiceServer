@@ -25,6 +25,9 @@ public class BoardController {
     // 장소 포스팅 등록
     @PostMapping(value = {"/place/posting/register"})
     public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
+        log.info(!SecurityUtil.validateMno(placeBoardDTO.getWriter()));
+        log.info(placeBoardDTO.getWriter());
+        log.info(SecurityUtil.getCurrentMemberMno());
         if(!SecurityUtil.validateMno(placeBoardDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -37,6 +40,8 @@ public class BoardController {
     // 코스포스팅 등록
     @PostMapping(value = {"/course/posting/register"})
     public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
+        log.info(SecurityUtil.getCurrentMemberMno());
+        log.info(courseBoardDTO.getWriter());
         if(!SecurityUtil.validateMno(courseBoardDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -56,13 +61,13 @@ public class BoardController {
     }
 
     // 장소 포스팅 수정
-    @PutMapping(value = {"/place/posting/update"})
+    @PutMapping(value = {"/place/posting/modify"})
     public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody PlaceBoardDTO placeBoardDTO) {
         log.info("modify...dto: " + placeBoardDTO);
         Map<String, Long> result = new HashMap<>();
-//        if (!SecurityUtil.validateMno(placeBoardDTO.getWriter())) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
+        if (!SecurityUtil.validateMno(placeBoardDTO.getWriter())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             Long bno = boardService.placeBoardModify(placeBoardDTO);
             result.put("bno", bno);
@@ -73,7 +78,7 @@ public class BoardController {
     }
 
     // 코스 게시글 수정 address
-    @PutMapping("/course/posting/update")
+    @PutMapping("/course/posting/modify")
     public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody CourseBoardDTO courseBoardDTO) {
 
         log.info("courseBoardDTO: " + courseBoardDTO);
