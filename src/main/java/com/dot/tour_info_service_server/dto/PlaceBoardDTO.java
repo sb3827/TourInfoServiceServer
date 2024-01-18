@@ -18,7 +18,7 @@ public class PlaceBoardDTO {
   private String content;
   private Double score;
   private Long writer;
-  private Long pno;
+  private Long place;
   private List<Long> images; // 등록 img number
   private List<String> deleteImages; // 삭제 대상 img src list
 }
