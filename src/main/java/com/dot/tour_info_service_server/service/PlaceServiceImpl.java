@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Log4j2
@@ -62,7 +64,23 @@ public class PlaceServiceImpl implements PlaceService {
             return placeList;
         }
         return null;
+    }
 
+    // 방문한 장소 수
+    @Override
+    @Transactional
+    public Map<String, Object> getPlaceCount(Long mno) {
+        List<Object[]> result = placeRepository.getPlaceCount(mno);
+        Map<String, Object> placeCount = new HashMap<>();
+        if(!result.isEmpty()){
+            for(Object[] list: result){
+                for(int i=0; i< list.length; i+=2){
+                    placeCount.put((String)list[i], list[i+1]);
+                }
+            }
+            return placeCount;
+        }
+        return null;
     }
 
     @Override

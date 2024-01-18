@@ -2,13 +2,16 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
+import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -39,4 +42,15 @@ public class PlaceRepositoryTests {
 
     }
 
+    // 프로시저 실행 테스트
+    @Test
+    @Transactional
+    public void getPlaceCountTest(){
+        List<Object[]> result = placeRepository.getPlaceCount(2L);
+        for(Object[] list: result){
+            for(Object count:list){
+                log.info("결과 : " + count);
+            }
+        }
+    }
 }

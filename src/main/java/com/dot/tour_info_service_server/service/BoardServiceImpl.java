@@ -627,6 +627,7 @@ public class BoardServiceImpl implements BoardService {
                     .bno((Long) objects[0])
                     .title((String) objects[1])
                     .src((String) objects[2])
+                    .isCourse((Boolean) objects[3])
                     .build();
             mainBoardResponseDTOS.add(mainBoardResponseDTO);
         }
@@ -638,6 +639,7 @@ public class BoardServiceImpl implements BoardService {
                     .bno((Long) objects[0])
                     .title((String) objects[1])
                     .src((String) objects[2])
+                    .isCourse((Boolean) objects[3])
                     .build();
             mainBoardResponseDTOS1.add(mainBoardResponseDTO);
         }
@@ -649,6 +651,7 @@ public class BoardServiceImpl implements BoardService {
                     .bno((Long) objects[0])
                     .title((String) objects[1])
                     .src((String) objects[2])
+                    .isCourse((Boolean) objects[3])
                     .build();
             mainBoardResponseDTOS2.add(mainBoardResponseDTO);
         }
@@ -660,6 +663,7 @@ public class BoardServiceImpl implements BoardService {
                     .bno((Long) objects[0])
                     .title((String) objects[1])
                     .src((String) objects[2])
+                    .isCourse((Boolean) objects[3])
                     .build();
             mainBoardResponseDTOS3.add(mainBoardResponseDTO);
         }

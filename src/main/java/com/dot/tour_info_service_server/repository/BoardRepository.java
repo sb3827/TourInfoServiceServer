@@ -51,14 +51,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 메인페이지
     //최근 올라온 장소 게시글 10개
-    @Query("select b.bno,b.title,i.src " +
+    @Query("select b.bno,b.title,i.src, b.isCourse " +
             "from Board b left outer join Image i on(b.bno=i.board.bno) " +
             "order by b.regDate desc " +
             "limit 10 ")
     List<Object[]> recentlyBoard();
 
     // 가장 많은 추천을 받은 코스 게시글
-    @Query("select b.bno,b.title,i.src " +
+    @Query("select b.bno, b.title, i.src, b.isCourse " +
             "from Board b left outer join Image i on(b.bno=i.board.bno)" +
             "where b.isCourse=true " +
             "order by b.likes desc " +
@@ -67,7 +67,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
     //팔로워들의 게시글
-    @Query("select b.bno,b.title,i.src " +
+    @Query("select b.bno,b.title,i.src, b.isCourse " +
             "from Board b left outer join Member m on(m.mno=b.writer.mno) " +
             "left outer join Follow f on(f.followPk.member.mno=m.mno) " +
             "left outer join Image i on(b.bno=i.board.bno) " +
@@ -78,7 +78,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> followerBoard(Long mno);
 
     //광고 게시글
-    @Query("select b.bno,b.title,i.src " +
+    @Query("select b.bno,b.title,i.src, b.isCourse " +
             "from Board b left outer join Image i on (b.bno=i.board.bno) " +
             "where b.isAd=true " +
             "group by b.bno " +
