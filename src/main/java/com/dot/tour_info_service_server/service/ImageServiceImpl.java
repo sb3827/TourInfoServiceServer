@@ -91,12 +91,13 @@ public class ImageServiceImpl implements ImageService {
 
         Image image = result.get();
         // 이미 연결된 image 연결 취소
-        if(image.getBoard().getBno() != null){
-            return;
+        try {
+            if(image.getBoard().getBno() != null)
+                return;
+        } catch (Exception e) {
+            image.changeBoard(board);
+            imageRepository.save(image);
         }
-
-        image.changeBoard(board);
-        imageRepository.save(image);
     }
 
     @Override
