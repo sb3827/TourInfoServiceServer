@@ -14,25 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 public class CourseBoardDTO {
   private Long bno;
-
   private String title;
-
   private String content;
-
-  private Boolean isAd;
-
-  private Boolean isCourse;
-
   private Double score;
-
-  private int likes;
-
   private Long writer;
-
-  private LocalDateTime regDate, modDate;
-
-  private List<BoardPlacePKDTO> coursePlaceList;
-
-  private List<String> srcList; //이미지 경로
-
+  private List<List<Long>> coursePlaceList;
+  private List<Long> images; // 등록 img number
+  private List<String> deleteImages; // 삭제 대상 img src list
 }

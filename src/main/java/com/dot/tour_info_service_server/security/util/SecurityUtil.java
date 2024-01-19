@@ -48,12 +48,17 @@ public class SecurityUtil {
         return principal.getMno();
     }
 
+    public static boolean existAuthentiaction() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !authentication.getPrincipal().equals("anonymousUser");
+    }
+
     public static boolean isAdmin() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         if(authorities == null) {
-            throw new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+            return false;
         }
 
         return authorities
@@ -69,5 +74,19 @@ public class SecurityUtil {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public static boolean isBusinessman() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        if(authorities == null) {
+            return false;
+        }
+
+        return authorities
+                .stream()
+                .anyMatch(grantedAuthority ->
+                        grantedAuthority.getAuthority().equals("[BUSINESSPERSON]"));
     }
 }

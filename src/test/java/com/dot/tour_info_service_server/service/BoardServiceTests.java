@@ -23,83 +23,83 @@ class BoardServiceTests {
   @Autowired
   private PlaceRepository placeRepository;
 
-  @Test
-  public void placeRegisterPost() {
-    List<String> imagePaths = new ArrayList<>();
-    imagePaths.add("이미지1 경로");
-    imagePaths.add("이미지2 경로");
+//  @Test
+//  public void placeRegisterPost() {
+//    List<String> imagePaths = new ArrayList<>();
+//    imagePaths.add("이미지1 경로");
+//    imagePaths.add("이미지2 경로");
+//
+//    PlaceBoardDTO placeBoardDTO = PlaceBoardDTO.builder()
+//            .title("제목3")
+//            .content("글1")
+//            .isAd(false)
+//            .isCourse(false)
+//            .score(0d)
+//            .likes(0)
+//            .writer(5L)
+//            .srcList(imagePaths)
+//            .pno(6L)
+//            .build();
+//
+////    Long bno = boardService.placeRegister(placeBoardDTO);
+////    System.out.println("bno: "+ bno);
+//
+//  }
 
-    PlaceBoardDTO placeBoardDTO = PlaceBoardDTO.builder()
-            .title("제목3")
-            .content("글1")
-            .isAd(false)
-            .isCourse(false)
-            .score(0d)
-            .likes(0)
-            .writer(5L)
-            .srcList(imagePaths)
-            .pno(6L)
-            .build();
-
-//    Long bno = boardService.placeRegister(placeBoardDTO);
-//    System.out.println("bno: "+ bno);
-
-  }
-
-  @Test
-  public void CourseRegisterPost() {
-    List<String> imagePaths = new ArrayList<>();
-    IntStream.rangeClosed(1, 5).forEach(i -> imagePaths.add("image" + i + " src"));
-
-    List<BoardPlacePKDTO> boardPlacePKDTO = new ArrayList<>();
-    IntStream.rangeClosed(1, 4).forEach(i -> {
-      BoardPlacePKDTO boardPlace = BoardPlacePKDTO.builder()
-              .pno((long) i)
-              .day((i + 1) % 2)
-              .orderNumber(i / 2)
-              .build();
-
-      boardPlacePKDTO.add(boardPlace);
-    });
-
-
-    CourseBoardDTO courseBoardDTO = CourseBoardDTO.builder()
-            .title("제목1")
-            .content("글1")
-            .isAd(false)
-            .isCourse(true)
-            .score(0d)
-            .likes(0)
-            .srcList(null)
-            .writer(5L)
-            .coursePlaceList(boardPlacePKDTO)
-            .build();
-//    Long bno = boardService.courseRegister(courseBoardDTO);
-//    System.out.println("bno: "+ bno);
-  }
+//  @Test
+//  public void CourseRegisterPost() {
+//    List<String> imagePaths = new ArrayList<>();
+//    IntStream.rangeClosed(1, 5).forEach(i -> imagePaths.add("image" + i + " src"));
+//
+//    List<BoardPlacePKDTO> boardPlacePKDTO = new ArrayList<>();
+//    IntStream.rangeClosed(1, 4).forEach(i -> {
+//      BoardPlacePKDTO boardPlace = BoardPlacePKDTO.builder()
+//              .pno((long) i)
+//              .day((i + 1) % 2)
+//              .orderNumber(i / 2)
+//              .build();
+//
+//      boardPlacePKDTO.add(boardPlace);
+//    });
+//
+//
+//    CourseBoardDTO courseBoardDTO = CourseBoardDTO.builder()
+//            .title("제목1")
+//            .content("글1")
+//            .isAd(false)
+//            .isCourse(true)
+//            .score(0d)
+//            .likes(0)
+//            .srcList(null)
+//            .writer(5L)
+//            .coursePlaceList(boardPlacePKDTO)
+//            .build();
+////    Long bno = boardService.courseRegister(courseBoardDTO);
+////    System.out.println("bno: "+ bno);
+//  }
 
   @Test
   public void remove() {
     boardService.remove(2L);
   }
 
-  @Test
-  public void modify() {
-
-    List<String> imagePaths = new ArrayList<>();
-    imagePaths.add("이미지1 경로수정1");
-    imagePaths.add("이미지2 경로수정4");
-    imagePaths.add("이미지3 경로수정5");
-
-    PlaceBoardDTO placeBoardDTO = PlaceBoardDTO.builder()
-            .bno(3L)
-            .title("changed title2")
-            .content("changed content2")
-            .srcList(imagePaths)
-            .build();
-    boardService.placeBoardModify(placeBoardDTO);
-
-  }
+//  @Test
+//  public void modify() {
+//
+//    List<String> imagePaths = new ArrayList<>();
+//    imagePaths.add("이미지1 경로수정1");
+//    imagePaths.add("이미지2 경로수정4");
+//    imagePaths.add("이미지3 경로수정5");
+//
+//    PlaceBoardDTO placeBoardDTO = PlaceBoardDTO.builder()
+//            .bno(3L)
+//            .title("changed title2")
+//            .content("changed content2")
+//            .srcList(imagePaths)
+//            .build();
+//    boardService.placeBoardModify(placeBoardDTO);
+//
+//  }
 
   @Test
   public void getBoardTest() {

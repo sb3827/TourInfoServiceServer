@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Array;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ import java.util.*;
 @Log4j2
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
+    private final ImageService imageService;
 
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
@@ -32,34 +35,61 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public UserInfoDTO showUserInfo(Long mno) {
         Object[] result = memberRepository.userInfo(mno).get(0);
-        if(result != null){
+        if (result != null) {
             UserInfoDTO userInfoDTO = UserInfoDTO.builder()
-                    .mno((Long)result[0])
-                    .image((String)result[1])
-                    .name((String)result[2])
-                    .email((String)result[3])
-                    .phone((String)result[4])
-                    .birth((LocalDate)result[5])
-                    .role((Role)result[6])
+                    .mno((Long) result[0])
+                    .image((String) result[1])
+                    .name((String) result[2])
+                    .email((String) result[3])
+                    .phone((String) result[4])
+                    .birth((LocalDate) result[5])
+                    .role((Role) result[6])
                     .build();
             return userInfoDTO;
         }
-            return null;
+        return null;
     }
 
     // 회원정보수정 ( 이름, 전화번호, 이미지 )
     @Override
     @Transactional
-    public UserInfoDTO modifyUserInfo(UserInfoDTO userInfoDTO) {
-        Optional<Member> result = memberRepository.findById(userInfoDTO.getMno());
+    public UserInfoDTO modifyUserInfo(RequestModifyMemberDTO requestMemberDTO) {
+        Optional<Member> result = memberRepository.findById(requestMemberDTO.getMno());
+        if (result.isEmpty()) {
+            throw new RuntimeException("유저 정보가 없습니다");
+        }
+        Member member = result.get();
 
-        if(result.isPresent()){
-            Member member = result.get();
-            member.changeName(userInfoDTO.getName());
-            member.changePhone(userInfoDTO.getPhone());
-            member.changeImage(userInfoDTO.getImage());
+        // 파일 업로드
+        List<MultipartFile> image = new ArrayList<>();
+        image.add(requestMemberDTO.getImage());
+        FileDTO newSrc;
+        try {
+            newSrc = imageService.uploadFile(image).get(0);
+        } catch (Exception e) {
+            e.fillInStackTrace();
+            log.error("사진 등록 에러: "+e.getMessage());
+            throw new RuntimeException("사진 등록 실패");
+        }
+
+        // 기존 파일 삭제
+        if(member.getImage() != null) {
+            try {// DB에 저장된 주소를 얻어 삭제
+                imageService.deleteFile(member.getImage());
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
+        }
+
+        // DB 유저 정보 수정
+        member.changeName(requestMemberDTO.getName());
+        member.changePhone(requestMemberDTO.getPhone());
+        member.changeImage(newSrc.getFileUrl());
+        try {
             memberRepository.save(member);
-            return userInfoDTO;
+        } catch (Exception e) {
+            log.error("DB 수정 에러: "+e.getMessage());
+            throw new RuntimeException("USER 정보 수정 실패");
         }
         return null;
     }
@@ -70,12 +100,12 @@ public class MemberServiceImpl implements MemberService {
         List<Object[]> result = memberRepository.findProfileByMno(mno);
         if(!result.isEmpty()){
             UserProfileDTO userProfileDTO = UserProfileDTO.builder()
-                    .mno((Long)result.get(0)[0])
-                    .name((String)result.get(0)[1])
-                    .followings(memberRepository.showFollowings((Long)result.get(0)[0]))
-                    .followers(memberRepository.showFollowers((Long)result.get(0)[0]))
-                    .cart(memberRepository.showCart((Long)result.get(0)[0]))
-                    .image((String)result.get(0)[5])
+                    .mno((Long) result.get(0)[0])
+                    .name((String) result.get(0)[1])
+                    .followings(memberRepository.showFollowings((Long) result.get(0)[0]))
+                    .followers(memberRepository.showFollowers((Long) result.get(0)[0]))
+                    .cart(memberRepository.showCart((Long) result.get(0)[0]))
+                    .image((String) result.get(0)[5])
                     .build();
             return userProfileDTO;
         }

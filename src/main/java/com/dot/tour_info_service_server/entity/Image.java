@@ -19,4 +19,8 @@ public class Image extends BaseEntity {
 
     @Column(nullable = false)
     private String src; //이미지 경로
+
+    public void changeBoard(Board board){
+        this.board = board;
+    }
 }

@@ -13,7 +13,7 @@ public interface MemberService {
 
 
     // 회원정보 수정 ( 이미지, 이름, 전화번호 )
-    UserInfoDTO modifyUserInfo(UserInfoDTO userInfoDTO);
+    UserInfoDTO modifyUserInfo(RequestModifyMemberDTO requestMemberDTO);
 
 
     // 회원 프로필 조회 ( 이미지, 이름, 팔로잉, 팔로워, 찜목록 수 )

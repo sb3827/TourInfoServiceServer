@@ -46,4 +46,8 @@ public class Board extends BaseEntity{
     public void changeContent(String content) {
         this.content = content;
     }
+
+    public void changeScore(double score) {
+        this.score = score;
+    }
 }
