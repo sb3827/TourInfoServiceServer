@@ -52,6 +52,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public UserInfoDTO modifyUserInfo(UserInfoDTO userInfoDTO) {
         Optional<Member> result = memberRepository.findById(userInfoDTO.getMno());
+
         if(result.isPresent()){
             Member member = result.get();
             member.changeName(userInfoDTO.getName());
@@ -65,8 +66,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원 프로필 조회 ( 이름, 팔로잉, 팔로워, 찜목록, 이미지 )
     @Override
-    public UserProfileDTO showUserProfile(String name) {
-        List<Object[]> result = memberRepository.findProfileByName(name);
+    public UserProfileDTO showUserProfile(Long mno) {
+        List<Object[]> result = memberRepository.findProfileByMno(mno);
         if(!result.isEmpty()){
             UserProfileDTO userProfileDTO = UserProfileDTO.builder()
                     .mno((Long)result.get(0)[0])

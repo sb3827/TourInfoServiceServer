@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +52,9 @@ public class MemberController {
 
     // 회원 프로필 조회
     @GetMapping(value = "/profile")
-    public ResponseEntity<UserProfileDTO> findUserProfile(@RequestParam("name") String name) {
+    public ResponseEntity<UserProfileDTO> findUserProfile(@RequestParam("mno") Long mno) {
         log.info("User Profile..........");
-        UserProfileDTO userProfileDTO = memberService.showUserProfile(name);
+        UserProfileDTO userProfileDTO = memberService.showUserProfile(mno);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
 
