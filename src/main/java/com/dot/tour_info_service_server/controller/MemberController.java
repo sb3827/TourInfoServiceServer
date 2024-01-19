@@ -37,10 +37,12 @@ public class MemberController {
     }
 
     //     회원정보 수정 검증 필요
-    @PutMapping(value = "/info/update")
+    @PutMapping(value = "/info/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestPart("member") RequestModifyMemberDTO requestMemberDTO,
                                                       @RequestPart("image") MultipartFile userImage) {
         log.info("updateUserInfo.........");
+        log.info(requestMemberDTO);
+        log.info(userImage);
         if (SecurityUtil.validateEmail(requestMemberDTO.getEmail())) {
             requestMemberDTO.setImage(userImage);
             UserInfoDTO changedUserInfo = memberService.modifyUserInfo(requestMemberDTO);
