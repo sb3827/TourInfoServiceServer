@@ -123,4 +123,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "group by b.bno")
     List<Object[]> findCourseBoard(String search);
 
+    // place 검색
+    Optional<Board> findBoardByBnoAndIsCourseIsFalse(Long bno);
+
+    // course 검색
+    Optional<Board> findBoardByBnoAndIsCourseIsTrue(Long bno);
 }

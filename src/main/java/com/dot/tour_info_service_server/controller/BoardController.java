@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,10 +25,14 @@ public class BoardController {
     // 장소 포스팅 등록
     @PostMapping(value = {"/place/posting/register"})
     public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
-        log.info("DTO: " + placeBoardDTO);
-        Map<String, Long> result = new HashMap<>();
+        log.info(!SecurityUtil.validateMno(placeBoardDTO.getWriter()));
+        log.info(placeBoardDTO.getWriter());
+        log.info(SecurityUtil.getCurrentMemberMno());
+        if(!SecurityUtil.validateMno(placeBoardDTO.getWriter()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         Long bno = boardService.placeRegister(placeBoardDTO);
-        log.info("bno: "+ bno);
+        Map<String, Long> result = new HashMap<>();
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -35,9 +40,13 @@ public class BoardController {
     // 코스포스팅 등록
     @PostMapping(value = {"/course/posting/register"})
     public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
+        log.info(SecurityUtil.getCurrentMemberMno());
+        log.info(courseBoardDTO.getWriter());
+        if(!SecurityUtil.validateMno(courseBoardDTO.getWriter()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        Map<String, Long> result = new HashMap<>();
         Long bno = boardService.courseRegister(courseBoardDTO);
+        Map<String, Long> result = new HashMap<>();
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -52,13 +61,13 @@ public class BoardController {
     }
 
     // 장소 포스팅 수정
-    @PutMapping(value = {"/place/posting/update"})
+    @PutMapping(value = {"/place/posting/modify"})
     public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody PlaceBoardDTO placeBoardDTO) {
         log.info("modify...dto: " + placeBoardDTO);
         Map<String, Long> result = new HashMap<>();
-//        if (!SecurityUtil.validateMno(placeBoardDTO.getWriter())) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
+        if (!SecurityUtil.validateMno(placeBoardDTO.getWriter())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             Long bno = boardService.placeBoardModify(placeBoardDTO);
             result.put("bno", bno);
@@ -69,7 +78,7 @@ public class BoardController {
     }
 
     // 코스 게시글 수정 address
-    @PutMapping("/course/posting/update")
+    @PutMapping("/course/posting/modify")
     public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody CourseBoardDTO courseBoardDTO) {
 
         log.info("courseBoardDTO: " + courseBoardDTO);
@@ -106,8 +115,9 @@ public class BoardController {
         log.info("getCourseBoard... bno: " + bno);
         try {
             BoardInfoDTO boardInfoDTO = boardService.getCourseByBno(bno);
-        return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
+            return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

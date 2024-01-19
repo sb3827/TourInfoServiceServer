@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,12 +37,13 @@ public class MemberController {
     }
 
     //     회원정보 수정 검증 필요
-    @PutMapping(value = "/info/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestBody UserInfoDTO userInfoDTO) {
+    @PutMapping(value = "/info/update")
+    public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestPart("member") RequestModifyMemberDTO requestMemberDTO,
+                                                      @RequestPart("image") MultipartFile userImage) {
         log.info("updateUserInfo.........");
-        log.info("DTO: "+userInfoDTO);
-        if (SecurityUtil.validateEmail(userInfoDTO.getEmail())) {
-            UserInfoDTO changedUserInfo = memberService.modifyUserInfo(userInfoDTO);
+        if (SecurityUtil.validateEmail(requestMemberDTO.getEmail())) {
+            requestMemberDTO.setImage(userImage);
+            UserInfoDTO changedUserInfo = memberService.modifyUserInfo(requestMemberDTO);
             return new ResponseEntity<>(changedUserInfo, HttpStatus.OK);
         } else {
             log.error("token is not valid");
@@ -94,7 +96,7 @@ public class MemberController {
 
     // 회원가입 승인 ( 관리자만 )
     @PutMapping(value = "/approve")
-    public ResponseEntity<Map<String, Long>> joinMember(@RequestParam("mno") Long mno) {
+    public ResponseEntity<Map<String,Long>> joinMember(@RequestParam("mno") Long mno){
         log.info("Join..............");
         Map<String, Long> result = new HashMap<>();
         memberService.joinMember(mno);

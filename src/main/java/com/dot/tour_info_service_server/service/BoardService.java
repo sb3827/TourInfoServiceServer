@@ -45,34 +45,4 @@ public interface BoardService {
     // 코스 검색 조회
     List<BoardSearchDTO> findCourseBoard(String search);
 
-
-    default Board placeDtoToEntity(PlaceBoardDTO placeBoardDTO) {
-        Board board = Board.builder()
-//        .bno(boardDTO.getBno())
-                .title(placeBoardDTO.getTitle())
-                .content(placeBoardDTO.getContent())
-                .isAd(placeBoardDTO.getIsAd())
-                .isCourse(placeBoardDTO.getIsCourse())
-                .score(placeBoardDTO.getScore())
-                .likes(placeBoardDTO.getLikes())
-                .writer(Member.builder().mno(placeBoardDTO.getWriter()).build())
-                .build();
-        return board;
-    }
-
-    default Board courseDtoToEntity(CourseBoardDTO courseBoardDTO) {
-        Board board = Board.builder()
-//        .bno(courseBoardDTO.getBno())
-                .title(courseBoardDTO.getTitle())
-                .content(courseBoardDTO.getContent())
-                .isAd(courseBoardDTO.getIsAd())
-                .isCourse(courseBoardDTO.getIsCourse())
-                .score(courseBoardDTO.getScore())
-                .likes(courseBoardDTO.getLikes())
-                .writer(Member.builder().mno(courseBoardDTO.getWriter()).build())
-                .build();
-        return board;
-    }
-
-
 }

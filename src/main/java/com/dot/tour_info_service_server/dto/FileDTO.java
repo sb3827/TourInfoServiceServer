@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class BoardPlacePKDTO {
-  private Long pno;
-  private int day;
-  private int orderNumber;
+@AllArgsConstructor
+public class FileDTO {
+    private String originalFileName;
+    private String renamedFileName;
+    private String fileUrl;
 }

@@ -48,4 +48,7 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
             "from BoardPlace bp left join Place p on bp.place.pno = p.pno " +
             "where bp.boardPlacePK.board.bno = :bno")
     List<Object[]> loadListByBno(@Param("bno") Long bno);
+
+    // table 존재 여부 조회
+    boolean existsByBoardPlacePK(BoardPlacePK boardPlacePK);
 }
