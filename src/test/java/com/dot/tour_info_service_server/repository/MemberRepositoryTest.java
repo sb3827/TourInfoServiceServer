@@ -133,4 +133,14 @@ class MemberRepositoryTest {
     void showCart(){
         log.info("카트" + memberRepository.showCart(2L));
     }
+
+    @Test
+    void findUserProfileTest(){
+        log.info("profile : " + memberRepository.findProfileByMno(2L));
+    }
+
+    @Test
+    void memberImageUpdateTest(){
+        memberRepository.updateMemberImage("testImageSrc", 2L);
+    }
 }

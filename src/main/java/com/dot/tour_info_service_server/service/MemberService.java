@@ -15,8 +15,9 @@ public interface MemberService {
     // 회원정보 수정 ( 이미지, 이름, 전화번호 )
     UserInfoDTO modifyUserInfo(RequestModifyMemberDTO requestMemberDTO);
 
+
     // 회원 프로필 조회 ( 이미지, 이름, 팔로잉, 팔로워, 찜목록 수 )
-    UserProfileDTO showUserProfile(String name);
+    UserProfileDTO showUserProfile(Long mno);
 
     // 회원 탈퇴
     void deleteUserInfo(Long mno);

@@ -33,9 +33,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "from Member m left outer join Follow f1 on m.mno = f1.followPk.follower.mno  " +
             "left outer join Follow f2 on m.mno = f2.followPk.member.mno " +
             "left outer join Cart c on m.mno = c.cartPK.member.mno " +
-            "where m.name like %:name% " +
+            "where m.mno  = :mno " +
             "group by m.mno")
-    List<Object[]> findProfileByName(@Param("name") String name);
+    List<Object[]> findProfileByMno(@Param("mno") Long mno);
 
     // 회원 검색 ( mno, 이미지, 이름 ,팔로워 수 , 팔로잉 수, 팔로우 여부) - 해당 부분 허가 된 사람+관리자 제외 검색 되도록 수정했습니다. + 팔로잉, 팔로워 수 추가
     @Query("select m.mno, m.image, m.name, " +
@@ -114,4 +114,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "where r!='ADMIN' and m.isApprove=true and d.expDate>=now() and m.name like %:name% " +
             "group by m.mno")
     List<Object[]> searchDisciplinary(String name);
+
+    //회원 이미지 변경
+    @Modifying
+    @Transactional
+    @Query("update Member m set m.image = :src where m.mno= :mno")
+    void updateMemberImage(String src, Long mno);
 }

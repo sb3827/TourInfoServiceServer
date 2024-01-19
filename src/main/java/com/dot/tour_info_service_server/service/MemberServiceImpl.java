@@ -91,16 +91,14 @@ public class MemberServiceImpl implements MemberService {
             log.error("DB 수정 에러: "+e.getMessage());
             throw new RuntimeException("USER 정보 수정 실패");
         }
-
-        // todo upload후 user 정보의 return이 필요한가???
         return null;
     }
 
     // 회원 프로필 조회 ( 이름, 팔로잉, 팔로워, 찜목록, 이미지 )
     @Override
-    public UserProfileDTO showUserProfile(String name) {
-        List<Object[]> result = memberRepository.findProfileByName(name);
-        if (!result.isEmpty()) {
+    public UserProfileDTO showUserProfile(Long mno) {
+        List<Object[]> result = memberRepository.findProfileByMno(mno);
+        if(!result.isEmpty()){
             UserProfileDTO userProfileDTO = UserProfileDTO.builder()
                     .mno((Long) result.get(0)[0])
                     .name((String) result.get(0)[1])
@@ -135,8 +133,8 @@ public class MemberServiceImpl implements MemberService {
         List<Object[]> result = memberRepository.searchUser(name,mno);
         List<SearchUserListDTO> userlist = new ArrayList<>();
 
-        if (!result.isEmpty()) {
-            for (Object[] list : result) {
+        if(!result.isEmpty()){
+            for(Object[] list : result){
                 SearchUserListDTO searchUserListDTO = SearchUserListDTO.builder()
                         .mno((Long)list[0])
                         .image((String)list[1])
@@ -159,13 +157,13 @@ public class MemberServiceImpl implements MemberService {
     public List<JoinWaitingDTO> showJoinWaiting() {
         List<Object[]> result = memberRepository.showJoinWaiting();
         List<JoinWaitingDTO> waitingList = new ArrayList<>();
-        if (!result.isEmpty()) {
-            for (Object[] list : result) {
+        if(!result.isEmpty()){
+            for(Object[] list : result){
                 JoinWaitingDTO joinWaitingDTO = JoinWaitingDTO.builder()
-                        .mno((Long) list[0])
-                        .name((String) list[1])
-                        .email((String) list[2])
-                        .businessId((int) list[3])
+                        .mno((Long)list[0])
+                        .name((String)list[1])
+                        .email((String)list[2])
+                        .businessId((int)list[3])
                         .build();
                 waitingList.add(joinWaitingDTO);
             }
@@ -183,28 +181,28 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 조회 - 관리자
     @Override
-    public List<MemberDetailDTO> managerToSearchUser(String filter, String name) {
-        List<Object[]> member = new ArrayList<>();
-        List<MemberDetailDTO> memberDetailDTOS = new ArrayList<>();
+    public List<MemberDetailDTO> managerToSearchUser(String filter,String name) {
+        List<Object[]> member=new ArrayList<>();
+        List<MemberDetailDTO> memberDetailDTOS=new ArrayList<>();
 
-        if (filter.equals("all")) {
-            member = memberRepository.searchMemberAll(name);
-        } else if (filter.equals("normal")) {
-            member = memberRepository.searchNomal(name);
-        } else if (filter.equals("business")) {
-            member = memberRepository.searchBusiness(name);
-        } else if (filter.equals("disciplinary")) {
-            member = memberRepository.searchDisciplinary(name);
+        if (filter.equals("all")){
+            member=memberRepository.searchMemberAll(name);
+        }else if(filter.equals("normal")){
+            member=memberRepository.searchNomal(name);
+        }else if(filter.equals("business")){
+            member=memberRepository.searchBusiness(name);
+        }else if(filter.equals("disciplinary")){
+            member=memberRepository.searchDisciplinary(name);
         }
 
-        log.info(filter + " , " + member);
-        for (Object[] objects : member) {
+        log.info(filter +" , " +member);
+        for(Object[] objects : member){
             String roleName = objects[5] instanceof Role ? ((Role) objects[5]).name() : null;
-            MemberDetailDTO memberDetailDTO = MemberDetailDTO.builder()
-                    .mno((Long) objects[0])
-                    .name((String) objects[1])
-                    .email((String) objects[2])
-                    .phone((String) objects[3])
+            MemberDetailDTO memberDetailDTO=MemberDetailDTO.builder()
+                    .mno((Long)objects[0])
+                    .name((String)objects[1])
+                    .email((String)objects[2])
+                    .phone((String)objects[3])
                     .regDate((LocalDateTime) objects[4])
                     .role(roleName)
                     .expDate((LocalDateTime) objects[6])
