@@ -320,8 +320,9 @@ public class BoardServiceImpl implements BoardService {
         if (result.isEmpty()) {
             throw new IllegalArgumentException("없는 게시글입니다.");
         }
+
         boolean isLiked;
-        if (!SecurityUtil.existAuthentiaction()) {
+        if (!SecurityUtil.existAuthentiaction() || SecurityUtil.getCurrentMemberMno() == null) {
             isLiked = false;
         } else {
             isLiked = boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
@@ -331,9 +332,8 @@ public class BoardServiceImpl implements BoardService {
         }
 
 
-        List<List<PostingPlaceBoardDTO>> placeDTOS = null;
+        List<List<PostingPlaceBoardDTO>> placeDTOS = new ArrayList<>();
         if (!placeList.isEmpty()) {
-            placeDTOS = new ArrayList<>();
             placeDTOS.add(new ArrayList<>());
             int cnt = 0;
             for (Object[] tuple : placeList) {
@@ -343,7 +343,6 @@ public class BoardServiceImpl implements BoardService {
                 }
                 List<Object[]> placeImage =
                         boardPlaceRepository.loadRepresentPlaceImageByPno((Long) tuple[2]);
-                if (!placeImage.isEmpty()) {
                     PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
                             .pno((Long) tuple[2])
                             .name((String) tuple[3])
@@ -352,22 +351,19 @@ public class BoardServiceImpl implements BoardService {
                             .roadAddress((String) tuple[6])
                             .localAddress((String) tuple[7])
                             .engAddress((String) tuple[8])
-                            .src((String) placeImage.get(0)[0])
                             .build();
-                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
+
+                if (placeImage != null && !placeImage.isEmpty()) {
+                    Object[] imageArray = placeImage.get(0);
+                    if (imageArray != null && imageArray.length > 0) {
+                        postingPlaceBoardDTO.setSrc((String) imageArray[0]);
+                    } else {
+                        postingPlaceBoardDTO.setSrc(null);
+                    }
                 } else {
-                    PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
-                            .pno((Long) tuple[2])
-                            .name((String) tuple[3])
-                            .lat((Double) tuple[4])
-                            .lng((Double) tuple[5])
-                            .roadAddress((String) tuple[6])
-                            .localAddress((String) tuple[7])
-                            .engAddress((String) tuple[8])
-                            .src(null)
-                            .build();
-                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
+                    postingPlaceBoardDTO.setSrc(null);
                 }
+                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
             }
         }
 
@@ -408,7 +404,7 @@ public class BoardServiceImpl implements BoardService {
         }
 
         boolean isLiked;
-        if (!SecurityUtil.existAuthentiaction()) {
+        if (!SecurityUtil.existAuthentiaction() || SecurityUtil.getCurrentMemberMno() == null) {
             isLiked = false;
         } else {
             isLiked = boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
@@ -418,9 +414,8 @@ public class BoardServiceImpl implements BoardService {
         }
 
 
-        List<List<PostingPlaceBoardDTO>> placeDTOS = null;
+        List<List<PostingPlaceBoardDTO>> placeDTOS = new ArrayList<>();
         if (!placeList.isEmpty()) {
-            placeDTOS = new ArrayList<>();
             placeDTOS.add(new ArrayList<>());
             int cnt = 0;
             for (Object[] tuple : placeList) {
@@ -430,31 +425,29 @@ public class BoardServiceImpl implements BoardService {
                 }
                 List<Object[]> placeImage =
                         boardPlaceRepository.loadRepresentPlaceImageByPno((Long) tuple[2]);
-                if (!placeImage.isEmpty()) {
-                    PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
-                            .pno((Long) tuple[2])
-                            .name((String) tuple[3])
-                            .lat((Double) tuple[4])
-                            .lng((Double) tuple[5])
-                            .roadAddress((String) tuple[6])
-                            .localAddress((String) tuple[7])
-                            .engAddress((String) tuple[8])
-                            .src((String) placeImage.get(0)[0])
-                            .build();
-                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
+                PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
+                        .pno((Long) tuple[2])
+                        .name((String) tuple[3])
+                        .lat((Double) tuple[4])
+                        .lng((Double) tuple[5])
+                        .roadAddress((String) tuple[6])
+                        .localAddress((String) tuple[7])
+                        .engAddress((String) tuple[8])
+                        .build();
+
+                if (placeImage != null && !placeImage.isEmpty()) {
+                    Object[] imageArray = placeImage.get(0);
+                    if (imageArray != null && imageArray.length > 0) {
+                        postingPlaceBoardDTO.setSrc((String) imageArray[0]);
+                    } else {
+                        // 이미지 배열이 null 또는 비어 있는 경우
+                        postingPlaceBoardDTO.setSrc(null);
+                    }
                 } else {
-                    PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
-                            .pno((Long) tuple[2])
-                            .name((String) tuple[3])
-                            .lat((Double) tuple[4])
-                            .lng((Double) tuple[5])
-                            .roadAddress((String) tuple[6])
-                            .localAddress((String) tuple[7])
-                            .engAddress((String) tuple[8])
-                            .src(null)
-                            .build();
-                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
+                    // 이미지 정보가 없는 경우
+                    postingPlaceBoardDTO.setSrc(null);
                 }
+                placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
             }
         }
 
