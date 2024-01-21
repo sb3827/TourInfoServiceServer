@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.entity.Place;
 import com.dot.tour_info_service_server.repository.BoardRepository;
 import com.dot.tour_info_service_server.repository.PlaceRepository;
 import org.junit.jupiter.api.Test;
@@ -135,15 +136,35 @@ class BoardServiceTests {
     }
 
     List<Object[]> result2 = boardRepository.mostLikeCourse();
-    List<MainBoardResponseDTO> mainBoardResponseDTOS1 = new ArrayList<>();
+    List<MostListCourseDTO> mostListCourseDTOS = new ArrayList<>();
     for (Object[] objects : result2) {
       MainBoardResponseDTO mainBoardResponseDTO = MainBoardResponseDTO.builder()
               .bno((Long) objects[0])
               .title((String) objects[1])
               .src((String) objects[2])
+              .isCourse((Boolean) objects[3])
               .build();
-      mainBoardResponseDTOS1.add(mainBoardResponseDTO);
+      List<Place> places=boardRepository.mostLikeCoursePlace((Long)objects[0]);
+      List<MainPlaceDTO> mainPlaceDTOS=new ArrayList<>();
+      for (Place place:places){
+        MainPlaceDTO mainPlaceDTO=MainPlaceDTO.builder()
+                .name(place.getName())
+                .lat(place.getLat())
+                .lng(place.getLng())
+                .roadAddress(place.getRoadAddress())
+                .engAddress(place.getEngAddress())
+                .localAddress(place.getLocalAddress())
+                .build();
+        mainPlaceDTOS.add(mainPlaceDTO);
+      }
+
+      MostListCourseDTO mostListCourseDTO=MostListCourseDTO.builder()
+              .mainBoardResponseDTO(mainBoardResponseDTO)
+              .placeList(mainPlaceDTOS)
+              .build();
+      mostListCourseDTOS.add(mostListCourseDTO);
     }
+
 
     List<Object[]> result3 = boardRepository.followerBoard(mno);
     List<MainBoardResponseDTO> mainBoardResponseDTOS2 = new ArrayList<>();
@@ -167,7 +188,7 @@ class BoardServiceTests {
       mainBoardResponseDTOS3.add(mainBoardResponseDTO);
     }
 
-    MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mainBoardResponseDTOS1, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
+    MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
 
     System.out.println(mainResponseDTO);
 

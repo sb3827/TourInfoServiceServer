@@ -68,4 +68,13 @@ class BoardRepositoryTests {
 
     }
 
+    @Test
+    void mostCourse(){
+        List<Object[]> mlc=boardRepository.mostLikeCourse();
+        for (Object[] objects:mlc){
+            System.out.println(objects);
+            System.out.println(boardRepository.mostLikeCoursePlace((Long)objects[0]));
+        }
+    }
+
 }

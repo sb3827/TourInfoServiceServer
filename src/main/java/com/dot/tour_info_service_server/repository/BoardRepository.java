@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Board;
+import com.dot.tour_info_service_server.entity.Place;
 import jakarta.transaction.Transactional;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -64,6 +65,13 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "order by b.likes desc " +
             "limit 10")
     List<Object[]> mostLikeCourse();
+
+    //코스에 해당하는 1일차 코스
+    @Query("select p " +
+            "from Place p left outer join BoardPlace bp on p.pno=bp.place.pno " +
+            "where bp.boardPlacePK.day=1 and bp.boardPlacePK.board.bno=:bno")
+    List<Place> mostLikeCoursePlace(Long bno);
+
 
 
     //팔로워들의 게시글
