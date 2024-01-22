@@ -37,7 +37,7 @@ public class SecurityConfig {
             "/auth/login", "/auth/newToken", "/auth/signup", "/auth/email/check",
             "/auth/email/re-validation", "/auth/email/validation/*",
             "/auth/email/find", "/auth/password/lost",
-            "/board/place/poting/**", "/board/course/poting/**", "/board/main",
+            "/board/place/posting/**", "/board/course/posting/**", "/board/main",
             "/board/place/posting/member/**", "/board/course/posting/member/**",
             "/board/place/**", "/board/course/**",
             "/place/**", "/place/placecount/**",
