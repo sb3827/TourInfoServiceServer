@@ -37,30 +37,30 @@ public class SecurityConfig {
             "/auth/login", "/auth/newToken", "/auth/signup", "/auth/email/check",
             "/auth/email/re-validation", "/auth/email/validation/*",
             "/auth/email/find", "/auth/password/lost",
-            "/board/place/poting/*", "/board/course/poting/*", "/board/main",
-            "/board/place/posting/member/*", "/board/course/posting/member/*",
-            "/board/place/*", "/board/course/*",
-            "/place/*", "/place/placecount/*",
-            "/reply/member/*", "/reply/board/*",
-            "/users/profile/*", "/users/find/*"
+            "/board/place/poting/**", "/board/course/poting/**", "/board/main",
+            "/board/place/posting/member/**", "/board/course/posting/member/**",
+            "/board/place/**", "/board/course/**",
+            "/place/**", "/place/placecount/**",
+            "/reply/member/**", "/reply/board/**",
+            "/users/profile/**", "/users/find/**"
     };
 
     private static final String[] AUTHENTICATED_LIST = {
             "/auth/logout",
             "/board/place/posting/register", "/board/course/posting/register",
             "/board/place/posting/modify", "/board/course/posting/modify",
-            "/board/place/posting/delete/*", "/board/course/posting/delete/*",
-            "/folder/*/*", "/follow/*/*", "/image/*", "/like/board",
+            "/board/place/posting/delete/**", "/board/course/posting/delete/**",
+            "/folder/**/*", "/follow/**/*", "/image/*", "/like/board",
             "/place/register",
             "/reply/register", "/reply/update", "/reply/delete", /*"/reply/report"*/
             "/report/register",
-            "/users/info/*", "/users/info/update", "/users/delete/*"
+            "/users/info/**", "/users/info/update", "/users/delete/**"
     };
 
     private static final String[] ADMIN_LIST = {
             "/place/delete",
             "/report/**",
-            "/users/wating", "/users/approve/*", "/users/filter-find/*"
+            "/users/wating", "/users/approve/**", "/users/filter-find/**"
     };
 
     @Bean
@@ -81,10 +81,10 @@ public class SecurityConfig {
 
                 // setting authorize of address
                 .authorizeHttpRequests(authorizeRequests -> {
-                    authorizeRequests.requestMatchers(ADMIN_LIST).hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(PERMIT_ALL_LIST).permitAll();
                     authorizeRequests.requestMatchers("/auth/getTest").authenticated(); // todo delete
                     authorizeRequests.requestMatchers(AUTHENTICATED_LIST).authenticated();
-                    authorizeRequests.requestMatchers(PERMIT_ALL_LIST).permitAll();
+                    authorizeRequests.requestMatchers(ADMIN_LIST).hasRole("ADMIN");
                     authorizeRequests.anyRequest().denyAll();
                 })
 
