@@ -58,7 +58,6 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("유저 정보가 없습니다");
         }
         Member member = result.get();
-
         // 기존 파일 삭제
         if (member.getImage()!=null) {
             try {// DB에 저장된 주소를 얻어 삭제
@@ -67,7 +66,6 @@ public class MemberServiceImpl implements MemberService {
                 log.error(e.getMessage());
             }
         }
-
         // 파일 업로드
         FileDTO newSrc;
         if (requestMemberDTO.getImage() != null) {
@@ -82,9 +80,6 @@ public class MemberServiceImpl implements MemberService {
                 throw new RuntimeException("사진 등록 실패");
             }
         }
-
-
-
         // DB 유저 정보 수정
         member.changeName(requestMemberDTO.getName());
         member.changePhone(requestMemberDTO.getPhone());
@@ -113,7 +108,6 @@ public class MemberServiceImpl implements MemberService {
                     .build();
             return userProfileDTO;
         }
-
         return null;
     }
 
@@ -143,8 +137,6 @@ public class MemberServiceImpl implements MemberService {
                         .mno((Long) list[0])
                         .image((String) list[1])
                         .name((String) list[2])
-//                        .followings(memberRepository.showFollowings((Long)list[0]))
-//                        .followers(memberRepository.showFollowers((Long)list[0]))
                         .followers((Long) list[3])
                         .followings((Long) list[4])
                         .followCheck((Boolean) list[5])
