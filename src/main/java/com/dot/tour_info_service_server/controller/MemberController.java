@@ -42,9 +42,10 @@ public class MemberController {
                                                       @RequestPart("image") MultipartFile userImage) {
         log.info("updateUserInfo.........");
         log.info(requestMemberDTO);
-        log.info(userImage);
+        log.info(userImage.isEmpty());
         if (SecurityUtil.validateEmail(requestMemberDTO.getEmail())) {
-            requestMemberDTO.setImage(userImage);
+            if(!userImage.isEmpty())
+                requestMemberDTO.setImage(userImage);
             UserInfoDTO changedUserInfo = memberService.modifyUserInfo(requestMemberDTO);
             return new ResponseEntity<>(changedUserInfo, HttpStatus.OK);
         } else {
