@@ -18,4 +18,5 @@ public class ReplyListDTO {
     private String title;
     private String text;
     private LocalDateTime regdate;
+    private boolean isCourse;
 }

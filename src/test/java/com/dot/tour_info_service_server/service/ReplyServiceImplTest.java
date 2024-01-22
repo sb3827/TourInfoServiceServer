@@ -16,6 +16,6 @@ class ReplyServiceImplTest {
 
     @Test
     void showReplyList() {
-       log.info(replyService.showReplyList(2L));
+       log.info(replyService.showReplyList(4L));
     }
 }

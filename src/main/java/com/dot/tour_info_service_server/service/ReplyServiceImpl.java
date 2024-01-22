@@ -93,6 +93,7 @@ public class ReplyServiceImpl implements ReplyService {
                 .title((String)list[3])
                 .text((String)list[4])
                 .regdate((LocalDateTime)list[5])
+                .isCourse((boolean)list[6])
                 .build();
         replyList.add(replyListDTO);
       }
