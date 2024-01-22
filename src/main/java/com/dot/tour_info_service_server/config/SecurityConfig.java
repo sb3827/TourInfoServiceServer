@@ -50,7 +50,7 @@ public class SecurityConfig {
             "/board/place/posting/register", "/board/course/posting/register",
             "/board/place/posting/modify", "/board/course/posting/modify",
             "/board/place/posting/delete/**", "/board/course/posting/delete/**",
-            "/folder/**/*", "/follow/**/*", "/image/*", "/like/board",
+            "/folder/**/*", "/follow/**/*", "/image/**", "/like/board",
             "/place/register",
             "/reply/register", "/reply/update", "/reply/delete", /*"/reply/report"*/
             "/report/register",
