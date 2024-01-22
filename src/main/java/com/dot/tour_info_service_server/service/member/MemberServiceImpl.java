@@ -58,36 +58,36 @@ public class MemberServiceImpl implements MemberService {
             throw new RuntimeException("유저 정보가 없습니다");
         }
         Member member = result.get();
-
-        // 파일 업로드
-        List<MultipartFile> image = new ArrayList<>();
-        image.add(requestMemberDTO.getImage());
-        FileDTO newSrc;
-        try {
-            newSrc = imageService.uploadFile(image).get(0);
-        } catch (Exception e) {
-            e.fillInStackTrace();
-            log.error("사진 등록 에러: "+e.getMessage());
-            throw new RuntimeException("사진 등록 실패");
-        }
-
         // 기존 파일 삭제
-        if(member.getImage() != null) {
+        if (member.getImage()!=null) {
             try {// DB에 저장된 주소를 얻어 삭제
                 imageService.deleteFile(member.getImage());
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
         }
-
+        // 파일 업로드
+        FileDTO newSrc;
+        if (requestMemberDTO.getImage() != null) {
+            List<MultipartFile> image = new ArrayList<>();
+            image.add(requestMemberDTO.getImage());
+            try {
+                newSrc = imageService.uploadFile(image).get(0);
+                member.changeImage(newSrc.getFileUrl());
+            } catch (Exception e) {
+                e.fillInStackTrace();
+                log.error("사진 등록 에러: " + e.getMessage());
+                throw new RuntimeException("사진 등록 실패");
+            }
+        }
         // DB 유저 정보 수정
         member.changeName(requestMemberDTO.getName());
         member.changePhone(requestMemberDTO.getPhone());
-        member.changeImage(newSrc.getFileUrl());
+
         try {
             memberRepository.save(member);
         } catch (Exception e) {
-            log.error("DB 수정 에러: "+e.getMessage());
+            log.error("DB 수정 에러: " + e.getMessage());
             throw new RuntimeException("USER 정보 수정 실패");
         }
         return null;
@@ -97,7 +97,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public UserProfileDTO showUserProfile(Long mno) {
         List<Object[]> result = memberRepository.findProfileByMno(mno);
-        if(!result.isEmpty()){
+        if (!result.isEmpty()) {
             UserProfileDTO userProfileDTO = UserProfileDTO.builder()
                     .mno((Long) result.get(0)[0])
                     .name((String) result.get(0)[1])
@@ -108,7 +108,6 @@ public class MemberServiceImpl implements MemberService {
                     .build();
             return userProfileDTO;
         }
-
         return null;
     }
 
@@ -128,20 +127,18 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 검색
     @Override
-    public List<SearchUserListDTO> searchUser(String name,Long mno) {
-        List<Object[]> result = memberRepository.searchUser(name,mno);
+    public List<SearchUserListDTO> searchUser(String name, Long mno) {
+        List<Object[]> result = memberRepository.searchUser(name, mno);
         List<SearchUserListDTO> userlist = new ArrayList<>();
 
-        if(!result.isEmpty()){
-            for(Object[] list : result){
+        if (!result.isEmpty()) {
+            for (Object[] list : result) {
                 SearchUserListDTO searchUserListDTO = SearchUserListDTO.builder()
-                        .mno((Long)list[0])
-                        .image((String)list[1])
-                        .name((String)list[2])
-//                        .followings(memberRepository.showFollowings((Long)list[0]))
-//                        .followers(memberRepository.showFollowers((Long)list[0]))
-                        .followers((Long)list[3])
-                        .followings((Long)list[4])
+                        .mno((Long) list[0])
+                        .image((String) list[1])
+                        .name((String) list[2])
+                        .followers((Long) list[3])
+                        .followings((Long) list[4])
                         .followCheck((Boolean) list[5])
                         .build();
                 userlist.add(searchUserListDTO);
@@ -156,13 +153,13 @@ public class MemberServiceImpl implements MemberService {
     public List<JoinWaitingDTO> showJoinWaiting() {
         List<Object[]> result = memberRepository.showJoinWaiting();
         List<JoinWaitingDTO> waitingList = new ArrayList<>();
-        if(!result.isEmpty()){
-            for(Object[] list : result){
+        if (!result.isEmpty()) {
+            for (Object[] list : result) {
                 JoinWaitingDTO joinWaitingDTO = JoinWaitingDTO.builder()
-                        .mno((Long)list[0])
-                        .name((String)list[1])
-                        .email((String)list[2])
-                        .businessId((int)list[3])
+                        .mno((Long) list[0])
+                        .name((String) list[1])
+                        .email((String) list[2])
+                        .businessId((int) list[3])
                         .build();
                 waitingList.add(joinWaitingDTO);
             }
@@ -180,28 +177,28 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 조회 - 관리자
     @Override
-    public List<MemberDetailDTO> managerToSearchUser(String filter,String name) {
-        List<Object[]> member=new ArrayList<>();
-        List<MemberDetailDTO> memberDetailDTOS=new ArrayList<>();
+    public List<MemberDetailDTO> managerToSearchUser(String filter, String name) {
+        List<Object[]> member = new ArrayList<>();
+        List<MemberDetailDTO> memberDetailDTOS = new ArrayList<>();
 
-        if (filter.equals("all")){
-            member=memberRepository.searchMemberAll(name);
-        }else if(filter.equals("normal")){
-            member=memberRepository.searchNomal(name);
-        }else if(filter.equals("business")){
-            member=memberRepository.searchBusiness(name);
-        }else if(filter.equals("disciplinary")){
-            member=memberRepository.searchDisciplinary(name);
+        if (filter.equals("all")) {
+            member = memberRepository.searchMemberAll(name);
+        } else if (filter.equals("normal")) {
+            member = memberRepository.searchNomal(name);
+        } else if (filter.equals("business")) {
+            member = memberRepository.searchBusiness(name);
+        } else if (filter.equals("disciplinary")) {
+            member = memberRepository.searchDisciplinary(name);
         }
 
-        log.info(filter +" , " +member);
-        for(Object[] objects : member){
+        log.info(filter + " , " + member);
+        for (Object[] objects : member) {
             String roleName = objects[5] instanceof Role ? ((Role) objects[5]).name() : null;
-            MemberDetailDTO memberDetailDTO=MemberDetailDTO.builder()
-                    .mno((Long)objects[0])
-                    .name((String)objects[1])
-                    .email((String)objects[2])
-                    .phone((String)objects[3])
+            MemberDetailDTO memberDetailDTO = MemberDetailDTO.builder()
+                    .mno((Long) objects[0])
+                    .name((String) objects[1])
+                    .email((String) objects[2])
+                    .phone((String) objects[3])
                     .regDate((LocalDateTime) objects[4])
                     .role(roleName)
                     .expDate((LocalDateTime) objects[6])
