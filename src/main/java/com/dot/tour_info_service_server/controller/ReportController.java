@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
-import com.dot.tour_info_service_server.service.ReportService;
+import com.dot.tour_info_service_server.service.report.ReportService;
 import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

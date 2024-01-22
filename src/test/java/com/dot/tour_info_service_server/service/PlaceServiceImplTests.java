@@ -3,15 +3,11 @@ package com.dot.tour_info_service_server.service;
 import com.dot.tour_info_service_server.dto.PlaceDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.PlaceRepository;
-import com.dot.tour_info_service_server.entity.Place;
+import com.dot.tour_info_service_server.service.place.PlaceService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 @Log4j2

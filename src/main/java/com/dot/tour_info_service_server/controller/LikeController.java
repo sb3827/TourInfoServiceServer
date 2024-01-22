@@ -3,7 +3,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.RequestLikesDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
-import com.dot.tour_info_service_server.service.LikeService;
+import com.dot.tour_info_service_server.service.like.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;

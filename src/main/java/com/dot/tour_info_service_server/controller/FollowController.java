@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.FollowDTO;
 import com.dot.tour_info_service_server.dto.FollowResponseDTO;
-import com.dot.tour_info_service_server.service.FollowService;
+import com.dot.tour_info_service_server.service.follow.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;

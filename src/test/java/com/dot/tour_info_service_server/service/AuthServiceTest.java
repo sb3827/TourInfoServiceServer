@@ -2,8 +2,10 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.MemberDTO;
 import com.dot.tour_info_service_server.dto.ResponseDTO;
-import com.dot.tour_info_service_server.dto.SignupRequestDTO;
+import com.dot.tour_info_service_server.dto.request.auth.EmailRequestDTO;
+import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
 import com.dot.tour_info_service_server.dto.ChangeMemberDTO;
+import com.dot.tour_info_service_server.service.auth.AuthService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +35,25 @@ class AuthServiceTest {
     // business 등록 test code
     public void registBusinessTest() {
         authService.signup(SignupRequestDTO.builder()
-                .email("email@email.com")
+                .email("Business@email.com")
                 .password("1234")
                 .birth(LocalDate.now())
                 .phone("010-1111-2222")
                 .name("해창")
                 .role("BUSINESSPERSON")
+                .build());
+    }
+
+    @Test
+    // business 등록 test code
+    public void registAdminTest() {
+        authService.signup(SignupRequestDTO.builder()
+                .email("ADMIN@DoT.com")
+                .password("1234")
+                .birth(LocalDate.now())
+                .phone("010-1111-2222")
+                .name("관리자")
+                .role("ADMIN")
                 .build());
     }
 
@@ -66,7 +81,7 @@ class AuthServiceTest {
 
     @Test
     public void resetPasswordTest() {
-        log.info(authService.resetPassword(MemberDTO.builder()
+        log.info(authService.resetPassword(EmailRequestDTO.builder()
                         .email("member")
                 .build()));
     }

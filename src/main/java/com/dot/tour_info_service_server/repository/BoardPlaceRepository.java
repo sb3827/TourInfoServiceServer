@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Board;
-import com.dot.tour_info_service_server.entity.BoardPlace;
-import com.dot.tour_info_service_server.entity.BoardPlacePK;
+import com.dot.tour_info_service_server.entity.boardPlace.BoardPlace;
+import com.dot.tour_info_service_server.entity.boardPlace.BoardPlacePK;
 import jakarta.transaction.Transactional;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;

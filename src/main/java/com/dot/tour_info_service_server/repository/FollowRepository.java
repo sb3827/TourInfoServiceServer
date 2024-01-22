@@ -1,7 +1,7 @@
 package com.dot.tour_info_service_server.repository;
 
-import com.dot.tour_info_service_server.entity.Follow;
-import com.dot.tour_info_service_server.entity.FollowPK;
+import com.dot.tour_info_service_server.entity.follow.Follow;
+import com.dot.tour_info_service_server.entity.follow.FollowPK;
 import com.dot.tour_info_service_server.entity.Member;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
