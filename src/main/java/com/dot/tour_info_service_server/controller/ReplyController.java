@@ -28,14 +28,7 @@ public class ReplyController {
   private final ReplyService replyService;
   private final ReportService reportService;
 
-
-//  @GetMapping("/member")
-//  public ResponseEntity<List<ReplyDTO>> getListByMno(@RequestParam("mno") Long mno) {
-//    log.info("getReplyListByMno....");
-//    List<ReplyDTO> result = replyService.getListOfReplyByMember(mno);
-//    return new ResponseEntity<>(result, HttpStatus.OK);
-//  }
-
+  // permit all
   @GetMapping("/member")
   public ResponseEntity<List<ReplyListDTO>> getListByMno(@RequestParam("mno") Long mno) {
     log.info("getReplyListByMno....");
@@ -44,6 +37,7 @@ public class ReplyController {
   }
 
   //수정 시작 게시글 댓글 조회
+  // permit all
   @GetMapping("/board")
   public ResponseEntity<List<ReplyMemberDTO>> getListByBno(@RequestParam("bno") Long bno, @RequestParam(value = "rno", required = false)Long rno) {
     log.info("getReplyListByBno....");
@@ -59,8 +53,7 @@ public class ReplyController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-
-
+  // authenticated
   @PostMapping("/register")
   public ResponseEntity<Map<String, Long>> register(@RequestBody ReplyDTO replyDTO) {
     log.info("saveReply... " + replyDTO);
@@ -76,6 +69,7 @@ public class ReplyController {
     }
   }
 
+  // authenticated
   @PutMapping("/update")
   public ResponseEntity<Map<String, Long>> update(@RequestBody ReplyDTO replyDTO) {
     if (!SecurityUtil.validateMno(replyDTO.getMno())) {
@@ -89,6 +83,7 @@ public class ReplyController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
+  // authenticated
   @PutMapping("/delete")
   public ResponseEntity<Map<String, Long>> delete(@RequestBody ReplyDTO replyDTO) {
     if (!SecurityUtil.validateMno(replyDTO.getMno())) {
@@ -104,18 +99,21 @@ public class ReplyController {
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
-  @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<ResponseWrapDTO<Long>> report(@RequestBody ReportRequestDTO reportRequestDTO) {
-    ResponseWrapDTO response = new ResponseWrapDTO(false, null);
-    Long data = reportService.report(reportRequestDTO);
-    if (data == 1l) {
-      response.setResult(true);
-      response.setData(data);
-      return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    //만약 신고한 유저가 존재하지 않는다면 null을 전달받음
+//todo
 
-    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-  }
+// authenticated
+//  @PostMapping(value = "/report", produces = MediaType.APPLICATION_JSON_VALUE)
+//  public ResponseEntity<ResponseWrapDTO<Long>> report(@RequestBody ReportRequestDTO reportRequestDTO) {
+//    ResponseWrapDTO response = new ResponseWrapDTO(false, null);
+//    Long data = reportService.report(reportRequestDTO);
+//    if (data == 1l) {
+//      response.setResult(true);
+//      response.setData(data);
+//      return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+//    //만약 신고한 유저가 존재하지 않는다면 null을 전달받음
+//
+//    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+//  }
 
 }

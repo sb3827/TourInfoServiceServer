@@ -25,6 +25,7 @@ public class MemberController {
 
 
     // 회원정보 조회 검증 필요
+    // authenticated
     @GetMapping(value = "/info")
     public ResponseEntity<UserInfoDTO> findUserInfo(@RequestParam("mno") Long mno) {
         log.info("findUserInfo........." + mno);
@@ -37,6 +38,7 @@ public class MemberController {
     }
 
     //     회원정보 수정 검증 필요
+    // authenticated
     @PutMapping(value = "/info/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserInfoDTO> updateUserInfo(@RequestPart("member") RequestModifyMemberDTO requestMemberDTO,
                                                       @RequestPart("image") MultipartFile userImage) {
@@ -54,6 +56,7 @@ public class MemberController {
     }
 
     // 회원 프로필 조회
+    // permit all
     @GetMapping(value = "/profile")
     public ResponseEntity<UserProfileDTO> findUserProfile(@RequestParam("mno") Long mno) {
         log.info("User Profile..........");
@@ -62,6 +65,7 @@ public class MemberController {
     }
 
     // 회원 탈퇴 검증 필요
+    // authenticated
     @DeleteMapping(value = "/delete")
     public ResponseEntity<Map<String, Long>> removeUserInfo(@RequestParam("mno") Long mno) {
         log.info("User Delete......");
@@ -76,6 +80,7 @@ public class MemberController {
     }
 
     // 회원 검색
+    // permit all
     @PostMapping(value = "/find")
     public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search,@RequestBody(required = false)MnoDTO mnoDTO) {
         log.info("Searching User.......");
@@ -89,6 +94,7 @@ public class MemberController {
     }
 
     // 회원가입대기 조회 ( 관리자만 )
+    // admin
     @GetMapping(value = "/waiting")
     public ResponseEntity<List<JoinWaitingDTO>> showJoinWaiting() {
         log.info("JoinWaiting List.............");
@@ -97,6 +103,7 @@ public class MemberController {
     }
 
     // 회원가입 승인 ( 관리자만 )
+    // admin
     @PutMapping(value = "/approve")
     public ResponseEntity<Map<String,Long>> joinMember(@RequestParam("mno") Long mno){
         log.info("Join..............");
@@ -107,6 +114,7 @@ public class MemberController {
     }
 
     //회원 검색 관리자
+    // admin
     @GetMapping(value = "/filter-find")
     public ResponseEntity<List<MemberDetailDTO>> managerSearchUser(@RequestParam("filter") String filter, @RequestParam("search") String name) {
         log.info(filter + " , " + name);
