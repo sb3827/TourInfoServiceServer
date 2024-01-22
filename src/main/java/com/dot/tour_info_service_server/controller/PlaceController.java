@@ -22,9 +22,13 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
+    //todo 검증 필요
     @PostMapping(value = "/register")
     public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody PlaceDTO placeDTO){
         log.info("registerPlace: " + placeDTO);
+        if(placeDTO.getName()==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Map<String, Long> result = new HashMap<>();
         Long pno = placeService.registerPlace(placeDTO);
         result.put("pno", pno);
@@ -50,6 +54,7 @@ public class PlaceController {
     }
 
 
+    //todo 검증 필요
     @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> removePlace(@RequestParam("pno") Long pno){
         log.info("delete..............");
