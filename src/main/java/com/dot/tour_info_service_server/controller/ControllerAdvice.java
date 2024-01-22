@@ -16,15 +16,6 @@ import java.sql.SQLException;
 
 @RestControllerAdvice
 public class ControllerAdvice {
-//    @ExceptionHandler
-//    public ResponseEntity<ErrorResponse> handlerException(final IllegalArgumentException e,
-//                                                          final HttpServletRequest request) {
-//        return new ResponseEntity<>(
-//                ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), request), HttpStatus.BAD_REQUEST);
-//    }
-
-
-    /*common error*/
     @ExceptionHandler(value = {BindException.class})
     public ResponseEntity<ErrorResponse> errorHandler(BindException e, final HttpServletRequest request) {
 
