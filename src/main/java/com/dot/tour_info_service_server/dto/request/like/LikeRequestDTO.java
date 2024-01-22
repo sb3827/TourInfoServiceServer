@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.request.like;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestLikesDTO {
+public class LikeRequestDTO {
     Long mno;
     Long bno;
 }

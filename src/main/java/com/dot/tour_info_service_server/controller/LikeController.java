@@ -1,7 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 
-import com.dot.tour_info_service_server.dto.RequestLikesDTO;
+import com.dot.tour_info_service_server.dto.request.like.LikeRequestDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.like.LikeService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/board")
-    public ResponseEntity<Void> likeBoard(@RequestBody RequestLikesDTO request) throws SQLException {
+    public ResponseEntity<Void> likeBoard(@RequestBody LikeRequestDTO request) throws SQLException {
         if (!SecurityUtil.validateMno(request.getMno()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -36,7 +36,7 @@ public class LikeController {
     }
 
     @DeleteMapping("/board")
-    public ResponseEntity<Void> unLikeBoard(@RequestBody RequestLikesDTO request) throws SQLException {
+    public ResponseEntity<Void> unLikeBoard(@RequestBody LikeRequestDTO request) throws SQLException {
         if (!SecurityUtil.validateMno(request.getMno()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
