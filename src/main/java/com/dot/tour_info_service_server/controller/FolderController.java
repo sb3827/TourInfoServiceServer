@@ -2,8 +2,8 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
-import com.dot.tour_info_service_server.service.CartService;
-import com.dot.tour_info_service_server.service.FolderService;
+import com.dot.tour_info_service_server.service.cart.CartService;
+import com.dot.tour_info_service_server.service.folder.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

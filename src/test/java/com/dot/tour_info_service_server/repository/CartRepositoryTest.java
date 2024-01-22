@@ -1,7 +1,8 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.*;
-import jakarta.transaction.Transactional;
+import com.dot.tour_info_service_server.entity.cart.Cart;
+import com.dot.tour_info_service_server.entity.cart.CartPK;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,13 +16,13 @@ class CartRepositoryTest {
     //스팟 추가 테스트
     @Test
     public void testSpotAdd(){
-        CartPK cartPK=CartPK.builder()
+        CartPK cartPK= CartPK.builder()
                 .member(Member.builder().mno(2l).build())
                 .folder(Folder.builder().fno(2l).build())
                 .place(Place.builder().pno(2l).build())
                 .build();
 
-        Cart cart=Cart.builder()
+        Cart cart= Cart.builder()
                 .cartPK(cartPK)
                 .build();
         cartRepository.save(cart);

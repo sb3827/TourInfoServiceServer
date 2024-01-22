@@ -1,9 +1,10 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.auth.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
-import com.dot.tour_info_service_server.service.AuthService;
-import com.dot.tour_info_service_server.service.TokenService;
+import com.dot.tour_info_service_server.service.auth.AuthService;
+import com.dot.tour_info_service_server.service.token.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class AuthController {
 
     // permit all
     @PostMapping("/login")
-    public ResponseEntity<ResponseMapDTO> login(@RequestBody JwtRequestDTO requestDTO) {
+    public ResponseEntity<ResponseMapDTO> login(@RequestBody LoginRequestDTO requestDTO) {
         ResponseMapDTO result;
         try {
             Long mno = authService.login(requestDTO);
@@ -54,17 +55,20 @@ public class AuthController {
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            result = ResponseMapDTO.builder()
+                    .response(Map.of("msg", e.getMessage()))
+                    .build();
+            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // permit all
     @PostMapping("/newToken")
-    public ResponseEntity<Object> createNewToken(@RequestBody RefreshDTO refreshDTO) {
+    public ResponseEntity<Object> createNewToken(@RequestBody NewTokenRequestDTO newTokenRequestDTO) {
         Map<String, String> result = new HashMap<>();
         try {
-            String newToken = tokenService.createNewAccessToken(refreshDTO.getRefreshToken());
+            String newToken = tokenService.createNewAccessToken(newTokenRequestDTO.getRefreshToken());
             result.put("msg", "로그인 성공");
             result.put("token", newToken);
         } catch (Exception e) {
@@ -84,7 +88,7 @@ public class AuthController {
             new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
             return new ResponseEntity<>(new ResponseDTO("success", true), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ResponseDTO(e.getMessage(), false),HttpStatus.NOT_FOUND);
         }
     }
 
@@ -97,9 +101,10 @@ public class AuthController {
             Long num = authService.signup(signupDTO);
             responseMap.put("mno", num);
         } catch (MailException e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
@@ -108,9 +113,14 @@ public class AuthController {
     // permit all
     // 이메일 중복 검사
     @PostMapping("/email/check")
-    public ResponseEntity<Map<String, Boolean>> checkDuplicate(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<Map<String, Boolean>> checkDuplicate(@RequestBody EmailRequestDTO emailDTO) {
         Map<String, Boolean> responseMap = new HashMap<>();
-        Boolean isDuplicate = authService.emailCheck(memberDTO.getEmail());
+        Boolean isDuplicate = false;
+        try {
+            isDuplicate = authService.emailCheck(emailDTO.getEmail());
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         responseMap.put("isDuplicate", isDuplicate);
 
@@ -120,7 +130,7 @@ public class AuthController {
     // permit all
     // 이메일 인증 재전송
     @PostMapping("/email/re-validation")
-    public ResponseEntity<Map<String, String>> checkValidate(@RequestBody EmailDTO emailDTO) {
+    public ResponseEntity<Map<String, String>> checkValidate(@RequestBody EmailRequestDTO emailDTO) {
         try {
             authService.resendEmail(emailDTO.getEmail());
         } catch (Exception e) {
@@ -159,10 +169,10 @@ public class AuthController {
     // 이메일 찾기
     // permit all
     @PostMapping("/email/find")
-    public ResponseEntity<Map<String, String>> findMail(@RequestBody MemberDTO memberDTO) {
+    public ResponseEntity<Map<String, String>> findMail(@RequestBody EmailFindRequestDTO findRequestDTODTO) {
         Map<String, String> responseMap = new HashMap<>();
         try {
-            String email = authService.findEmail(memberDTO.getName(), memberDTO.getPhone());
+            String email = authService.findEmail(findRequestDTODTO.getName(), findRequestDTODTO.getPhone());
             responseMap.put("email", email);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -187,10 +197,8 @@ public class AuthController {
     // 비밀번호 찾기
     // permit all
     @PostMapping("password/lost")
-    public ResponseEntity<ResponseDTO> lostPassword(@RequestBody MemberDTO memberDTO) {
-        ResponseDTO result = authService.resetPassword(memberDTO);
-        HttpStatus tmp = HttpStatus.OK;
-
-        return new ResponseEntity<>(result, tmp);
+    public ResponseEntity<ResponseDTO> lostPassword(@RequestBody EmailRequestDTO emailRequestDTO) {
+        ResponseDTO result = authService.resetPassword(emailRequestDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

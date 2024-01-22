@@ -6,6 +6,7 @@ import com.dot.tour_info_service_server.dto.FolderNameDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.repository.CartRepository;
 import com.dot.tour_info_service_server.repository.FolderRepository;
+import com.dot.tour_info_service_server.service.folder.FolderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

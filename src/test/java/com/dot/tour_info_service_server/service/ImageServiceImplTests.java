@@ -1,5 +1,6 @@
 package com.dot.tour_info_service_server.service;
 
+import com.dot.tour_info_service_server.service.image.ImageService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
