@@ -1,14 +1,12 @@
 package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Board;
-import com.dot.tour_info_service_server.entity.BoardLike;
-import com.dot.tour_info_service_server.entity.BoardLikePK;
+import com.dot.tour_info_service_server.entity.boardLike.BoardLike;
+import com.dot.tour_info_service_server.entity.boardLike.BoardLikePK;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikePK> {
 

@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.security.handler;
 
 import com.dot.tour_info_service_server.dto.TokenDTO;
 import com.dot.tour_info_service_server.security.dto.AuthMemberDTO;
-import com.dot.tour_info_service_server.service.TokenService;
+import com.dot.tour_info_service_server.service.token.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

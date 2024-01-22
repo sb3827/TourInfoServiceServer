@@ -1,7 +1,7 @@
 package com.dot.tour_info_service_server.repository;
 
-import com.dot.tour_info_service_server.entity.CartPK;
-import com.dot.tour_info_service_server.entity.Cart;
+import com.dot.tour_info_service_server.entity.cart.CartPK;
+import com.dot.tour_info_service_server.entity.cart.Cart;
 import com.dot.tour_info_service_server.entity.Folder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

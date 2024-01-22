@@ -4,13 +4,13 @@ import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.Place;
 import com.dot.tour_info_service_server.repository.BoardRepository;
 import com.dot.tour_info_service_server.repository.PlaceRepository;
+import com.dot.tour_info_service_server.service.board.BoardService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 @SpringBootTest
 class BoardServiceTests {

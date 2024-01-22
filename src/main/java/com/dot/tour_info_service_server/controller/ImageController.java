@@ -2,13 +2,12 @@ package com.dot.tour_info_service_server.controller;
 
 
 import com.dot.tour_info_service_server.dto.FileDTO;
-import com.dot.tour_info_service_server.dto.RequestDeleteDTO;
+import com.dot.tour_info_service_server.dto.request.image.ImageDeleteRequestDTO;
 import com.dot.tour_info_service_server.dto.ResponseUploadDTO;
-import com.dot.tour_info_service_server.service.ImageService;
+import com.dot.tour_info_service_server.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +53,7 @@ public class ImageController {
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<Void> deleteImage(@RequestBody RequestDeleteDTO request) {
+    public ResponseEntity<Void> deleteImage(@RequestBody ImageDeleteRequestDTO request) {
         try {
             for (String src : request.getSrcs()) {
                 imageService.deleteImage(src);

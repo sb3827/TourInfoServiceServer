@@ -37,7 +37,7 @@ public class SecurityConfig {
             "/auth/login", "/auth/newToken", "/auth/signup", "/auth/email/check",
             "/auth/email/re-validation", "/auth/email/validation/*",
             "/auth/email/find", "/auth/password/lost",
-            "/board/place/poting/**", "/board/course/poting/**", "/board/main",
+            "/board/place/posting/**", "/board/course/posting/**", "/board/main",
             "/board/place/posting/member/**", "/board/course/posting/member/**",
             "/board/place/**", "/board/course/**",
             "/place/**", "/place/placecount/**",
@@ -60,7 +60,7 @@ public class SecurityConfig {
     private static final String[] ADMIN_LIST = {
             "/place/delete",
             "/report/**",
-            "/users/wating", "/users/approve/**", "/users/filter-find/**"
+            "/users/waiting", "/users/approve/**", "/users/filter-find/**"
     };
 
     @Bean
@@ -84,7 +84,7 @@ public class SecurityConfig {
                     authorizeRequests.requestMatchers(PERMIT_ALL_LIST).permitAll();
                     authorizeRequests.requestMatchers("/auth/getTest").authenticated(); // todo delete
                     authorizeRequests.requestMatchers(AUTHENTICATED_LIST).authenticated();
-                    authorizeRequests.requestMatchers(ADMIN_LIST).hasRole("ADMIN");
+                    authorizeRequests.requestMatchers(ADMIN_LIST).hasAuthority("[ADMIN]");
                     authorizeRequests.anyRequest().denyAll();
                 })
 

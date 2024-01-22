@@ -4,6 +4,7 @@ import com.dot.tour_info_service_server.dto.UserInfoDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Role;
 import com.dot.tour_info_service_server.repository.MemberRepository;
+import com.dot.tour_info_service_server.service.member.MemberService;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,10 +2,9 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
-import com.dot.tour_info_service_server.service.MemberService;
+import com.dot.tour_info_service_server.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

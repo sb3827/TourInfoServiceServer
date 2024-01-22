@@ -3,6 +3,7 @@ package com.dot.tour_info_service_server.service;
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.repository.*;
+import com.dot.tour_info_service_server.service.report.ReportService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
