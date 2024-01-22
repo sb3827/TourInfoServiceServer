@@ -20,6 +20,7 @@ import java.util.*;
 @RestController
 @Log4j2
 @RequiredArgsConstructor
+// 전체 authenticated
 @RequestMapping("image")
 public class ImageController {
 

@@ -20,6 +20,7 @@ public class ReportController {
     private final ReportService reportService;
 
     //필터 조회
+    // amdin
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapDTO<List<ReportResponseDTO>>>reportFilter(@RequestParam String filter, @RequestParam String search){
         List<ReportResponseDTO> data=reportService.reportFilter(filter,search);
@@ -28,6 +29,7 @@ public class ReportController {
     }
 
     //신고 정보 조회 -valid 체크
+    // admin
     @GetMapping(value = "/detail/{sno}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapDTO<ReportDTO>> resportDetail(@PathVariable Long sno){
         ReportDTO data=reportService.reportDetail(sno);
@@ -41,6 +43,7 @@ public class ReportController {
     }
 
     //회원제재 내역 전체 조회 - valid 체크
+    // admin
     @GetMapping(value = "/all/{mno}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapDTO<List<DisciplinaryDTO>>> disciplinaryAll(@PathVariable Long mno){
 
@@ -53,6 +56,7 @@ public class ReportController {
     }
 
     //신고 -valid체크
+    // authenticated
     @PostMapping(value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapDTO<Long>> report(@RequestBody ReportRequestDTO reportRequestDTO){
         ResponseWrapDTO response = new ResponseWrapDTO(false, null);
@@ -71,6 +75,7 @@ public class ReportController {
     }
 
     //신고 확인(신고 상태 업데이트) -service에서 valid 체크
+    // admin
     @PutMapping(value = "/update/{sno}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapDTO<Long>> reportIsDone(@PathVariable Long sno){
         Long data=reportService.reportUpdate(sno);
@@ -86,6 +91,7 @@ public class ReportController {
     }
 
     //제재 -valid 체크
+    // admin
     @PostMapping(value="/disciplinary",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWrapDTO<Long>> disciplinary(@RequestBody DisciplinaryRequestDTO disciplinaryRequestDTO){
         ResponseWrapDTO response=new ResponseWrapDTO(false,null);

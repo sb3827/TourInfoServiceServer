@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+// 전체 authenticated
 @RequestMapping("/follow")
 @Log4j2
 @RequiredArgsConstructor

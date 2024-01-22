@@ -5,7 +5,6 @@ import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +18,10 @@ import java.util.*;
 public class BoardController {
     private final BoardService boardService;
 
-    @Value("${com.dot.upload.path}")
-    private String uploadPath;
-
     // 장소 포스팅 등록
+    // authenticated
     @PostMapping(value = {"/place/posting/register"})
     public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody PlaceBoardDTO placeBoardDTO) {
-        log.info(!SecurityUtil.validateMno(placeBoardDTO.getWriter()));
-        log.info(placeBoardDTO.getWriter());
-        log.info(SecurityUtil.getCurrentMemberMno());
         if(!SecurityUtil.validateMno(placeBoardDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -38,10 +32,9 @@ public class BoardController {
     }
 
     // 코스포스팅 등록
+    // authenticated
     @PostMapping(value = {"/course/posting/register"})
     public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardDTO courseBoardDTO) {
-        log.info(SecurityUtil.getCurrentMemberMno());
-        log.info(courseBoardDTO.getWriter());
         if(!SecurityUtil.validateMno(courseBoardDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -52,6 +45,7 @@ public class BoardController {
     }
 
     // 장소,코스 포스팅 삭제
+    // authenticated
     @DeleteMapping(value = {"/place/posting/delete", "/course/posting/delete"})
     public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) {
         Map<String, Long> result = new HashMap<>();
@@ -61,9 +55,9 @@ public class BoardController {
     }
 
     // 장소 포스팅 수정
+    // authenticated
     @PutMapping(value = {"/place/posting/modify"})
     public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody PlaceBoardDTO placeBoardDTO) {
-        log.info("modify...dto: " + placeBoardDTO);
         Map<String, Long> result = new HashMap<>();
         if (!SecurityUtil.validateMno(placeBoardDTO.getWriter())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -78,6 +72,7 @@ public class BoardController {
     }
 
     // 코스 게시글 수정 address
+    // authenticated
     @PutMapping("/course/posting/modify")
     public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody CourseBoardDTO courseBoardDTO) {
 
@@ -98,6 +93,7 @@ public class BoardController {
 
 
     // 장소 포스팅 정보 조회
+    // permit all
     @GetMapping(value = {"/place/posting"})
     public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
         log.info("getPlaceBoard... bno: " + bno);
@@ -110,6 +106,7 @@ public class BoardController {
     }
 
     // 코스 포스팅 정보 조회
+    // permit all
     @GetMapping(value = {"/course/posting"})
     public ResponseEntity<BoardInfoDTO> getCourseBoard(@RequestParam("bno") Long bno) {
         log.info("getCourseBoard... bno: " + bno);
@@ -124,6 +121,7 @@ public class BoardController {
 
 
     // 보드 메인페이지 정보 조회
+    // permit all
     @PostMapping(value = "/main")
     public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoDTO mnoDTO) {
         ResponseWrapDTO response;
@@ -137,6 +135,7 @@ public class BoardController {
 
 
     //   회원별 장소 포스팅 정보 조회
+    // permit all
     @GetMapping(value = {"/place/posting/member"})
     public ResponseEntity<List<BoardMemberDTO>> getBoardByMno(@RequestParam("mno") Long mno) {
         log.info("getBoardByMno... bno: " + mno);
@@ -145,6 +144,7 @@ public class BoardController {
     }
 
     // 장소별 장소 포스팅 정보 조회
+    // permit all
     @GetMapping(value = {"/place"})
     public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno) {
         log.info("getBoardByMno... bno: " + pno);
@@ -157,6 +157,7 @@ public class BoardController {
     }
 
     // 회원별 코스 포스팅 정보 조회
+    // permit all
     @GetMapping(value = {"/course/posting/member"})
     public ResponseEntity<List<BoardMemberDTO>> getCourseBoardByMno(@RequestParam("mno") Long mno) {
         log.info("getBoardByMno... bno: " + mno);
@@ -165,6 +166,7 @@ public class BoardController {
     }
 
     // 코스 검색 조회
+    // permit all
     @GetMapping(value = {"/course"})
     public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search) {
         log.info("Search.... : "+search);
