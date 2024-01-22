@@ -69,7 +69,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //코스에 해당하는 1일차 코스
     @Query("select p " +
             "from Place p left outer join BoardPlace bp on p.pno=bp.place.pno " +
-            "where bp.boardPlacePK.day=1 and bp.boardPlacePK.board.bno=:bno")
+            "where bp.boardPlacePK.day=0 and bp.boardPlacePK.board.bno=:bno")
     List<Place> mostLikeCoursePlace(Long bno);
 
 

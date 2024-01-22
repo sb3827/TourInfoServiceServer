@@ -22,7 +22,7 @@ public class PlaceController {
 
     private final PlaceService placeService;
 
-    //todo 검증 필요
+    // authenticated
     @PostMapping(value = "/register")
     public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody PlaceDTO placeDTO){
         log.info("registerPlace: " + placeDTO);
@@ -35,6 +35,7 @@ public class PlaceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // permit all
     @GetMapping(value = "")
     public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") String filter, @RequestParam(value = "search") String search ){
         log.info("findPlace...... filter :  " + filter + " search : " + search);
@@ -47,6 +48,7 @@ public class PlaceController {
     }
 
     // 지역별 방문수
+    // permit all
     @GetMapping(value="/placecount")
     public ResponseEntity<Map<String, Object>> getPlaceCount(@RequestParam(value="mno") Long mno){
         Map<String, Object> result = placeService.getPlaceCount(mno);
@@ -54,7 +56,7 @@ public class PlaceController {
     }
 
 
-    //todo 검증 필요
+    // admin
     @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> removePlace(@RequestParam("pno") Long pno){
         log.info("delete..............");

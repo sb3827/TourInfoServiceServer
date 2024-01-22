@@ -5,7 +5,6 @@ import com.dot.tour_info_service_server.config.jwt.TokenProvider;
 import com.dot.tour_info_service_server.security.filter.JwtFilter;
 import com.dot.tour_info_service_server.security.handler.JwtAccessDeniedHandler;
 import com.dot.tour_info_service_server.security.handler.OAuth2SuccessHandler;
-import com.dot.tour_info_service_server.security.service.OAuth2MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -32,11 +31,42 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final OAuth2MemberDetailsService oAuth2UserService;
     private final OAuth2SuccessHandler successHandler;
+
+    private static final String[] PERMIT_ALL_LIST = {
+            "/auth/login", "/auth/newToken", "/auth/signup", "/auth/email/check",
+            "/auth/email/re-validation", "/auth/email/validation/*",
+            "/auth/email/find", "/auth/password/lost",
+            "/board/place/poting/**", "/board/course/poting/**", "/board/main",
+            "/board/place/posting/member/**", "/board/course/posting/member/**",
+            "/board/place/**", "/board/course/**",
+            "/place/**", "/place/placecount/**",
+            "/reply/member/**", "/reply/board/**",
+            "/users/profile/**", "/users/find/**"
+    };
+
+    private static final String[] AUTHENTICATED_LIST = {
+            "/auth/logout",
+            "/board/place/posting/register", "/board/course/posting/register",
+            "/board/place/posting/modify", "/board/course/posting/modify",
+            "/board/place/posting/delete/**", "/board/course/posting/delete/**",
+            "/folder/**/*", "/follow/**/*", "/image/**", "/like/board",
+            "/place/register",
+            "/reply/register", "/reply/update", "/reply/delete", /*"/reply/report"*/
+            "/report/register",
+            "/users/info/**", "/users/info/update", "/users/delete/**"
+    };
+
+    private static final String[] ADMIN_LIST = {
+            "/place/delete",
+            "/report/**",
+            "/users/wating", "/users/approve/**", "/users/filter-find/**"
+    };
 
     @Bean
     protected SecurityFilterChain config(HttpSecurity httpSecurity) throws Exception{
+
+
         return httpSecurity
                 // csrf disable
                 .csrf(AbstractHttpConfigurer::disable)
@@ -51,8 +81,11 @@ public class SecurityConfig {
 
                 // setting authorize of address
                 .authorizeHttpRequests(authorizeRequests -> {
-                    authorizeRequests.requestMatchers("/auth/getTest", "/auth/logout").authenticated();
-                    authorizeRequests.anyRequest().permitAll();
+                    authorizeRequests.requestMatchers(PERMIT_ALL_LIST).permitAll();
+                    authorizeRequests.requestMatchers("/auth/getTest").authenticated(); // todo delete
+                    authorizeRequests.requestMatchers(AUTHENTICATED_LIST).authenticated();
+                    authorizeRequests.requestMatchers(ADMIN_LIST).hasRole("ADMIN");
+                    authorizeRequests.anyRequest().denyAll();
                 })
 
                 .oauth2Login(OAuth2LoginConfigurer ->

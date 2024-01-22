@@ -23,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @Log4j2
-@RequestMapping("auth") // 주의 properties의 context-path=/ 임
+@RequestMapping("auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -38,6 +38,7 @@ public class AuthController {
         return new ResponseEntity<>("test", HttpStatus.OK);
     }
 
+    // permit all
     @PostMapping("/login")
     public ResponseEntity<ResponseMapDTO> login(@RequestBody JwtRequestDTO requestDTO) {
         ResponseMapDTO result;
@@ -58,8 +59,8 @@ public class AuthController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // permit all
     @PostMapping("/newToken")
-    // modify error
     public ResponseEntity<Object> createNewToken(@RequestBody RefreshDTO refreshDTO) {
         Map<String, String> result = new HashMap<>();
         try {
@@ -75,6 +76,7 @@ public class AuthController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // authenticated
     @PostMapping("/logout")
     public ResponseEntity<ResponseDTO> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -86,6 +88,7 @@ public class AuthController {
         }
     }
 
+    //permit all
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Long>> register(@RequestBody SignupRequestDTO signupDTO) {
         Map<String, Long> responseMap = new HashMap<>();
@@ -102,6 +105,8 @@ public class AuthController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+    // permit all
+    // 이메일 중복 검사
     @PostMapping("/email/check")
     public ResponseEntity<Map<String, Boolean>> checkDuplicate(@RequestBody MemberDTO memberDTO) {
         Map<String, Boolean> responseMap = new HashMap<>();
@@ -112,6 +117,8 @@ public class AuthController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+    // permit all
+    // 이메일 인증 재전송
     @PostMapping("/email/re-validation")
     public ResponseEntity<Map<String, String>> checkValidate(@RequestBody EmailDTO emailDTO) {
         try {
@@ -125,9 +132,11 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    // 이메일 검증 주소
+    // permit all
     @GetMapping("/email/validation")
     public ModelAndView checkValtidate(@RequestParam("email") String email, @RequestParam("token") String token) throws BadRequestException {
-        //todo token
         boolean isValid = authService.checkValidate(email);
 
         try {
@@ -142,12 +151,13 @@ public class AuthController {
             return new ModelAndView(new RedirectView("http://localhost:3000/login"));
         } else {
             // 실패한 경우 (badRequest)
-            // todo
             throw new BadRequestException("잘못된 요청");
 //            return new ModelAndView("errorPage"); // 실패 시 보여줄 에러 페이지로 이동
         }
     }
 
+    // 이메일 찾기
+    // permit all
     @PostMapping("/email/find")
     public ResponseEntity<Map<String, String>> findMail(@RequestBody MemberDTO memberDTO) {
         Map<String, String> responseMap = new HashMap<>();
@@ -162,6 +172,8 @@ public class AuthController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
+    // 비밀번호 변경
+    // todo 변경
     @PostMapping("password/change")
     public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangeMemberDTO changeMemberDTO) {
         if (SecurityUtil.validateEmail(changeMemberDTO.getEmail())) {
@@ -172,6 +184,8 @@ public class AuthController {
         }
     }
 
+    // 비밀번호 찾기
+    // permit all
     @PostMapping("password/lost")
     public ResponseEntity<ResponseDTO> lostPassword(@RequestBody MemberDTO memberDTO) {
         ResponseDTO result = authService.resetPassword(memberDTO);

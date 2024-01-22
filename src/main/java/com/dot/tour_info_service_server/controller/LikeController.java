@@ -15,18 +15,10 @@ import java.sql.SQLException;
 @RestController
 @Log4j2
 @RequiredArgsConstructor
+// 전체 authenticated
 @RequestMapping("like")
 public class LikeController {
     private final LikeService likeService;
-//    @PostMapping("place")
-//    public ResponseEntity<Void> likePlace () {
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("place")
-//    public ResponseEntity<Void> disLikePlace () {
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
 
     @PostMapping("/board")
     public ResponseEntity<Void> likeBoard(@RequestBody RequestLikesDTO request) throws SQLException {
