@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 
 import com.dot.tour_info_service_server.dto.FileDTO;
-import com.dot.tour_info_service_server.dto.RequestDeleteDTO;
+import com.dot.tour_info_service_server.dto.request.image.ImageDeleteRequestDTO;
 import com.dot.tour_info_service_server.dto.ResponseUploadDTO;
 import com.dot.tour_info_service_server.service.image.ImageService;
 import jakarta.transaction.Transactional;
@@ -53,7 +53,7 @@ public class ImageController {
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<Void> deleteImage(@RequestBody RequestDeleteDTO request) {
+    public ResponseEntity<Void> deleteImage(@RequestBody ImageDeleteRequestDTO request) {
         try {
             for (String src : request.getSrcs()) {
                 imageService.deleteImage(src);

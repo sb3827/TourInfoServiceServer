@@ -1,6 +1,5 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.request.image;
 
-import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.util.List;
@@ -10,6 +9,6 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestDeleteDTO {
+public class ImageDeleteRequestDTO {
     List<String> srcs;
 }
