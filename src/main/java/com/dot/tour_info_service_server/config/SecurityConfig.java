@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     private static final String[] PERMIT_ALL_LIST = {
             "/auth/login", "/auth/newToken", "/auth/signup", "/auth/email/check",
-            "/auth/email/re-validation", "/auth/email/validation/*",
+            "/auth/email/re-validation", "/auth/email/validation/**",
             "/auth/email/find", "/auth/password/lost",
             "/board/place/posting/**", "/board/course/posting/**", "/board/main",
             "/board/place/posting/member/**", "/board/course/posting/member/**",
