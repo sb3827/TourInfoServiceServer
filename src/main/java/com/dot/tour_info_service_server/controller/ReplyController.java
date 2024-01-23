@@ -7,7 +7,7 @@ import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.reply.ReplyService;
 import com.dot.tour_info_service_server.service.report.ReportService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class ReplyController {
 
   // permit all
   @GetMapping("/member")
-  public ResponseEntity<List<ReplyListResponseDTO>> getListByMno(@Valid @RequestParam("mno") @NotEmpty(message = "mno cannot be Empty") Long mno) {
+  public ResponseEntity<List<ReplyListResponseDTO>> getListByMno(@Valid @RequestParam("mno") @NotNull(message = "mno cannot be null") Long mno) {
     log.info("getReplyListByMno....");
     List<ReplyListResponseDTO> result = replyService.showReplyList(mno);
     return new ResponseEntity<>(result, HttpStatus.OK);
@@ -39,7 +39,7 @@ public class ReplyController {
   //수정 시작 게시글 댓글 조회
   // permit all
   @GetMapping("/board")
-  public ResponseEntity<List<ReplyMemberResponseDTO>> getListByBno(@Valid @RequestParam("bno") @NotEmpty(message = "bno cannot be Empty") Long bno, @RequestParam(value = "rno", required = false) Long rno) {
+  public ResponseEntity<List<ReplyMemberResponseDTO>> getListByBno(@Valid @RequestParam("bno") @NotNull(message = "bno cannot be null") Long bno, @RequestParam(value = "rno", required = false) Long rno) {
     log.info("getReplyListByBno....");
     List<ReplyMemberResponseDTO> result;
     //상위 댓글만 조회
