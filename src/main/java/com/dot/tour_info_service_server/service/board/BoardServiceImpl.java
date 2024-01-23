@@ -3,7 +3,6 @@ package com.dot.tour_info_service_server.service.board;
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.board.CourseBoardRequestDTO;
 import com.dot.tour_info_service_server.dto.request.board.PlaceBoardRequestDTO;
-import com.dot.tour_info_service_server.dto.response.board.*;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.entity.boardLike.BoardLikePK;
 import com.dot.tour_info_service_server.entity.boardPlace.BoardPlace;

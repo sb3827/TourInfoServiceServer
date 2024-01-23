@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto.response.board;
+package com.dot.tour_info_service_server.dto;
 
 import com.dot.tour_info_service_server.dto.MainBoardResponseDTO;
 import com.dot.tour_info_service_server.dto.MainPlaceResponseDTO;

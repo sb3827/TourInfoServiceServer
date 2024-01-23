@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.dto;
 
-import com.dot.tour_info_service_server.entity.Place;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

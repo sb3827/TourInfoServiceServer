@@ -1,7 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
-import com.dot.tour_info_service_server.dto.response.board.ResponseWrapDTO;
+import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.cart.CartService;
 import com.dot.tour_info_service_server.service.folder.FolderService;

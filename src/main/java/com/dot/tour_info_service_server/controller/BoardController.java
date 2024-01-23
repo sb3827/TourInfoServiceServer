@@ -1,9 +1,9 @@
 package com.dot.tour_info_service_server.controller;
 
+import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.board.CourseBoardRequestDTO;
 import com.dot.tour_info_service_server.dto.request.board.MnoRequestDTO;
 import com.dot.tour_info_service_server.dto.request.board.PlaceBoardRequestDTO;
-import com.dot.tour_info_service_server.dto.response.board.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.board.BoardService;
 import jakarta.validation.Valid;

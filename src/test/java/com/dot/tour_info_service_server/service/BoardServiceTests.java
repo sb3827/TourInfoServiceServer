@@ -1,7 +1,8 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.*;
-import com.dot.tour_info_service_server.dto.response.board.MainResponseDTO;
+import com.dot.tour_info_service_server.dto.MainBoardResponseDTO;
+import com.dot.tour_info_service_server.dto.MainResponseDTO;
 import com.dot.tour_info_service_server.entity.Place;
 import com.dot.tour_info_service_server.repository.BoardRepository;
 import com.dot.tour_info_service_server.repository.PlaceRepository;

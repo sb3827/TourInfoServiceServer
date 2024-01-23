@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.service.board;
 
+import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.board.CourseBoardRequestDTO;
 import com.dot.tour_info_service_server.dto.request.board.PlaceBoardRequestDTO;
-import com.dot.tour_info_service_server.dto.response.board.*;
 
 import java.sql.SQLException;
 import java.util.List;
