@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.service;
 
-import com.dot.tour_info_service_server.dto.FolderAllDTO;
-import com.dot.tour_info_service_server.dto.FolderDTO;
-import com.dot.tour_info_service_server.dto.FolderNameDTO;
+import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.repository.CartRepository;
 import com.dot.tour_info_service_server.repository.FolderRepository;
@@ -29,7 +29,7 @@ class FolderServiceImplTest{
     public void testGetAllFolder() {
         Long mno=2l;
         List<Object[]> result = folderRepository.getFolderAll(mno);
-        Map<Long, FolderAllDTO> folderMap = new HashMap<>();
+        Map<Long, FolderAllResponseDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
             Long fno = (Long) objects[0];
@@ -37,7 +37,7 @@ class FolderServiceImplTest{
             Long pno = (Long) objects[2];
             String name = (String) objects[3];
 
-            FolderAllDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
+            FolderAllResponseDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
             folderAllDTO.getPno().add(pno);
             folderAllDTO.getName().add(name);
         }
@@ -50,7 +50,7 @@ class FolderServiceImplTest{
         Long mno=2l;
         List<Folder> result=folderRepository.getFolderTitle(mno);
         for (Folder folder:result){
-            FolderNameDTO folderNameDTO=FolderNameDTO.builder()
+            FolderNameResponseDTO folderNameDTO=FolderNameResponseDTO.builder()
                     .fno(folder.getFno())
                     .title(folder.getTitle())
                     .build();
@@ -61,7 +61,7 @@ class FolderServiceImplTest{
     //폴더명 수정 테스트
     @Test
     public void testFolderModify(){
-        FolderDTO folderDTO=new FolderDTO(1l,2l,"test : modify");
+        FolderAllRequestDTO folderDTO=new FolderAllRequestDTO(1l,2l,"test : modify");
         Long num=folderDTO.getFno();
         Optional<Folder> result=folderRepository.findById(num);
         System.out.println("폴더 "+folderDTO.getTitle()+"로 수정");

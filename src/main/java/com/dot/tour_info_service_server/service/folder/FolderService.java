@@ -1,9 +1,9 @@
 package com.dot.tour_info_service_server.service.folder;
 
-import com.dot.tour_info_service_server.dto.FolderAllDTO;
-import com.dot.tour_info_service_server.dto.FolderDTO;
-import com.dot.tour_info_service_server.dto.FolderNameDTO;
-import com.dot.tour_info_service_server.dto.FolderRegistDTO;
+import com.dot.tour_info_service_server.dto.request.folder.FolderRegistRequestDTO;
+import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
 
@@ -12,16 +12,16 @@ import java.util.List;
 public interface FolderService {
 
     //폴더 전부 조회
-    List<FolderAllDTO> getAllFolder(Long mno);
+    List<FolderAllResponseDTO> getAllFolder(Long mno);
 
     //폴더명 조회
-    List<FolderNameDTO> getTitle(Long mno);
+    List<FolderNameResponseDTO> getTitle(Long mno);
 
     //폴더 등록
-    Long register(FolderRegistDTO folderRegistDTO);
+    Long register(FolderRegistRequestDTO folderRegistRequestDTO );
 
     //폴더명 수정 - 성공 시 폴더번호, 실패시 -1
-    Long modify(FolderDTO folderDTO);
+    Long modify(FolderAllRequestDTO folderAllRequestDTO);
 
     //폴더 삭제 - 성공 시 폴더번호, 실패시 -1
     Long remove(Long fno);
@@ -29,26 +29,26 @@ public interface FolderService {
 
 
     //Folder dtoToEntity
-    default Folder dtoToEntity(FolderDTO folderDTO){
+    default Folder dtoToEntity(FolderAllRequestDTO folderAllRequestDTO){
         Folder folder=Folder.builder()
-                .fno(folderDTO.getFno())
+                .fno(folderAllRequestDTO.getFno())
                 .member(Member
                         .builder()
-                        .mno(folderDTO.getMno())
+                        .mno(folderAllRequestDTO.getMno())
                         .build())
-                .title(folderDTO.getTitle())
+                .title(folderAllRequestDTO.getTitle())
                 .build();
         return folder;
     }
 
     //Folder entityToDto
-    default FolderDTO entityToDto(Folder folder){
-        FolderDTO folderDTO=FolderDTO.builder()
+    default FolderAllRequestDTO entityToDto(Folder folder){
+        FolderAllRequestDTO folderAllRequestDTO = FolderAllRequestDTO.builder()
                 .fno(folder.getFno())
                 .mno(folder.getMember().getMno())
                 .title(folder.getTitle())
                 .build();
-        return folderDTO;
+        return folderAllRequestDTO;
     }
 
 
