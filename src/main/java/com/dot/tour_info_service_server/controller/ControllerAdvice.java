@@ -10,6 +10,7 @@ import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
@@ -74,13 +75,15 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> accessDeniedException(AccessDeniedException e, final HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> accessDeniedException(AccessDeniedException e,
+                                                               final HttpServletRequest request) {
         return new ResponseEntity<>(ErrorResponse.of(HttpStatus.FORBIDDEN, "접근이 거부되었습니다", request),
                 HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
-    public ResponseEntity<ErrorResponse> unAuthorizedException(HttpClientErrorException.Unauthorized e, final HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> unAuthorizedException(HttpClientErrorException.Unauthorized e,
+                                                               final HttpServletRequest request) {
         return new ResponseEntity<>(ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), request),
                 HttpStatus.UNAUTHORIZED);
     }
@@ -89,5 +92,12 @@ public class ControllerAdvice {
     public ResponseEntity<ErrorResponse> mailException(MailException e, final HttpServletRequest request) {
         return new ResponseEntity<>(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request),
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> MissingParameterException(MissingServletRequestParameterException e,
+                                                                   final HttpServletRequest request) {
+        return new ResponseEntity<>(ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), request),
+                HttpStatus.BAD_REQUEST);
     }
 }
