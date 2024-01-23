@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.board.CourseBoardRequestDTO;
-import com.dot.tour_info_service_server.dto.request.board.MnoRequestDTO;
+import com.dot.tour_info_service_server.dto.request.board.MnoBoardRequestDTO;
 import com.dot.tour_info_service_server.dto.request.board.PlaceBoardRequestDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.board.BoardService;
@@ -129,12 +129,12 @@ public class BoardController {
     // 보드 메인페이지 정보 조회
     // permit all
     @PostMapping(value = "/main")
-    public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoRequestDTO mnoRequestDTO) {
+    public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoBoardRequestDTO mnoBoardRequestDTO) {
         ResponseWrapDTO response;
-        if(mnoRequestDTO ==null){
+        if(mnoBoardRequestDTO ==null){
             response=new ResponseWrapDTO(true,boardService.mainBoard(-1l));
         }else {
-            response = new ResponseWrapDTO(true, boardService.mainBoard(mnoRequestDTO.getMno()));
+            response = new ResponseWrapDTO(true, boardService.mainBoard(mnoBoardRequestDTO.getMno()));
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
