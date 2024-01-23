@@ -28,5 +28,5 @@ public class SignupRequestDTO {
     @NotBlank(message = "name cannot be blank")
     private String name;
     private String role;
-    private int businessId;
+    private String businessId;
 }
