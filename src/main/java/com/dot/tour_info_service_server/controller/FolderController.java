@@ -4,7 +4,7 @@ import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.folder.CartAllRequestDTO;
 import com.dot.tour_info_service_server.dto.request.folder.FolderRegistRequestDTO;
 import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
-import com.dot.tour_info_service_server.dto.response.folder.FolderAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDTO;
 import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.cart.CartService;
@@ -29,9 +29,9 @@ public class FolderController {
 
     //폴더 내용 모두 들고오기
     @GetMapping(value = "/all/{mno}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseWrapDTO<List<FolderAllResponseDTO>>> allFolder(@PathVariable Long mno){
-        List<FolderAllResponseDTO> data=folderService.getAllFolder(mno);
-        ResponseWrapDTO<List<FolderAllResponseDTO>> response=new ResponseWrapDTO<>(true,data);
+    public ResponseEntity<ResponseWrapDTO<List<FolderItemResponseDTO>>> allFolder(@PathVariable Long mno){
+        List<FolderItemResponseDTO> data=folderService.getAllFolder(mno);
+        ResponseWrapDTO<List<FolderItemResponseDTO>> response=new ResponseWrapDTO<>(true,data);
       return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
