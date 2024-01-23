@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.service.reply;
 
-import com.dot.tour_info_service_server.dto.ReplyDTO;
-import com.dot.tour_info_service_server.dto.ReplyListDTO;
-import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+import com.dot.tour_info_service_server.dto.response.reply.ReplyListResponseDTO;
+import com.dot.tour_info_service_server.dto.response.reply.ReplyMemberResponseDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyRequestDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
 import com.dot.tour_info_service_server.repository.ReplyRepository;
@@ -32,68 +32,68 @@ public class ReplyServiceImpl implements ReplyService {
 
   //부모 댓글 조회
   @Override
-  public List<ReplyMemberDTO> parentReply(Long bno) {
-    List<Object[]> result=replyRepository.getParentReply(bno);
-    List<ReplyMemberDTO> replyMemberDTOS=new ArrayList<>();
-    for(Object[] object:result){
-      ReplyMemberDTO replyMemberDTO=ReplyMemberDTO.builder()
-              .rno((Long)object[0])
-              .text((String)object[1])
-              .parent_rno((Long)object[2])
-              .regDate((LocalDateTime) object[3])
-              .mno((Long)object[4])
-              .name((String)object[5])
-              .src((String)object[6])
-              .build();
-      replyMemberDTOS.add(replyMemberDTO);
+  public List<ReplyMemberResponseDTO> parentReply(Long bno) {
+    List<Object[]> result = replyRepository.getParentReply(bno);
+    List<ReplyMemberResponseDTO> replyMemberResponseDTOS = new ArrayList<>();
+    for (Object[] object : result) {
+      ReplyMemberResponseDTO replyMemberResponseDTO = ReplyMemberResponseDTO.builder()
+          .rno((Long) object[0])
+          .text((String) object[1])
+          .parent_rno((Long) object[2])
+          .regDate((LocalDateTime) object[3])
+          .mno((Long) object[4])
+          .name((String) object[5])
+          .src((String) object[6])
+          .build();
+      replyMemberResponseDTOS.add(replyMemberResponseDTO);
     }
-    return replyMemberDTOS;
+    return replyMemberResponseDTOS;
   }
 
   //자식 댓글 조회
   @Override
-  public List<ReplyMemberDTO> childReply(Long bno, Long rno) {
-    List<Object[]> result=replyRepository.getChildReply(bno,rno);
-    List<ReplyMemberDTO> replyMemberDTOS=new ArrayList<>();
-    for(Object[] object:result){
-      ReplyMemberDTO replyMemberDTO=ReplyMemberDTO.builder()
-              .rno((Long)object[0])
-              .text((String)object[1])
-              .parent_rno((Long)object[2])
-              .regDate((LocalDateTime) object[3])
-              .mno((Long)object[4])
-              .name((String)object[5])
-              .src((String)object[6])
-              .build();
-      replyMemberDTOS.add(replyMemberDTO);
+  public List<ReplyMemberResponseDTO> childReply(Long bno, Long rno) {
+    List<Object[]> result = replyRepository.getChildReply(bno, rno);
+    List<ReplyMemberResponseDTO> replyMemberResponseDTOS = new ArrayList<>();
+    for (Object[] object : result) {
+      ReplyMemberResponseDTO replyMemberResponseDTO = ReplyMemberResponseDTO.builder()
+          .rno((Long) object[0])
+          .text((String) object[1])
+          .parent_rno((Long) object[2])
+          .regDate((LocalDateTime) object[3])
+          .mno((Long) object[4])
+          .name((String) object[5])
+          .src((String) object[6])
+          .build();
+      replyMemberResponseDTOS.add(replyMemberResponseDTO);
     }
-    return replyMemberDTOS;
+    return replyMemberResponseDTOS;
   }
 
 
   @Override
-  public List<ReplyDTO> getListOfReplyByMember(Long mno) {
+  public List<ReplyRequestDTO> getListOfReplyByMember(Long mno) {
     Member member = Member.builder().mno(mno).build();
     List<Reply> result = replyRepository.getRepliesByMemberOrderByRegDate(member);
     return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
   }
 
   @Override
-  public List<ReplyListDTO> showReplyList(Long mno) {
+  public List<ReplyListResponseDTO> showReplyList(Long mno) {
     List<Object[]> result = replyRepository.showReplyList(mno);
-    List<ReplyListDTO> replyList = new ArrayList<>();
+    List<ReplyListResponseDTO> replyList = new ArrayList<>();
 
-    if(!result.isEmpty()){
-      for(Object[] list : result){
-        ReplyListDTO replyListDTO = ReplyListDTO.builder()
-                .rno((Long)list[0])
-                .mno((Long)list[1])
-                .bno((Long)list[2])
-                .title((String)list[3])
-                .text((String)list[4])
-                .regdate((LocalDateTime)list[5])
-                .isCourse((boolean)list[6])
-                .build();
+    if (!result.isEmpty()) {
+      for (Object[] list : result) {
+        ReplyListResponseDTO replyListDTO = ReplyListResponseDTO.builder()
+            .rno((Long) list[0])
+            .mno((Long) list[1])
+            .bno((Long) list[2])
+            .title((String) list[3])
+            .text((String) list[4])
+            .regdate((LocalDateTime) list[5])
+            .isCourse((boolean) list[6])
+            .build();
         replyList.add(replyListDTO);
       }
       return replyList;
@@ -102,20 +102,20 @@ public class ReplyServiceImpl implements ReplyService {
   }
 
   @Override
-  public void saveReply(ReplyDTO replyDTO){
-    Reply reply = dtoToEntity(replyDTO);
+  public void saveReply(ReplyRequestDTO replyRequestDTO) {
+    Reply reply = dtoToEntity(replyRequestDTO);
     replyRepository.save(reply);
   }
 
   @Override
-  public void modify(ReplyDTO replyDTO) {
-    Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
+  public void modify(ReplyRequestDTO replyRequestDTO) {
+    Optional<Reply> result = replyRepository.findById(replyRequestDTO.getRno());
     if (result.isPresent()) {
       Reply reply = result.get();
-      if (replyDTO.getMno()==null){   // 유저댓글삭제시 controller 에서 mno를 setNull함
+      if (replyRequestDTO.getMno() == null) {   // 유저댓글삭제시 controller 에서 mno를 setNull함
         reply.changeMember(null);
       }
-      reply.changeText(replyDTO.getText());
+      reply.changeText(replyRequestDTO.getText());
       replyRepository.save(reply);
     }
   }
