@@ -1,7 +1,8 @@
 package com.dot.tour_info_service_server.service.follow;
 
-import com.dot.tour_info_service_server.dto.FollowDTO;
-import com.dot.tour_info_service_server.dto.FollowResponseDTO;
+
+import com.dot.tour_info_service_server.dto.response.follow.FollowResponseDTO;
+import com.dot.tour_info_service_server.dto.request.follow.FollowRequestDTO;
 import com.dot.tour_info_service_server.entity.follow.Follow;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.repository.FollowRepository;
@@ -58,8 +59,8 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
-    public void follow(FollowDTO followDTO) {
-        Follow follow = dtoToEntity(followDTO);
+    public void follow(FollowRequestDTO followRequestDTO) {
+        Follow follow = dtoToEntity(followRequestDTO);
         followRepository.save(follow);
     }
 

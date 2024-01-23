@@ -1,7 +1,6 @@
 package com.dot.tour_info_service_server.controller;
-
-import com.dot.tour_info_service_server.dto.FollowDTO;
-import com.dot.tour_info_service_server.dto.FollowResponseDTO;
+import com.dot.tour_info_service_server.dto.response.follow.FollowResponseDTO;
+import com.dot.tour_info_service_server.dto.request.follow.FollowRequestDTO;
 import com.dot.tour_info_service_server.service.follow.FollowService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -24,22 +23,22 @@ public class FollowController {
 
     //   팔로우 버튼을 누르는 회원 -> followerMno    팔로우 당하는 회원-> memberMno
     @PostMapping("/following")
-    public ResponseEntity<Map<String, Long>> follow(@RequestBody FollowDTO followDTO) {
-        log.info("follow : " + followDTO);
+    public ResponseEntity<Map<String, Long>> follow(@RequestBody FollowRequestDTO followRequestDTO) {
+        log.info("follow : " + followRequestDTO);
         Map<String, Long> result = new HashMap<>();
-        Long mno = followDTO.getMemberMno();
+        Long mno = followRequestDTO.getMemberMno();
         result.put("mno", mno);
-        followService.follow(followDTO);
+        followService.follow(followRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     //   언팔로우 버튼을 누르는 회원 -> followerMno    언팔로우 당하는 회원-> memberMno
     @DeleteMapping("/following")
-    public ResponseEntity<Map<String, Long>> unFollow(@RequestBody FollowDTO followDTO) {
-        log.info("unfollow : " + followDTO);
-        followService.unFollow(followDTO.getMemberMno(), followDTO.getFollowerMno());
+    public ResponseEntity<Map<String, Long>> unFollow(@RequestBody FollowRequestDTO followRequestDTO) {
+        log.info("unfollow : " + followRequestDTO);
+        followService.unFollow(followRequestDTO.getMemberMno(), followRequestDTO.getFollowerMno());
         Map<String, Long> result = new HashMap<>();
-        result.put("mno", followDTO.getMemberMno());
+        result.put("mno", followRequestDTO.getMemberMno());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

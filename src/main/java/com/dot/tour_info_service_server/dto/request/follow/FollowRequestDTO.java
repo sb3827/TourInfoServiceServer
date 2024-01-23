@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.request.follow;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class FollowResponseDTO {
-  private Long mno;
-  private String name;
-  private String image;
+public class FollowRequestDTO {
+  private Long memberMno;
+  private Long followerMno;
 }
