@@ -1,5 +1,6 @@
 package com.dot.tour_info_service_server.service.place;
 
+import com.dot.tour_info_service_server.dto.request.place.RegistPlaceRequestDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.dto.PlaceDTO;
 import com.dot.tour_info_service_server.entity.Place;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface PlaceService {
-    Long registerPlace(PlaceDTO dto);
+    Long registerPlace(RegistPlaceRequestDTO dto);
 
     void removePlace(Long pno);
 
@@ -16,9 +17,8 @@ public interface PlaceService {
 
     Map<String, Object> getPlaceCount(Long mno);
 
-    default Place dtoToEntity(PlaceDTO dto){
+    default Place dtoToEntity(RegistPlaceRequestDTO dto){
         Place place = Place.builder()
-                .pno(dto.getPno())
                 .name(dto.getName())
                 .lng(dto.getLng())
                 .lat(dto.getLat())
@@ -26,7 +26,6 @@ public interface PlaceService {
                 .localAddress(dto.getLocalAddress())
                 .engAddress(dto.getEngAddress())
                 .category(dto.getCategory())
-                .cart(dto.getCart())
                 .build();
         return place;
     }

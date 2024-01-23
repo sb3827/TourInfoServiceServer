@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.PlaceDTO;
+import com.dot.tour_info_service_server.dto.request.place.RegistPlaceRequestDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.PlaceRepository;
 import com.dot.tour_info_service_server.service.place.PlaceService;
@@ -22,7 +23,15 @@ public class PlaceServiceImplTests {
 
     @Test
     void register(){
-        PlaceDTO dto = PlaceDTO.builder().name("Test1").lat(123.0).lng(123.0).localAddress("test").roadAddress("test").engAddress("test").category(Category.RESTAURANT).build();
+        RegistPlaceRequestDTO dto = RegistPlaceRequestDTO.builder()
+                .name("Test1")
+                .lat(123.0)
+                .lng(123.0)
+                .localAddress("test")
+                .roadAddress("test")
+                .engAddress("test")
+                .category(Category.RESTAURANT)
+                .build();
         Long pno = placeService.registerPlace(dto);
         System.out.println("pno : " + pno);
     }
