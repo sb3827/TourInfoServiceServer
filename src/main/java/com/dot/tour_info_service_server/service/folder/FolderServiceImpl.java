@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.service.folder;
 
 import com.dot.tour_info_service_server.dto.request.folder.FolderRegistRequestDTO;
 import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
-import com.dot.tour_info_service_server.dto.response.folder.FolderAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDTO;
 import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
@@ -28,9 +28,9 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 전부 조회
     @Override
-    public List<FolderAllResponseDTO> getAllFolder(Long mno) {
+    public List<FolderItemResponseDTO> getAllFolder(Long mno) {
         List<Object[]> result = folderRepository.getFolderAll(mno);
-        Map<Long, FolderAllResponseDTO> folderMap = new HashMap<>();
+        Map<Long, FolderItemResponseDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
             Long fno = (Long) objects[0];
@@ -39,10 +39,10 @@ public class FolderServiceImpl implements FolderService{
             String name = (String) objects[3];
             String src=(String)objects[4];
 
-            FolderAllResponseDTO folderAllResponseDTO = folderMap.computeIfAbsent(fno, k -> FolderAllResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
-            folderAllResponseDTO.getPno().add(pno);
-            folderAllResponseDTO.getName().add(name);
-            folderAllResponseDTO.getSrc().add(src);
+            FolderItemResponseDTO folderItemResponseDTO = folderMap.computeIfAbsent(fno, k -> FolderItemResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
+            folderItemResponseDTO.getPno().add(pno);
+            folderItemResponseDTO.getName().add(name);
+            folderItemResponseDTO.getSrc().add(src);
         }
 
         return new ArrayList<>(folderMap.values());

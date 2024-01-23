@@ -2,7 +2,7 @@ package com.dot.tour_info_service_server.service.folder;
 
 import com.dot.tour_info_service_server.dto.request.folder.FolderRegistRequestDTO;
 import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
-import com.dot.tour_info_service_server.dto.response.folder.FolderAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDTO;
 import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface FolderService {
 
     //폴더 전부 조회
-    List<FolderAllResponseDTO> getAllFolder(Long mno);
+    List<FolderItemResponseDTO> getAllFolder(Long mno);
 
     //폴더명 조회
     List<FolderNameResponseDTO> getTitle(Long mno);

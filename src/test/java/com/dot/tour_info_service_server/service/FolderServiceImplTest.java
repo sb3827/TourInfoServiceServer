@@ -1,7 +1,7 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
-import com.dot.tour_info_service_server.dto.response.folder.FolderAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDTO;
 import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.repository.CartRepository;
@@ -29,7 +29,7 @@ class FolderServiceImplTest{
     public void testGetAllFolder() {
         Long mno=2l;
         List<Object[]> result = folderRepository.getFolderAll(mno);
-        Map<Long, FolderAllResponseDTO> folderMap = new HashMap<>();
+        Map<Long, FolderItemResponseDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
             Long fno = (Long) objects[0];
@@ -37,7 +37,7 @@ class FolderServiceImplTest{
             Long pno = (Long) objects[2];
             String name = (String) objects[3];
 
-            FolderAllResponseDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
+            FolderItemResponseDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderItemResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).build());
             folderAllDTO.getPno().add(pno);
             folderAllDTO.getName().add(name);
         }
