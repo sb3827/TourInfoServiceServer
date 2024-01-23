@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service.place;
 
 import com.dot.tour_info_service_server.dto.PlaceDTO;
+import com.dot.tour_info_service_server.dto.request.place.RegistPlaceRequestDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.entity.Place;
@@ -30,7 +31,7 @@ public class PlaceServiceImpl implements PlaceService {
 
 
     @Override
-    public Long registerPlace(PlaceDTO placeDTO) {
+    public Long registerPlace(RegistPlaceRequestDTO placeDTO) {
         log.info("DTO-------------------");
         log.info(placeDTO);
 

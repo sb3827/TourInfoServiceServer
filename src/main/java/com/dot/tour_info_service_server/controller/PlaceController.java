@@ -1,8 +1,11 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.PlaceDTO;
+import com.dot.tour_info_service_server.dto.request.place.RegistPlaceRequestDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.service.place.PlaceService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -24,7 +27,7 @@ public class PlaceController {
 
     // authenticated
     @PostMapping(value = "/register")
-    public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody PlaceDTO placeDTO){
+    public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody RegistPlaceRequestDTO placeDTO){
         log.info("registerPlace: " + placeDTO);
         if(placeDTO.getName()==null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -37,7 +40,8 @@ public class PlaceController {
 
     // permit all
     @GetMapping(value = "")
-    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") String filter, @RequestParam(value = "search") String search ){
+    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") String filter,
+                                                    @RequestParam(value = "search") String search){
         log.info("findPlace...... filter :  " + filter + " search : " + search);
         Category category=null;
         if(!filter.isEmpty()) {
@@ -50,7 +54,8 @@ public class PlaceController {
     // 지역별 방문수
     // permit all
     @GetMapping(value="/placecount")
-    public ResponseEntity<Map<String, Object>> getPlaceCount(@RequestParam(value="mno") Long mno){
+    public ResponseEntity<Map<String, Object>> getPlaceCount(@Valid @RequestParam(value="mno")
+                                                                 @NotNull(message = "mno cannot be null") Long mno){
         Map<String, Object> result = placeService.getPlaceCount(mno);
         return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
     }
@@ -58,7 +63,8 @@ public class PlaceController {
 
     // admin
     @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Long>> removePlace(@RequestParam("pno") Long pno){
+    public ResponseEntity<Map<String, Long>> removePlace(@Valid @RequestParam("pno")
+                                                             @NotNull(message = "pno cannnot be null") Long pno){
         log.info("delete..............");
         Map<String, Long> result = new HashMap<>();
         placeService.removePlace(pno);
