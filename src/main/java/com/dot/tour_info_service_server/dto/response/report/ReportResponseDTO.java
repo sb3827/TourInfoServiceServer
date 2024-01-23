@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
