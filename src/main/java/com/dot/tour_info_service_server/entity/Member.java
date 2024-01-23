@@ -44,7 +44,7 @@ public class Member extends BaseEntity {
   @Column(nullable = false)
   private int disciplinary;
 
-  private int businessId; // 사업자 번호
+  private String businessId; // 사업자 번호
 
   private boolean isApprove; // 사업자 승인 여부
 
