@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PlaceBoardRequestDTO {
   private Long bno;
-  @NotEmpty
+  @NotEmpty (message = "null title")
   private String title;
   private String content;
   private Double score;

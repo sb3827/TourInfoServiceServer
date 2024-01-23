@@ -14,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 public class CourseBoardRequestDTO {
   private Long bno;
-  @NotEmpty
+  @NotEmpty (message = "null title")
   private String title;
   private String content;
   private Double score;
   private Long writer;
-  @NotEmpty
+  @NotEmpty (message = "null placeList")
   private List<List<Long>> coursePlaceList;
   private List<Long> images; // 등록 img number
   private List<String> deleteImages; // 삭제 대상 img src list
