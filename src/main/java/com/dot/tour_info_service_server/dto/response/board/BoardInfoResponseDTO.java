@@ -1,5 +1,7 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.board;
 
+import com.dot.tour_info_service_server.dto.PostingPlaceBoardDTO;
+import com.dot.tour_info_service_server.dto.WriterDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardInfoDTO {
+public class BoardInfoResponseDTO {
   private String title;
   private String content;
   private WriterDTO writerDTO;

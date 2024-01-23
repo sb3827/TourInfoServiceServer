@@ -1,5 +1,8 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.board;
 
+import com.dot.tour_info_service_server.dto.MainBoardResponseDTO;
+import com.dot.tour_info_service_server.dto.MainPlaceResponseDTO;
+import com.dot.tour_info_service_server.dto.MostListCourseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

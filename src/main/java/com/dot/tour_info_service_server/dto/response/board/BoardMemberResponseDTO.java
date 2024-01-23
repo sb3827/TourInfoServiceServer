@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.board;
 
 
 import lombok.AllArgsConstructor;
@@ -12,23 +12,15 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardPlaceReplyCountDTO {
-
-    private Long pno;
+public class BoardMemberResponseDTO {
     private Long bno;
     private String title;
-    private String[] src;
+    private String src;
     private Long replyCount;
-    private String writer;
     private LocalDateTime regdate;
     private int likes;
     private Double score;
-    private boolean isAd;
-    private Double lng;
-    private Double lat;
-    private String roadAddress;
-    private String localAddress;
-    private String engAddress;
+    private String writer;
     private String name;
 
 }
