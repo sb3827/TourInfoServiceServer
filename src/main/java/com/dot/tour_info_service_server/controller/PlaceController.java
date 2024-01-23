@@ -26,6 +26,9 @@ public class PlaceController {
     @PostMapping(value = "/register")
     public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody PlaceDTO placeDTO){
         log.info("registerPlace: " + placeDTO);
+        if(placeDTO.getName()==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         Map<String, Long> result = new HashMap<>();
         Long pno = placeService.registerPlace(placeDTO);
         result.put("pno", pno);

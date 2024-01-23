@@ -77,4 +77,10 @@ class ReplyRepositoryTest {
     System.out.println(result);
 
   }
+
+  @Test
+  public void showReplyTest(){
+    List<Object[]>result=replyRepository.showReplyList(4l);
+    System.out.println(result);
+  }
 }
