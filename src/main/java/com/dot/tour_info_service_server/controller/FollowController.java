@@ -2,10 +2,12 @@ package com.dot.tour_info_service_server.controller;
 import com.dot.tour_info_service_server.dto.response.follow.FollowResponseDTO;
 import com.dot.tour_info_service_server.dto.request.follow.FollowRequestDTO;
 import com.dot.tour_info_service_server.service.follow.FollowService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,13 +19,14 @@ import java.util.Map;
 @RequestMapping("/follow")
 @Log4j2
 @RequiredArgsConstructor
+@Validated
 public class FollowController {
 
     private final FollowService followService;
 
     //   팔로우 버튼을 누르는 회원 -> followerMno    팔로우 당하는 회원-> memberMno
     @PostMapping("/following")
-    public ResponseEntity<Map<String, Long>> follow(@RequestBody FollowRequestDTO followRequestDTO) {
+    public ResponseEntity<Map<String, Long>> follow(@RequestBody @Valid FollowRequestDTO followRequestDTO) {
         log.info("follow : " + followRequestDTO);
         Map<String, Long> result = new HashMap<>();
         Long mno = followRequestDTO.getMemberMno();
@@ -34,7 +37,7 @@ public class FollowController {
 
     //   언팔로우 버튼을 누르는 회원 -> followerMno    언팔로우 당하는 회원-> memberMno
     @DeleteMapping("/following")
-    public ResponseEntity<Map<String, Long>> unFollow(@RequestBody FollowRequestDTO followRequestDTO) {
+    public ResponseEntity<Map<String, Long>> unFollow(@RequestBody @Valid  FollowRequestDTO followRequestDTO) {
         log.info("unfollow : " + followRequestDTO);
         followService.unFollow(followRequestDTO.getMemberMno(), followRequestDTO.getFollowerMno());
         Map<String, Long> result = new HashMap<>();
