@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MnoRequestDTO {
+public class MnoBoardRequestDTO {
     private Long mno;
 }
