@@ -1,10 +1,11 @@
 package com.dot.tour_info_service_server.dto.request.reply;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Builder
@@ -12,14 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 public class ReplyRequestDTO {
-  @NotNull
   private Long rno;
   private Long parentRno;
-  @NotNull
+  @NotBlank(message = "text cannot be blank")
   private String text;
-  @NotNull
   private Long mno;
-  @NotNull
   private Long bno;
   private LocalDateTime regDate, modDate;
 

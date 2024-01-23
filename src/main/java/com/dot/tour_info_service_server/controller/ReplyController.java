@@ -7,6 +7,7 @@ import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.reply.ReplyService;
 import com.dot.tour_info_service_server.service.report.ReportService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class ReplyController {
 
   // permit all
   @GetMapping("/member")
-  public ResponseEntity<List<ReplyListResponseDTO>> getListByMno(@RequestParam("mno") Long mno) {
+  public ResponseEntity<List<ReplyListResponseDTO>> getListByMno(@Valid @RequestParam("mno") @NotEmpty(message = "mno cannot be Empty") Long mno) {
     log.info("getReplyListByMno....");
     List<ReplyListResponseDTO> result = replyService.showReplyList(mno);
     return new ResponseEntity<>(result, HttpStatus.OK);
@@ -38,23 +39,23 @@ public class ReplyController {
   //수정 시작 게시글 댓글 조회
   // permit all
   @GetMapping("/board")
-  public ResponseEntity<List<ReplyMemberResponseDTO>> getListByBno(@RequestParam("bno") Long bno, @RequestParam(value = "rno", required = false)Long rno) {
+  public ResponseEntity<List<ReplyMemberResponseDTO>> getListByBno(@Valid @RequestParam("bno") @NotEmpty(message = "bno cannot be Empty") Long bno, @RequestParam(value = "rno", required = false) Long rno) {
     log.info("getReplyListByBno....");
     List<ReplyMemberResponseDTO> result;
     //상위 댓글만 조회
-    if(rno==null) {
+    if (rno == null) {
       result = replyService.parentReply(bno);
     }
     //대댓글 조회
-    else{
-      result=replyService.childReply(bno,rno);
+    else {
+      result = replyService.childReply(bno, rno);
     }
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   // authenticated
   @PostMapping("/register")
-  public ResponseEntity<Map<String, Long>> register(@RequestBody @Valid  ReplyRequestDTO replyRequestDTO) {
+  public ResponseEntity<Map<String, Long>> register(@RequestBody @Valid ReplyRequestDTO replyRequestDTO) {
     log.info("saveReply... " + replyRequestDTO);
     Map<String, Long> result = new HashMap<>();
     result.put("bno", replyRequestDTO.getBno());
