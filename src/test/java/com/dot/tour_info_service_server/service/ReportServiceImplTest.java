@@ -1,6 +1,10 @@
 package com.dot.tour_info_service_server.service;
 
-import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.report.DisciplinaryRequestDTO;
+import com.dot.tour_info_service_server.dto.request.report.ReportRequestDTO;
+import com.dot.tour_info_service_server.dto.response.report.DisciplinaryAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.report.ReportAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.report.ReportResponseDTO;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.service.report.ReportService;
@@ -120,24 +124,24 @@ class ReportServiceImplTest {
     public void testUserDisciplinary(){
         Long mno=1l;
         List<Disciplinary> result=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(mno);
-        List<DisciplinaryDTO> disciplinaryDTOS=new ArrayList<>();
+        List<DisciplinaryAllResponseDTO> disciplinaryAllResponseDTOS =new ArrayList<>();
         for(Disciplinary disciplinary:result){
-            DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
+            DisciplinaryAllResponseDTO disciplinaryAllResponseDTO = DisciplinaryAllResponseDTO.builder()
                     .dno(disciplinary.getDno())
                     .mno(disciplinary.getMember().getMno())
                     .reason(disciplinary.getReason())
                     .strDate(disciplinary.getStrDate())
                     .expDate(disciplinary.getExpDate())
                     .build();
-            disciplinaryDTOS.add(disciplinaryDTO);
+            disciplinaryAllResponseDTOS.add(disciplinaryAllResponseDTO);
         }
-        System.out.println(disciplinaryDTOS);
+        System.out.println(disciplinaryAllResponseDTOS);
     }
 
     //신고
     @Test
     public void testReport(){
-        ReportDTO reportDTO=ReportDTO.builder()
+        ReportAllResponseDTO reportAllResponseDTO = ReportAllResponseDTO.builder()
                 .complainant(1l)
                 .bno(2l)
                 .defendant(2l)
@@ -145,8 +149,8 @@ class ReportServiceImplTest {
                 .content("<h2>zxcv</h2>")
                 .isDone(false)
                 .build();
-        reportRepository.save(reportService.dtoToEntity(reportDTO));
-        System.out.println(reportDTO);
+        reportRepository.save(reportService.dtoToEntity(reportAllResponseDTO));
+        System.out.println(reportAllResponseDTO);
     }
 
     //update 신고
