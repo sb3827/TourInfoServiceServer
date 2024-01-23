@@ -1,7 +1,6 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
-import com.dot.tour_info_service_server.dto.request.board.MnoRequestDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -83,13 +82,13 @@ public class MemberController {
     // 회원 검색
     // permit all
     @PostMapping(value = "/find")
-    public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search,@RequestBody(required = false) MnoRequestDTO mnoRequestDTO) {
+    public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search,@RequestBody(required = false) MnoDTO mnoDTO) {
         log.info("Searching User.......");
         List<SearchUserListDTO> userlist;
-        if(mnoRequestDTO.getMno()==null){
+        if(mnoDTO.getMno()==null){
             userlist=memberService.searchUser(search,null);
         }else {
-            userlist = memberService.searchUser(search, mnoRequestDTO.getMno());
+            userlist = memberService.searchUser(search, mnoDTO.getMno());
         }
         return new ResponseEntity<>(userlist, HttpStatus.OK);
     }
