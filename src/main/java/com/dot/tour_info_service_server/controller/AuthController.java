@@ -7,6 +7,10 @@ import com.dot.tour_info_service_server.service.auth.AuthService;
 import com.dot.tour_info_service_server.service.token.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
@@ -15,17 +19,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @Log4j2
 @RequestMapping("auth")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
@@ -41,8 +50,9 @@ public class AuthController {
 
     // permit all
     @PostMapping("/login")
-    public ResponseEntity<ResponseMapDTO> login(@RequestBody LoginRequestDTO requestDTO) {
+    public ResponseEntity<ResponseMapDTO> login(@Valid @RequestBody LoginRequestDTO requestDTO) {
         ResponseMapDTO result;
+
         try {
             Long mno = authService.login(requestDTO);
             String refreshToken = tokenService.generateRefreshToken(mno);
@@ -58,14 +68,14 @@ public class AuthController {
             result = ResponseMapDTO.builder()
                     .response(Map.of("msg", e.getMessage()))
                     .build();
-            return new ResponseEntity<>(result,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     // permit all
     @PostMapping("/newToken")
-    public ResponseEntity<Object> createNewToken(@RequestBody NewTokenRequestDTO newTokenRequestDTO) {
+    public ResponseEntity<Object> createNewToken(@Valid @RequestBody NewTokenRequestDTO newTokenRequestDTO) {
         Map<String, String> result = new HashMap<>();
         try {
             String newToken = tokenService.createNewAccessToken(newTokenRequestDTO.getRefreshToken());
@@ -94,7 +104,7 @@ public class AuthController {
 
     //permit all
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, Long>> register(@RequestBody SignupRequestDTO signupDTO) {
+    public ResponseEntity<Map<String, Long>> register(@Valid @RequestBody SignupRequestDTO signupDTO) {
         Map<String, Long> responseMap = new HashMap<>();
 
         try {
@@ -113,7 +123,7 @@ public class AuthController {
     // permit all
     // 이메일 중복 검사
     @PostMapping("/email/check")
-    public ResponseEntity<Map<String, Boolean>> checkDuplicate(@RequestBody EmailRequestDTO emailDTO) {
+    public ResponseEntity<Map<String, Boolean>> checkDuplicate(@Valid @RequestBody EmailRequestDTO emailDTO) {
         Map<String, Boolean> responseMap = new HashMap<>();
         Boolean isDuplicate = false;
         try {
@@ -130,7 +140,7 @@ public class AuthController {
     // permit all
     // 이메일 인증 재전송
     @PostMapping("/email/re-validation")
-    public ResponseEntity<Map<String, String>> checkValidate(@RequestBody EmailRequestDTO emailDTO) {
+    public ResponseEntity<Map<String, String>> checkValidate(@Valid @RequestBody EmailRequestDTO emailDTO) {
         try {
             authService.resendEmail(emailDTO.getEmail());
         } catch (Exception e) {
@@ -146,7 +156,8 @@ public class AuthController {
     // 이메일 검증 주소
     // permit all
     @GetMapping("/email/validation")
-    public ModelAndView checkValtidate(@RequestParam("email") String email, @RequestParam("token") String token) throws BadRequestException {
+    public ModelAndView checkValtidate(@RequestParam("email") String email,
+                                       @RequestParam("token") String token) throws BadRequestException {
         boolean isValid = authService.checkValidate(email);
 
         try {
@@ -169,7 +180,7 @@ public class AuthController {
     // 이메일 찾기
     // permit all
     @PostMapping("/email/find")
-    public ResponseEntity<Map<String, String>> findMail(@RequestBody EmailFindRequestDTO findRequestDTODTO) {
+    public ResponseEntity<Map<String, String>> findMail(@Valid @RequestBody EmailFindRequestDTO findRequestDTODTO) {
         Map<String, String> responseMap = new HashMap<>();
         try {
             String email = authService.findEmail(findRequestDTODTO.getName(), findRequestDTODTO.getPhone());
@@ -197,7 +208,7 @@ public class AuthController {
     // 비밀번호 찾기
     // permit all
     @PostMapping("password/lost")
-    public ResponseEntity<ResponseDTO> lostPassword(@RequestBody EmailRequestDTO emailRequestDTO) {
+    public ResponseEntity<ResponseDTO> lostPassword(@Valid @RequestBody EmailRequestDTO emailRequestDTO) {
         ResponseDTO result = authService.resetPassword(emailRequestDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
