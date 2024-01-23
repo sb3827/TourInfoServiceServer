@@ -40,7 +40,7 @@ public class BoardController {
     // 코스포스팅 등록
     // authenticated
     @PostMapping(value = {"/course/posting/register"})
-    public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody CourseBoardRequestDTO courseBoardRequestDTO) {
+    public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody @Valid CourseBoardRequestDTO courseBoardRequestDTO) {
         if(!SecurityUtil.validateMno(courseBoardRequestDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -63,7 +63,7 @@ public class BoardController {
     // 장소 포스팅 수정
     // authenticated
     @PutMapping(value = {"/place/posting/modify"})
-    public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody PlaceBoardRequestDTO placeBoardRequestDTO) {
+    public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody  @Valid PlaceBoardRequestDTO placeBoardRequestDTO) {
         Map<String, Long> result = new HashMap<>();
         if (!SecurityUtil.validateMno(placeBoardRequestDTO.getWriter())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -80,14 +80,14 @@ public class BoardController {
     // 코스 게시글 수정 address
     // authenticated
     @PutMapping("/course/posting/modify")
-    public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody CourseBoardRequestDTO courseBoardRequestDTO) {
+    public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody  @Valid CourseBoardRequestDTO courseBoardRequestDTO) {
 
         log.info("courseBoardDTO: " + courseBoardRequestDTO);
         Map<String, Long> result = new HashMap<>();
         // token 없이 controller Test시 제거할 것
-//    if (!SecurityUtil.validateMno(courseBoardDTO.getWriter())) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
+    if (!SecurityUtil.validateMno(courseBoardRequestDTO.getWriter())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
         try {
             Long bno = boardService.modifyCourse(courseBoardRequestDTO);
             result.put("bno", bno);
