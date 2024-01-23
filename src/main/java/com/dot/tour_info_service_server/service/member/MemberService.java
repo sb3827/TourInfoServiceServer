@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.service.member;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.member.MemberUpdateRequestDTO;
 import com.dot.tour_info_service_server.entity.Member;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface MemberService {
 
 
     // 회원정보 수정 ( 이미지, 이름, 전화번호 )
-    UserInfoDTO modifyUserInfo(RequestModifyMemberDTO requestMemberDTO);
+    UserInfoDTO modifyUserInfo(MemberUpdateRequestDTO requestMemberDTO);
 
 
     // 회원 프로필 조회 ( 이미지, 이름, 팔로잉, 팔로워, 찜목록 수 )

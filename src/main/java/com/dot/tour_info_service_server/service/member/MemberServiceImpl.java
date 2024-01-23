@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service.member;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.member.MemberUpdateRequestDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Role;
 import com.dot.tour_info_service_server.repository.*;
@@ -52,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
     // 회원정보수정 ( 이름, 전화번호, 이미지 )
     @Override
     @Transactional
-    public UserInfoDTO modifyUserInfo(RequestModifyMemberDTO requestMemberDTO) {
+    public UserInfoDTO modifyUserInfo(MemberUpdateRequestDTO requestMemberDTO) {
         Optional<Member> result = memberRepository.findById(requestMemberDTO.getMno());
         if (result.isEmpty()) {
             throw new RuntimeException("유저 정보가 없습니다");

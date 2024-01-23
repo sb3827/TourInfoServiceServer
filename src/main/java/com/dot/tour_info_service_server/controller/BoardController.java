@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.member.FindMemberRequestDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -123,7 +124,7 @@ public class BoardController {
     // 보드 메인페이지 정보 조회
     // permit all
     @PostMapping(value = "/main")
-    public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoDTO mnoDTO) {
+    public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) FindMemberRequestDTO mnoDTO) {
         ResponseWrapDTO response;
         if(mnoDTO==null){
             response=new ResponseWrapDTO(true,boardService.mainBoard(-1l));
