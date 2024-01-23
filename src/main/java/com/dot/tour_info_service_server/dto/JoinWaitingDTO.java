@@ -13,5 +13,5 @@ public class JoinWaitingDTO {
     private Long mno;
     private String name;
     private String email;
-    private int businessId;
+    private String businessId;
 }
