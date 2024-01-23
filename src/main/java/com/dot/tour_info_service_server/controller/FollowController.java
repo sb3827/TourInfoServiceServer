@@ -5,6 +5,7 @@ import com.dot.tour_info_service_server.dto.request.follow.FollowRequestDTO;
 import com.dot.tour_info_service_server.service.follow.FollowService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class FollowController {
 
     // 회원이 팔로우 중인 사람들 조회(팔로잉 조회)        조회대상회원 -> memberMno 팔로잉->followerMno 로 나옴
     @GetMapping("/following")
-    public ResponseEntity<List<FollowResponseDTO>> getListOfFollowing(@Valid @RequestParam("mno") @NotEmpty(message = "mno cannot be Empty") Long mno) {
+    public ResponseEntity<List<FollowResponseDTO>> getListOfFollowing(@Valid @RequestParam(value="mno") @NotNull(message = "mno cannot be null") Long mno) {
         log.info("List of Following : " + mno);
         List<FollowResponseDTO> result = followService.getListOfFollowing(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -57,7 +58,7 @@ public class FollowController {
 
     // 회원을 팔로우 중인 사람들 조회(팔로워조회)       조회대상회원-> followerMno  팔로워->memberMno 로 나옴
     @GetMapping("/follower")
-    public ResponseEntity<List<FollowResponseDTO>> getListOfFollower(@Valid @RequestParam("mno") @NotEmpty(message = "mno cannot be Empty") Long mno) {
+    public ResponseEntity<List<FollowResponseDTO>> getListOfFollower(@Valid @RequestParam(value="mno") @NotNull(message = "mno cannot be null") Long mno) {
         log.info("List of follower : " + mno);
         List<FollowResponseDTO> result = followService.getListOfFollower(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);

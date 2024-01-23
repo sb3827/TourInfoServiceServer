@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.service.reply;
 
-import com.dot.tour_info_service_server.dto.ReplyDTO;
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyRequestDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
 import com.dot.tour_info_service_server.repository.ReplyRepository;
@@ -72,7 +72,7 @@ public class ReplyServiceImpl implements ReplyService {
 
 
   @Override
-  public List<ReplyDTO> getListOfReplyByMember(Long mno) {
+  public List<ReplyRequestDTO> getListOfReplyByMember(Long mno) {
     Member member = Member.builder().mno(mno).build();
     List<Reply> result = replyRepository.getRepliesByMemberOrderByRegDate(member);
     return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
@@ -102,20 +102,20 @@ public class ReplyServiceImpl implements ReplyService {
   }
 
   @Override
-  public void saveReply(ReplyDTO replyDTO){
-    Reply reply = dtoToEntity(replyDTO);
+  public void saveReply(ReplyRequestDTO replyRequestDTO){
+    Reply reply = dtoToEntity(replyRequestDTO);
     replyRepository.save(reply);
   }
 
   @Override
-  public void modify(ReplyDTO replyDTO) {
-    Optional<Reply> result = replyRepository.findById(replyDTO.getRno());
+  public void modify(ReplyRequestDTO replyRequestDTO) {
+    Optional<Reply> result = replyRepository.findById(replyRequestDTO.getRno());
     if (result.isPresent()) {
       Reply reply = result.get();
-      if (replyDTO.getMno()==null){   // 유저댓글삭제시 controller 에서 mno를 setNull함
+      if (replyRequestDTO.getMno()==null){   // 유저댓글삭제시 controller 에서 mno를 setNull함
         reply.changeMember(null);
       }
-      reply.changeText(replyDTO.getText());
+      reply.changeText(replyRequestDTO.getText());
       replyRepository.save(reply);
     }
   }
