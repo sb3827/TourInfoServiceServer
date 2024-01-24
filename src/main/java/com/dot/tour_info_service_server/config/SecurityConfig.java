@@ -40,6 +40,7 @@ public class SecurityConfig {
             "/board/place/posting/**", "/board/course/posting/**", "/board/main",
             "/board/place/posting/member/**", "/board/course/posting/member/**",
             "/board/place/**", "/board/course/**",
+            "/follow/followings/**", "/follow/followers/**",
             "/place/**", "/place/placecount/**",
             "/reply/member/**", "/reply/board/**",
             "/users/profile/**", "/users/find/**",
