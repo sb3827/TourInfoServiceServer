@@ -1,6 +1,10 @@
 package com.dot.tour_info_service_server.service.report;
 
-import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.report.DisciplinaryRequestDTO;
+import com.dot.tour_info_service_server.dto.request.report.ReportRequestDTO;
+import com.dot.tour_info_service_server.dto.response.report.DisciplinaryAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.report.ReportAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.report.ReportResponseDTO;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
@@ -76,9 +80,9 @@ public class ReportServiceImpl implements ReportService{
             ReportResponseDTO reportResponseDTO=ReportResponseDTO.builder()
                     .sno(report.getSno())
                     .complainant_mno(report.getComplainant_mno())
-                    .complainant(com.get().getName())
+                    .complainant(com.isPresent()?com.get().getName():null)
                     .defendant_mno(report.getDefendant_mno())
-                    .defendant(def.get().getName())
+                    .defendant(def.isPresent()?def.get().getName():null)
                     .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
                     .rno(report.getReply_rno()!=null?report.getReply_rno():null)
                     .content(report.getContent())
@@ -93,7 +97,7 @@ public class ReportServiceImpl implements ReportService{
 
     //신고 정보 조회
     @Override
-    public ReportDTO reportDetail(Long sno) {
+    public ReportAllResponseDTO reportDetail(Long sno) {
         Optional<Report> result=reportRepository.findById(sno);
         if (result.isPresent()){
             Report report=result.get();
@@ -106,7 +110,7 @@ public class ReportServiceImpl implements ReportService{
 
     //유저에대한 정지 정보
     @Override
-    public List<DisciplinaryDTO> disciplinaryUserData(Long mno) {
+    public List<DisciplinaryAllResponseDTO> disciplinaryUserData(Long mno) {
         //회원이 없을 경우 null 전달
         Optional<Member> member=memberRepository.findById(mno);
         if (!member.isPresent()){
@@ -114,18 +118,18 @@ public class ReportServiceImpl implements ReportService{
         }
 
         List<Disciplinary> result=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(mno);
-        List<DisciplinaryDTO> disciplinaryDTOS=new ArrayList<>();
+        List<DisciplinaryAllResponseDTO> disciplinaryAllResponseDTOS =new ArrayList<>();
         for(Disciplinary disciplinary:result){
-            DisciplinaryDTO disciplinaryDTO=DisciplinaryDTO.builder()
+            DisciplinaryAllResponseDTO disciplinaryAllResponseDTO = DisciplinaryAllResponseDTO.builder()
                     .dno(disciplinary.getDno())
                     .mno(disciplinary.getMember().getMno())
                     .reason(disciplinary.getReason())
                     .strDate(disciplinary.getStrDate())
                     .expDate(disciplinary.getExpDate())
                     .build();
-            disciplinaryDTOS.add(disciplinaryDTO);
+            disciplinaryAllResponseDTOS.add(disciplinaryAllResponseDTO);
         }
-        return disciplinaryDTOS;
+        return disciplinaryAllResponseDTOS;
     }
 
     //신고
