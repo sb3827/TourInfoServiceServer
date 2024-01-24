@@ -29,6 +29,7 @@ public class BoardServiceImpl implements BoardService {
     private final ReplyRepository replyRepository;
 
     private final ImageRepository imageRepository;
+
     private final ImageService imageService;
 
     private final ReportRepository reportRepository;

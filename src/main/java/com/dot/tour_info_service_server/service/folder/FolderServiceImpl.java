@@ -6,6 +6,7 @@ import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDT
 import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
+import com.dot.tour_info_service_server.repository.BoardPlaceRepository;
 import com.dot.tour_info_service_server.repository.CartRepository;
 import com.dot.tour_info_service_server.repository.FolderRepository;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
@@ -26,6 +27,8 @@ public class FolderServiceImpl implements FolderService{
     //장바구니 repository
     private final CartRepository cartRepository;
 
+    private final BoardPlaceRepository boardPlaceRepository;
+
     //폴더 전부 조회
     @Override
     public List<FolderItemResponseDTO> getAllFolder(Long mno) {
@@ -33,16 +36,22 @@ public class FolderServiceImpl implements FolderService{
         Map<Long, FolderItemResponseDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
+            List<Object[]> placeImage = boardPlaceRepository.loadRepresentPlaceImageByPno((Long) objects[2]);
             Long fno = (Long) objects[0];
             String title = (String) objects[1];
             Long pno = (Long) objects[2];
             String name = (String) objects[3];
-            String src=(String)objects[4];
 
             FolderItemResponseDTO folderItemResponseDTO = folderMap.computeIfAbsent(fno, k -> FolderItemResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
             folderItemResponseDTO.getPno().add(pno);
             folderItemResponseDTO.getName().add(name);
-            folderItemResponseDTO.getSrc().add(src);
+
+            if (placeImage != null && !placeImage.isEmpty()) {
+                Object[] imageArray = placeImage.get(0);
+                if (imageArray != null && imageArray.length > 0) {
+                    folderItemResponseDTO.getSrc().add((String) imageArray[0]);
+                }
+            }
         }
 
         return new ArrayList<>(folderMap.values());

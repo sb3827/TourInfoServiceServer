@@ -26,15 +26,14 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Object[]> mostLikePlace();
 
 
-    @Query("select p.pno, p.name, p.lng, p.lat, p.roadAddress, p.localAddress, p.engAddress, p.category, p.cart, p.regDate, p.modDate, i.src " +
-            "from Place p left outer join BoardPlace bp on p.pno = bp.place.pno " +
-            "left outer join Image i on bp.boardPlacePK.board.bno = i.board.bno " +
+    @Query("select p.pno, p.name, p.lng, p.lat, p.roadAddress, p.localAddress, p.engAddress, p.category, p.cart, p.regDate, p.modDate " +
+            "from Place p " +
             "where :filter is null and " +
             "(p.name like %:search% or p.localAddress like %:search% or " +
             "p.roadAddress like %:search% or p.engAddress like %:search%) " +
             "or p.category = :filter and " +
             "(p.name like %:search% or p.localAddress like %:search% or " +
-            "p.roadAddress like %:search% or p.engAddress like %:search%) " +
+            "p.roadAddress like %:search% or p.engAddress like %:search%)" +
             "group by p.pno")
     List<Object[]> searchPlace(Category filter, String search);
 
