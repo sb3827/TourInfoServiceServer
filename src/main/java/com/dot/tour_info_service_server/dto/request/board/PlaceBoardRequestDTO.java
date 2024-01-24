@@ -21,6 +21,7 @@ public class PlaceBoardRequestDTO {
   @Max(value = 5 , message = "score cannot exceed 5 points.")
   @Min(value = 0 , message = "score cannot be less than 0. ")
   private Double score;
+  @NotNull (message = "writer(mno) cannot be null")
   private Long writer;
   @NotNull (message = "place cannot be null")
   private Long place;
