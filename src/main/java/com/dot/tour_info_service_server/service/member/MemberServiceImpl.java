@@ -160,7 +160,7 @@ public class MemberServiceImpl implements MemberService {
                         .mno((Long) list[0])
                         .name((String) list[1])
                         .email((String) list[2])
-                        .businessId((int) list[3])
+                        .businessId((String) list[3])
                         .build();
                 waitingList.add(joinWaitingDTO);
             }

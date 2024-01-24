@@ -1,9 +1,9 @@
 package com.dot.tour_info_service_server.service.folder;
 
-import com.dot.tour_info_service_server.dto.FolderAllDTO;
-import com.dot.tour_info_service_server.dto.FolderDTO;
-import com.dot.tour_info_service_server.dto.FolderNameDTO;
-import com.dot.tour_info_service_server.dto.FolderRegistDTO;
+import com.dot.tour_info_service_server.dto.request.folder.FolderRegistRequestDTO;
+import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDTO;
+import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
 import com.dot.tour_info_service_server.entity.Folder;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.repository.CartRepository;
@@ -28,9 +28,9 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 전부 조회
     @Override
-    public List<FolderAllDTO> getAllFolder(Long mno) {
+    public List<FolderItemResponseDTO> getAllFolder(Long mno) {
         List<Object[]> result = folderRepository.getFolderAll(mno);
-        Map<Long, FolderAllDTO> folderMap = new HashMap<>();
+        Map<Long, FolderItemResponseDTO> folderMap = new HashMap<>();
 
         for (Object[] objects : result) {
             Long fno = (Long) objects[0];
@@ -39,10 +39,10 @@ public class FolderServiceImpl implements FolderService{
             String name = (String) objects[3];
             String src=(String)objects[4];
 
-            FolderAllDTO folderAllDTO = folderMap.computeIfAbsent(fno, k -> FolderAllDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
-            folderAllDTO.getPno().add(pno);
-            folderAllDTO.getName().add(name);
-            folderAllDTO.getSrc().add(src);
+            FolderItemResponseDTO folderItemResponseDTO = folderMap.computeIfAbsent(fno, k -> FolderItemResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
+            folderItemResponseDTO.getPno().add(pno);
+            folderItemResponseDTO.getName().add(name);
+            folderItemResponseDTO.getSrc().add(src);
         }
 
         return new ArrayList<>(folderMap.values());
@@ -50,25 +50,25 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더명 조회
     @Override
-    public List<FolderNameDTO> getTitle(Long mno) {
+    public List<FolderNameResponseDTO> getTitle(Long mno) {
         List<Folder> result=folderRepository.getFolderTitle(mno);
-        List<FolderNameDTO>folderNameDTOS=new ArrayList<>();
+        List<FolderNameResponseDTO>folderNameDTOS=new ArrayList<>();
         for (Folder folder:result){
-            FolderNameDTO folderNameDTO=FolderNameDTO.builder()
+            FolderNameResponseDTO folderNameResponseDTO=FolderNameResponseDTO.builder()
                     .fno(folder.getFno())
                     .title(folder.getTitle())
                     .build();
-            folderNameDTOS.add(folderNameDTO);
+            folderNameDTOS.add(folderNameResponseDTO);
         }
         return folderNameDTOS;
     }
 
     //폴더 등록
     @Override
-    public Long register(FolderRegistDTO folderRegistDTO) {
+    public Long register(FolderRegistRequestDTO folderRegistRequestDTO) {
         Folder folder=Folder.builder()
-                .member(Member.builder().mno(folderRegistDTO.getMno()).build())
-                .title(folderRegistDTO.getTitle())
+                .member(Member.builder().mno(folderRegistRequestDTO.getMno()).build())
+                .title(folderRegistRequestDTO.getTitle())
                 .build();
         folderRepository.save(folder);
         return folder.getFno();
@@ -76,12 +76,12 @@ public class FolderServiceImpl implements FolderService{
 
     //폴더 수정
     @Override
-    public Long modify(FolderDTO folderDTO) {
-        Long num=folderDTO.getFno();
+    public Long modify(FolderAllRequestDTO folderAllRequestDTO) {
+        Long num= folderAllRequestDTO.getFno();
         Optional<Folder> result=folderRepository.findById(num);
         if(result.isPresent()) {
             Folder folder=result.get();
-            folder.changeTitle(folderDTO.getTitle());
+            folder.changeTitle(folderAllRequestDTO.getTitle());
             folderRepository.save(folder);
             return folder.getFno();
         }

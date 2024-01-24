@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.folder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FolderAllDTO { //폴더 전체 정보 들고옴
+public class FolderItemResponseDTO {
     private Long fno; //폴더 번호
     private String title; //폴더 title
     private List<Long> pno; //장소 번호
