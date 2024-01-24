@@ -2,7 +2,9 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyDeleteRequestDTO;
 import com.dot.tour_info_service_server.dto.request.reply.ReplyRequestDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyUpdateRequestDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.reply.ReplyService;
 import com.dot.tour_info_service_server.service.report.ReportService;
@@ -72,31 +74,29 @@ public class ReplyController {
 
   // authenticated
   @PutMapping("/update")
-  public ResponseEntity<Map<String, Long>> update(@RequestBody @Valid ReplyRequestDTO replyRequestDTO) {
-    if (!SecurityUtil.validateMno(replyRequestDTO.getMno())) {
+  public ResponseEntity<Map<String, Long>> update(@RequestBody @Valid ReplyUpdateRequestDTO replyUpdateRequestDTO) {
+    if (!SecurityUtil.validateMno(replyUpdateRequestDTO.getMno())) {
       log.error("mno not matched");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     Map<String, Long> result = new HashMap<>();
-    result.put("rno", replyRequestDTO.getRno());
-    log.info("updateReply...replyDTO : " + replyRequestDTO);
-    replyService.modify(replyRequestDTO);
+    result.put("rno", replyUpdateRequestDTO.getRno());
+    log.info("updateReply...replyDTO : " + replyUpdateRequestDTO);
+    replyService.modify(replyUpdateRequestDTO);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 
   // authenticated
   @PutMapping("/delete")
-  public ResponseEntity<Map<String, Long>> delete(@RequestBody @Valid ReplyRequestDTO replyRequestDTO) {
-    if (!SecurityUtil.validateMno(replyRequestDTO.getMno())) {
+  public ResponseEntity<Map<String, Long>> delete(@RequestBody @Valid ReplyDeleteRequestDTO replyDeleteRequestDTO) {
+    if (!SecurityUtil.validateMno(replyDeleteRequestDTO.getMno())) {
       log.error("mno not matched");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     Map<String, Long> result = new HashMap<>();
-    result.put("rno", replyRequestDTO.getRno());
-    log.info("deleteReply...replyDTO : " + replyRequestDTO);
-    replyRequestDTO.setText("삭제된 댓글입니다");
-    replyRequestDTO.setMno(null);
-    replyService.modify(replyRequestDTO);
+    result.put("rno", replyDeleteRequestDTO.getRno());
+    log.info("deleteReply...replyDTO : " + replyDeleteRequestDTO);
+    replyService.delete(replyDeleteRequestDTO);
     return new ResponseEntity<>(result, HttpStatus.OK);
   }
 

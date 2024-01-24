@@ -2,12 +2,17 @@ package com.dot.tour_info_service_server.service.reply;
 
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyDeleteRequestDTO;
 import com.dot.tour_info_service_server.dto.request.reply.ReplyRequestDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyUpdateRequestDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
 import com.dot.tour_info_service_server.repository.ReplyRepository;
+import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -108,14 +113,30 @@ public class ReplyServiceImpl implements ReplyService {
   }
 
   @Override
-  public void modify(ReplyRequestDTO replyRequestDTO) {
-    Optional<Reply> result = replyRepository.findById(replyRequestDTO.getRno());
+  public void modify(ReplyUpdateRequestDTO replyUpdateRequestDTO) {
+    Optional<Reply> result = replyRepository.findById(replyUpdateRequestDTO.getRno());
     if (result.isPresent()) {
       Reply reply = result.get();
-      if (replyRequestDTO.getMno()==null){   // 유저댓글삭제시 controller 에서 mno를 setNull함
-        reply.changeMember(null);
+      if (!SecurityUtil.validateMno(reply.getMember().getMno())){
+        log.error("modify reply_mno not matched");
+        throw new RuntimeException("자신의 댓글만 수정 가능합니다");
       }
-      reply.changeText(replyRequestDTO.getText());
+      reply.changeText(replyUpdateRequestDTO.getText());
+      replyRepository.save(reply);
+    }
+  }
+
+  @Override
+  public void delete(ReplyDeleteRequestDTO replyDeleteRequestDTO) {
+    Optional<Reply> result = replyRepository.findById(replyDeleteRequestDTO.getRno());
+    if (result.isPresent()) {
+      Reply reply = result.get();
+      if (!SecurityUtil.validateMno(reply.getMember().getMno())){
+        log.error("delete reply_mno not matched");
+        throw new RuntimeException("자신의 댓글만 삭제 가능합니다");
+      }
+      reply.changeText("삭제된 댓글입니다");
+      reply.changeMember(null);
       replyRepository.save(reply);
     }
   }

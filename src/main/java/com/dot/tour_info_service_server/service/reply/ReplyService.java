@@ -2,7 +2,9 @@ package com.dot.tour_info_service_server.service.reply;
 
 import com.dot.tour_info_service_server.dto.ReplyListDTO;
 import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyDeleteRequestDTO;
 import com.dot.tour_info_service_server.dto.request.reply.ReplyRequestDTO;
+import com.dot.tour_info_service_server.dto.request.reply.ReplyUpdateRequestDTO;
 import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
@@ -24,7 +26,9 @@ public interface ReplyService {
 
   void saveReply(ReplyRequestDTO replyDTO);
 
-  void modify(ReplyRequestDTO replyDTO);
+  void modify(ReplyUpdateRequestDTO replyUpdateRequestDTO);
+
+  void delete(ReplyDeleteRequestDTO replyDeleteRequestDTO);
 
 
   default Reply dtoToEntity(ReplyRequestDTO replyDTO) {
@@ -51,32 +55,23 @@ public interface ReplyService {
     if (reply.getMember() != null) {
       if (reply.getParent() != null && reply.getParent().getRno() != null) {
         replyDTO = ReplyRequestDTO.builder()
-            .rno(reply.getRno())
             .text(reply.getText())
             .bno(reply.getBoard().getBno())
             .mno(reply.getMember().getMno())
             .parentRno(reply.getParent().getRno())
-            .regDate(reply.getRegDate())
-            .modDate(reply.getModDate())
             .build();
       } else {
         replyDTO = ReplyRequestDTO.builder()
-            .rno(reply.getRno())
             .text(reply.getText())
             .bno(reply.getBoard().getBno())
             .mno(reply.getMember().getMno())
-            .regDate(reply.getRegDate())
-            .modDate(reply.getModDate())
             .build();
       }
     } else {
       // 유저가 삭제한 댓글에 의해 mno가 null인 경우에 대한 처리
       replyDTO = ReplyRequestDTO.builder()
-          .rno(reply.getRno())
           .text(reply.getText())
           .bno(reply.getBoard().getBno())
-          .regDate(reply.getRegDate())
-          .modDate(reply.getModDate())
           .build();
     }
     return replyDTO;
