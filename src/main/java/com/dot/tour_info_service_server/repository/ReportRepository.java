@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
@@ -54,4 +55,15 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
   @Query("UPDATE Report r SET r.board_bno = null where r.board_bno=:bno")
   void updateReportByBoardBno(@Param("bno") Long bno);
 
-}
+  //이미 신고한 내역인지 확인 - 게시글
+  @Query("select r " +
+          "from Report r  " +
+          "where r.board_bno=:bno and r.complainant_mno=:mno")
+  Report checkBoardReport(Long bno, Long mno);
+
+
+  //이미 신고한 내역인지 확인 - 댓글
+  @Query("select r " +
+          "from Report r  " +
+          "where r.reply_rno=:rno and r.complainant_mno=:mno")
+  Report checkReplyReport(Long rno, Long mno);}
