@@ -56,7 +56,10 @@ public class AuthServiceImpl implements AuthService {
             throw new DisabledException("이메일 인증이 필요합니다.");
         }
 
-        LoginServiceDTO loginServiceDTO = LoginServiceDTO.builder().mno(member.getMno()).build();
+        LoginServiceDTO loginServiceDTO = LoginServiceDTO.builder()
+                .mno(member.getMno())
+                .message("")
+                .build();
 
         if (member.isReset()) {
             loginServiceDTO.setMessage("password 변경이 필요 합니다");

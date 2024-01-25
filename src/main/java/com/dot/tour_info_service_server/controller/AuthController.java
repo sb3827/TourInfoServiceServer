@@ -66,10 +66,9 @@ public class AuthController {
         try {
             String refreshToken = tokenService.generateRefreshToken(loginServiceDTO.getMno());
             TokenDTO tokens = TokenDTO.builder()
+                    .refreshToken(refreshToken)
                     .token(tokenService.createNewAccessToken(refreshToken))
                     .build();
-            if(!loginServiceDTO.getMessage().isEmpty())
-                tokens.setRefreshToken(refreshToken);
             result = ResponseMapDTO.builder()
                     .response(Map.of("mno", loginServiceDTO.getMno(), "tokens", tokens, "message", loginServiceDTO.getMessage()))
                     .build();
