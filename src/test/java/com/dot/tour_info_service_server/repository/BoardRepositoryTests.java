@@ -1,5 +1,6 @@
 package com.dot.tour_info_service_server.repository;
 
+import com.dot.tour_info_service_server.entity.Board;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -42,19 +43,12 @@ class BoardRepositoryTests {
 
     @Test
     @Transactional
-    void test2() {
-        List<Object[]> result = boardRepository.getPlaceBoardByBno(8L);
-        result.forEach(objects -> {
-            System.out.println(Arrays.toString(objects));
-        });
-        for (Object[] objects: result) {
-            System.out.println(Arrays.toString(objects));
-        }
-
+    void getPlaceBoardByBno() {
+       Board result = boardRepository.getPlaceBoardByBno(8L);
     }
 
     @Test
-    void getPlaceBoardByBnoTest() {
+    void getCourseBoardByBnoTest() {
 //        Object result = boardRepository.getPlaceBoardByBno(1L);
 //
 //        System.out.println(result);
