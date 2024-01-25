@@ -320,93 +320,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public BoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
-        List<Object[]> result = boardRepository.getPlaceBoardByBno(bno);
+        Board result = boardRepository.getPlaceBoardByBno(bno);
         List<Object[]> images = imageRepository.getImageByBno(bno);
         List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
 
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException("없는 게시글입니다.");
-        }
-
-        boolean isLiked;
-        if (!SecurityUtil.existAuthentiaction() || SecurityUtil.getCurrentMemberMno() == null) {
-            isLiked = false;
-        } else {
-            isLiked = boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
-                    .board(Board.builder().bno(bno).build())
-                    .member(Member.builder().mno(SecurityUtil.getCurrentMemberMno()).build())
-                    .build());
-        }
-
-
-        List<List<PostingPlaceBoardDTO>> placeDTOS = new ArrayList<>();
-        if (!placeList.isEmpty()) {
-            placeDTOS.add(new ArrayList<>());
-            int cnt = 0;
-            for (Object[] tuple : placeList) {
-                if (cnt != (Integer) tuple[0]) {
-                    placeDTOS.add(new ArrayList<>());
-                    cnt++;
-                }
-                List<Object[]> placeImage =
-                        boardPlaceRepository.loadRepresentPlaceImageByPno((Long) tuple[2]);
-                    PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
-                            .pno((Long) tuple[2])
-                            .name((String) tuple[3])
-                            .lat((Double) tuple[4])
-                            .lng((Double) tuple[5])
-                            .roadAddress((String) tuple[6])
-                            .localAddress((String) tuple[7])
-                            .engAddress((String) tuple[8])
-                            .build();
-
-                if (placeImage != null && !placeImage.isEmpty()) {
-                    Object[] imageArray = placeImage.get(0);
-                    if (imageArray != null && imageArray.length > 0) {
-                        postingPlaceBoardDTO.setSrc((String) imageArray[0]);
-                    } else {
-                        postingPlaceBoardDTO.setSrc(null);
-                    }
-                } else {
-                    postingPlaceBoardDTO.setSrc(null);
-                }
-                    placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
-            }
-        }
-
-        List<String> imageUrls = new ArrayList<>();
-        for (Object[] image : images) {
-            String src = (String) image[0];
-            imageUrls.add(src);
-        }
-
-        return BoardInfoDTO.builder()
-                .title((String) result.get(0)[0])
-                .content((String) result.get(0)[1])
-                .writerDTO(WriterDTO.builder()
-                        .mno((Long) result.get(0)[2])
-                        .name((String) result.get(0)[3])
-                        .build())
-                .isCourse((Boolean) result.get(0)[4])
-                .regdate((LocalDateTime) result.get(0)[5])
-                .isAd((Boolean) result.get(0)[6])
-                .likes((Integer) result.get(0)[7])
-                .score((Double) result.get(0)[8])
-                .moddate((LocalDateTime) result.get(0)[9])
-                .isLiked(isLiked)
-                .images(imageUrls.toArray(new String[0]))
-                .postingPlaceBoardDTOS(placeDTOS)
-                .build();
-    }
-
-    //코스 포스팅 정보 조회
-    @Override
-    public BoardInfoDTO getCourseByBno(Long bno) throws IllegalAccessException, SQLException {
-        List<Object[]> result = boardRepository.getCourseBoardByBno(bno);
-        List<Object[]> images = imageRepository.getImageByBno(bno);
-        List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
-
-        if (result.isEmpty()) {
+        if (result == null) {
             throw new IllegalArgumentException("없는 게시글입니다.");
         }
 
@@ -464,23 +382,125 @@ public class BoardServiceImpl implements BoardService {
             imageUrls.add(src);
         }
 
-        return BoardInfoDTO.builder()
-                .title((String) result.get(0)[0])
-                .content((String) result.get(0)[1])
-                .writerDTO(WriterDTO.builder()
-                        .mno((Long) result.get(0)[2])
-                        .name((String) result.get(0)[3])
-                        .build())
-                .isCourse((Boolean) result.get(0)[4])
-                .regdate((LocalDateTime) result.get(0)[5])
-                .isAd((Boolean) result.get(0)[6])
-                .likes((Integer) result.get(0)[7])
-                .score((Double) result.get(0)[8])
-                .moddate((LocalDateTime) result.get(0)[9])
+        BoardInfoDTO boardInfoDTO = BoardInfoDTO.builder()
+                .title( result.getTitle())
+                .content(result.getContent())
+                .isCourse( result.getIsCourse())
+                .regdate( result.getRegDate())
+                .isAd( result.getIsAd())
+                .likes(result.getLikes())
+                .score( result.getScore())
+                .moddate( result.getModDate())
                 .isLiked(isLiked)
                 .images(imageUrls.toArray(new String[0]))
                 .postingPlaceBoardDTOS(placeDTOS)
                 .build();
+
+        if (result.getWriter() != null) {
+            boardInfoDTO.setWriterDTO(WriterDTO.builder()
+                    .mno(result.getWriter().getMno())
+                    .name(result.getWriter().getName())
+                    .build());
+        } else {
+            boardInfoDTO.setWriterDTO(WriterDTO.builder()
+                    .mno(null)
+                    .name(null)
+                    .build());
+        }
+        return boardInfoDTO;
+    }
+
+    //코스 포스팅 정보 조회
+    @Override
+    public BoardInfoDTO getCourseByBno(Long bno) throws IllegalAccessException, SQLException {
+        Board result = boardRepository.getCourseBoardByBno(bno);
+        List<Object[]> images = imageRepository.getImageByBno(bno);
+        List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
+
+        if (result == null) {
+            throw new IllegalArgumentException("없는 게시글입니다.");
+        }
+
+        boolean isLiked;
+        if (!SecurityUtil.existAuthentiaction() || SecurityUtil.getCurrentMemberMno() == null) {
+            isLiked = false;
+        } else {
+            isLiked = boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
+                    .board(Board.builder().bno(bno).build())
+                    .member(Member.builder().mno(SecurityUtil.getCurrentMemberMno()).build())
+                    .build());
+        }
+
+
+        List<List<PostingPlaceBoardDTO>> placeDTOS = new ArrayList<>();
+        if (!placeList.isEmpty()) {
+            placeDTOS.add(new ArrayList<>());
+            int cnt = 0;
+            for (Object[] tuple : placeList) {
+                if (cnt != (Integer) tuple[0]) {
+                    placeDTOS.add(new ArrayList<>());
+                    cnt++;
+                }
+                List<Object[]> placeImage =
+                        boardPlaceRepository.loadRepresentPlaceImageByPno((Long) tuple[2]);
+                PostingPlaceBoardDTO postingPlaceBoardDTO = PostingPlaceBoardDTO.builder()
+                        .pno((Long) tuple[2])
+                        .name((String) tuple[3])
+                        .lat((Double) tuple[4])
+                        .lng((Double) tuple[5])
+                        .roadAddress((String) tuple[6])
+                        .localAddress((String) tuple[7])
+                        .engAddress((String) tuple[8])
+                        .build();
+
+                if (placeImage != null && !placeImage.isEmpty()) {
+                    Object[] imageArray = placeImage.get(0);
+                    if (imageArray != null && imageArray.length > 0) {
+                        postingPlaceBoardDTO.setSrc((String) imageArray[0]);
+                    } else {
+                        // 이미지 배열이 null 또는 비어 있는 경우
+                        postingPlaceBoardDTO.setSrc(null);
+                    }
+                } else {
+                    // 이미지 정보가 없는 경우
+                    postingPlaceBoardDTO.setSrc(null);
+                }
+                placeDTOS.get((Integer) tuple[0]).add(postingPlaceBoardDTO);
+            }
+        }
+
+        List<String> imageUrls = new ArrayList<>();
+        for (Object[] image : images) {
+            String src = (String) image[0];
+            imageUrls.add(src);
+        }
+
+        BoardInfoDTO boardInfoDTO = BoardInfoDTO.builder()
+                .title( result.getTitle())
+                .content(result.getContent())
+                .isCourse( result.getIsCourse())
+                .regdate( result.getRegDate())
+                .isAd( result.getIsAd())
+                .likes(result.getLikes())
+                .score( result.getScore())
+                .moddate( result.getModDate())
+                .isLiked(isLiked)
+                .images(imageUrls.toArray(new String[0]))
+                .postingPlaceBoardDTOS(placeDTOS)
+                .build();
+
+        if (result.getWriter() != null) {
+            boardInfoDTO.setWriterDTO(WriterDTO.builder()
+                    .mno(result.getWriter().getMno())
+                    .name(result.getWriter().getName())
+                    .build());
+        } else {
+            boardInfoDTO.setWriterDTO(WriterDTO.builder()
+                    .mno(null)
+                    .name(null)
+                    .build());
+        }
+        return boardInfoDTO;
     }
 
 
