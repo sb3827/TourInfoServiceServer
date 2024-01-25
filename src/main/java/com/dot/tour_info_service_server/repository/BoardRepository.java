@@ -54,6 +54,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //최근 올라온 장소 게시글 10개
     @Query("select b.bno,b.title,i.src, b.isCourse " +
             "from Board b left outer join Image i on(b.bno=i.board.bno) " +
+            "group by b.bno " +
             "order by b.regDate desc " +
             "limit 10 ")
     List<Object[]> recentlyBoard();
