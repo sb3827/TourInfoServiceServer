@@ -139,7 +139,6 @@ public class ReportServiceImpl implements ReportService{
         Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
 
         if (!member.isPresent()){
-            System.out.println("여긴가?");
             return null;
         }
         if(reportRequestDTO.getRno()==null && reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
