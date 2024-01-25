@@ -5,6 +5,7 @@ import com.dot.tour_info_service_server.dto.request.auth.ChangePasswordRequestDT
 import com.dot.tour_info_service_server.dto.request.auth.EmailRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.LoginRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
+import com.dot.tour_info_service_server.dto.response.auth.LoginServiceDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Role;
 import org.apache.coyote.BadRequestException;
@@ -14,7 +15,7 @@ import java.security.cert.CertificateException;
 import java.util.Objects;
 
 public interface AuthService {
-    Long login(LoginRequestDTO requestDTO) throws Exception;
+    LoginServiceDTO login(LoginRequestDTO requestDTO) throws Exception;
     Long signup(SignupRequestDTO signupDTO) throws Exception;
     Boolean emailCheck(String email);
     String findEmail(String name, String phone) throws Exception;
