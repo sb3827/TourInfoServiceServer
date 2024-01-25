@@ -56,6 +56,16 @@ class MemberRepositoryTest {
     }
 
     @Test
+    public void findEmailWhereFromSolcialFalseTest() {
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse("mmk275@naver.com");
+        if(result.isEmpty()){
+            log.info("not found");
+        } else {
+            log.info(result.get().getMno());
+        }
+    }
+
+    @Test
     // member+phone로 member 찾기 test
     public void findMemberbyNamePhoneTest() {
         Optional<Member> result = memberRepository.findMemberByNameAndPhone("희범", "010-1234-5678");

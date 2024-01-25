@@ -67,7 +67,12 @@ public class ReportController {
 
         if(SecurityUtil.validateMno(reportRequestDTO.getComplainant())) {
             Long data = reportService.report(reportRequestDTO);
-            if (data == 1l) {
+            if(data==-1){
+                response.setResult(false);
+                response.setData(-1l);
+                return new ResponseEntity<>(response,HttpStatus.OK);
+            }
+            else if (data == 1l) {
                 response.setResult(true);
                 response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.OK);

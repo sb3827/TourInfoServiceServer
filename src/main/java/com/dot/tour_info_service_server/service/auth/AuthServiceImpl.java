@@ -5,6 +5,7 @@ import com.dot.tour_info_service_server.dto.request.auth.ChangePasswordRequestDT
 import com.dot.tour_info_service_server.dto.request.auth.EmailRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.LoginRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
+import com.dot.tour_info_service_server.dto.response.auth.LoginServiceDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.repository.MemberRepository;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
@@ -34,8 +35,9 @@ public class AuthServiceImpl implements AuthService {
     private final TokenService tokenService;
 
     @Override
-    public Long login(LoginRequestDTO requestDTO) throws Exception {
+    public LoginServiceDTO login(LoginRequestDTO requestDTO) throws Exception {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
+
 
         if (result.isEmpty()) {
             throw new BadCredentialsException("유저 정보가 없습니다");
@@ -46,10 +48,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Password가 일치하지 않습니다");
         }
 
-        if (member.isReset()) {
-            throw new DisabledException("password 변경이 필요 합니다");
-        }
-
         if (!member.isApprove()) {
             throw new DisabledException("관리자의 승인이 필요합니다.");
         }
@@ -58,7 +56,16 @@ public class AuthServiceImpl implements AuthService {
             throw new DisabledException("이메일 인증이 필요합니다.");
         }
 
-        return member.getMno();
+        LoginServiceDTO loginServiceDTO = LoginServiceDTO.builder()
+                .mno(member.getMno())
+                .message("")
+                .build();
+
+        if (member.isReset()) {
+            loginServiceDTO.setMessage("password 변경이 필요 합니다");
+        }
+
+        return loginServiceDTO;
     }
 
     @Override
@@ -105,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseDTO changePassword(ChangePasswordRequestDTO passwordRequestDTO) {
-        Optional<Member> result = memberRepository.findByEmail(passwordRequestDTO.getEmail());
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse(passwordRequestDTO.getEmail());
         ResponseDTO responseDTO;
 
         // DB 없을 경우
@@ -121,6 +128,7 @@ public class AuthServiceImpl implements AuthService {
 
         String newPassword = passwordEncoder.encode(passwordRequestDTO.getNewPassword());
         member.changePassword(newPassword);
+        member.changeIsReset();
         try {
             memberRepository.save(member);
             responseDTO = ResponseDTO.builder()
@@ -139,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
     // 비밀번호 초기화
     @Override
     public ResponseDTO resetPassword(EmailRequestDTO emailRequestDTO) {
-        Optional<Member> result = memberRepository.findByEmail(emailRequestDTO.getEmail());
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse(emailRequestDTO.getEmail());
 
         // 검색결과x
         if (result.isEmpty()) {
@@ -220,7 +228,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void resendEmail(String email) throws Exception{
-        Optional<Member> result = memberRepository.findByEmail(email);
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse(email);
 
         if (result.isEmpty()) {
             throw new BadCredentialsException("존재하지 않는 이메일");

@@ -16,6 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Member> findById(@Param("mno") Long mno);
 
+    @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
+    Optional<Member> findByEmailAndFromSocialIsFalse(@Param("email") String email);
 
     @EntityGraph(attributePaths = {"roleSet"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Member> findByEmail(@Param("email") String email);
