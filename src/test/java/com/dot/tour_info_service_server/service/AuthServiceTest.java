@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.dto.MemberDTO;
 import com.dot.tour_info_service_server.dto.ResponseDTO;
+import com.dot.tour_info_service_server.dto.request.auth.ChangePasswordRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.EmailRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
 import com.dot.tour_info_service_server.dto.ChangeMemberDTO;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.time.LocalDate;
 
 @SpringBootTest
@@ -20,7 +22,7 @@ class AuthServiceTest {
     AuthService authService;
     @Test
     // member 등록 test code
-    public void registMemberTest() {
+    public void registMemberTest() throws Exception {
         authService.signup(SignupRequestDTO.builder()
                         .email("email@email.com")
                         .password("1234")
@@ -33,7 +35,7 @@ class AuthServiceTest {
 
     @Test
     // business 등록 test code
-    public void registBusinessTest() {
+    public void registBusinessTest() throws Exception {
         authService.signup(SignupRequestDTO.builder()
                 .email("Business@email.com")
                 .password("1234")
@@ -46,7 +48,7 @@ class AuthServiceTest {
 
     @Test
     // business 등록 test code
-    public void registAdminTest() {
+    public void registAdminTest() throws Exception {
         authService.signup(SignupRequestDTO.builder()
                 .email("ADMIN@DoT.com")
                 .password("1234")
@@ -65,12 +67,12 @@ class AuthServiceTest {
 
     @Test
     public void findEmailTest() {
-        log.info(authService.findEmail("희범1", "010-1234-5678"));
+//        log.info(authService.findEmail("희범1", "010-1234-5678"));
     }
 
     @Test
-    public void changePasswordTest() {
-        ResponseDTO result = authService.changePassword(ChangeMemberDTO.builder()
+    public void changePasswordTest() throws AccountNotFoundException {
+        ResponseDTO result = authService.changePassword(ChangePasswordRequestDTO.builder()
                         .email("member1@email.com")
                         .oldPassword("hb1234")
                         .newPassword("1234")

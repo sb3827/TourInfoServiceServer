@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.service.auth;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.auth.ChangePasswordRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.EmailRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.LoginRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
@@ -14,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import javax.security.auth.login.AccountNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.util.*;
@@ -31,35 +34,35 @@ public class AuthServiceImpl implements AuthService {
     private final TokenService tokenService;
 
     @Override
-    public Long login(LoginRequestDTO requestDTO) {
+    public Long login(LoginRequestDTO requestDTO) throws Exception {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
 
         if (result.isEmpty()) {
-            throw new RuntimeException("유저 정보가 없습니다");
+            throw new BadCredentialsException("유저 정보가 없습니다");
         }
 
         Member member = result.get();
         if (!passwordEncoder.matches(requestDTO.getPassword(), member.getPassword())) {
-            throw new RuntimeException("Password가 일치하지 않습니다");
+            throw new BadCredentialsException("Password가 일치하지 않습니다");
         }
 
         if (member.isReset()) {
-            throw new RuntimeException("password 변경이 필요 합니다");
+            throw new DisabledException("password 변경이 필요 합니다");
         }
 
         if (!member.isApprove()) {
-            throw new RuntimeException("관리자의 승인이 필요합니다.");
+            throw new DisabledException("관리자의 승인이 필요합니다.");
         }
 
         if (!member.getIsValidate()) {
-            throw new RuntimeException("이메일 인증이 필요합니다.");
+            throw new DisabledException("이메일 인증이 필요합니다.");
         }
 
         return member.getMno();
     }
 
     @Override
-    public Long signup(SignupRequestDTO signupDTO) {
+    public Long signup(SignupRequestDTO signupDTO) throws Exception{
 
         // email 중복처리
         if (memberRepository.existsByEmail(signupDTO.getEmail())) {
@@ -74,12 +77,6 @@ public class AuthServiceImpl implements AuthService {
             member = memberRepository.save(member);
             TokenDTO token = tokenService.generateTokens(member.getMno());
             mailService.sendValidateUrl(signupDTO.getEmail(), signupDTO.getName(), token.getToken());
-        } catch (MailException | MessagingException | UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("메일 전송 오류");
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("토큰 생성 오류");
         } catch (Exception e) {
             log.error(e.getMessage());
             throw e;
@@ -94,12 +91,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String findEmail(String name, String phone) {
+    public String findEmail(String name, String phone) throws AccountNotFoundException {
         Optional<Member> result = memberRepository.findMemberByNameAndPhone(name, phone);
 
         // DB에 없는 경우
         if (result.isEmpty()) {
-            throw new RuntimeException("not found member");
+            throw new AccountNotFoundException("not found member");
         }
 
         Member member = result.get();
@@ -107,28 +104,22 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseDTO changePassword(ChangeMemberDTO changeMemberDTO) {
-        Optional<Member> result = memberRepository.findByEmail(changeMemberDTO.getEmail());
+    public ResponseDTO changePassword(ChangePasswordRequestDTO passwordRequestDTO) {
+        Optional<Member> result = memberRepository.findByEmail(passwordRequestDTO.getEmail());
         ResponseDTO responseDTO;
 
         // DB 없을 경우
         if (result.isEmpty()) {
-            return ResponseDTO.builder()
-                    .msg("not found member")
-                    .result(false)
-                    .build();
+            throw new BadCredentialsException("유저 정보가 없습니다");
         }
         Member member = result.get();
 
         // 기존 비밀번호가 일치하지 않을 경우
-        if (!passwordEncoder.matches(changeMemberDTO.getOldPassword(), member.getPassword())) {
-            return ResponseDTO.builder()
-                    .msg("password mismatch")
-                    .result(false)
-                    .build();
+        if (!passwordEncoder.matches(passwordRequestDTO.getOldPassword(), member.getPassword())) {
+            throw new BadCredentialsException("Password가 일치하지 않습니다");
         }
 
-        String newPassword = passwordEncoder.encode(changeMemberDTO.getNewPassword());
+        String newPassword = passwordEncoder.encode(passwordRequestDTO.getNewPassword());
         member.changePassword(newPassword);
         try {
             memberRepository.save(member);
@@ -138,10 +129,8 @@ public class AuthServiceImpl implements AuthService {
                     .build();
 
         } catch (Exception e) {
-            responseDTO = ResponseDTO.builder()
-                    .msg("change failed")
-                    .result(false)
-                    .build();
+            log.error(e.getMessage());
+            throw e;
         }
 
         return responseDTO;
@@ -230,27 +219,22 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void resendEmail(String email) {
+    public void resendEmail(String email) throws Exception{
         Optional<Member> result = memberRepository.findByEmail(email);
 
         if (result.isEmpty()) {
-            throw new RuntimeException("존재하지 않는 이메일");
+            throw new BadCredentialsException("존재하지 않는 이메일");
+        }
+
+        Member member = result.get();
+        if (member.getIsValidate()) {
+            throw new IllegalAccessException("이미 인증된 이메일 입니다.");
         }
 
         try {
-            Member member = result.get();
-            if (member.getIsValidate()) {
-                throw new RuntimeException("이미 인증된 이메일");
-            }
             TokenDTO token = tokenService.generateTokens(member.getMno());
             mailService.reSendValidateUrl(member.getEmail(), member.getName(), token.getToken());
-        } catch (MailException | MessagingException | UnsupportedEncodingException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("메일 전송 오류");
-        } catch (IllegalArgumentException | IllegalAccessException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("토큰 생성 오류");
-        } catch (Exception e) {
+        } catch (Exception e){
             log.error(e.getMessage());
             throw e;
         }
