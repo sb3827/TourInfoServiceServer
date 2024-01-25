@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.UnknownHttpStatusCodeException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.sql.SQLException;
 
@@ -99,5 +101,18 @@ public class ControllerAdvice {
                                                                    final HttpServletRequest request) {
         return new ResponseEntity<>(ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage(), request),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> MaxUploadSizeExceededException(MaxUploadSizeExceededException e,
+                                                                        final HttpServletRequest request) {
+        return new ResponseEntity<>(ErrorResponse.of(HttpStatus.PAYLOAD_TOO_LARGE, e.getMessage(), request),
+                HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ErrorResponse> DisabledException(DataAccessException e, final HttpServletRequest request) {
+        return new ResponseEntity<>(ErrorResponse.of(HttpStatus.UNAUTHORIZED, e.getMessage(), request),
+                HttpStatus.UNAUTHORIZED);
     }
 }

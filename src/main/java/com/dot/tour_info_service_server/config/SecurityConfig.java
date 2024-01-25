@@ -48,7 +48,7 @@ public class SecurityConfig {
     };
 
     private static final String[] AUTHENTICATED_LIST = {
-            "/auth/logout",
+            "/auth/logout", "/auth/password/change",
             "/board/place/posting/register", "/board/course/posting/register",
             "/board/place/posting/modify", "/board/course/posting/modify",
             "/board/place/posting/delete/**", "/board/course/posting/delete/**",
