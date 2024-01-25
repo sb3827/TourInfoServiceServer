@@ -125,6 +125,7 @@ public class AuthServiceImpl implements AuthService {
 
         String newPassword = passwordEncoder.encode(passwordRequestDTO.getNewPassword());
         member.changePassword(newPassword);
+        member.changeIsReset();
         try {
             memberRepository.save(member);
             responseDTO = ResponseDTO.builder()
