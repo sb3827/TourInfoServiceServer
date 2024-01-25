@@ -112,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseDTO changePassword(ChangePasswordRequestDTO passwordRequestDTO) {
-        Optional<Member> result = memberRepository.findByEmail(passwordRequestDTO.getEmail());
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse(passwordRequestDTO.getEmail());
         ResponseDTO responseDTO;
 
         // DB 없을 경우
@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
     // 비밀번호 초기화
     @Override
     public ResponseDTO resetPassword(EmailRequestDTO emailRequestDTO) {
-        Optional<Member> result = memberRepository.findByEmail(emailRequestDTO.getEmail());
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse(emailRequestDTO.getEmail());
 
         // 검색결과x
         if (result.isEmpty()) {
@@ -228,7 +228,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void resendEmail(String email) throws Exception{
-        Optional<Member> result = memberRepository.findByEmail(email);
+        Optional<Member> result = memberRepository.findByEmailAndFromSocialIsFalse(email);
 
         if (result.isEmpty()) {
             throw new BadCredentialsException("존재하지 않는 이메일");
