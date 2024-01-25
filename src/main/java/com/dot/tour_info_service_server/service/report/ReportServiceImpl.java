@@ -137,9 +137,19 @@ public class ReportServiceImpl implements ReportService{
     public Long report(ReportRequestDTO reportRequestDTO) {
         //신고하고자하는 회원이 없을 경우 null 전달
         Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
+
         if (!member.isPresent()){
+            System.out.println("여긴가?");
             return null;
         }
+        if(reportRequestDTO.getRno()==null && reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
+             return -1l;
+        }
+        if(reportRequestDTO.getBno()==null && reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
+
+            return -1l;
+        }
+        System.out.println("성공");
 
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())

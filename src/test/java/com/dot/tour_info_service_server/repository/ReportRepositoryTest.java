@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 class ReportRepositoryTest {
@@ -59,6 +60,20 @@ class ReportRepositoryTest {
     public void testFilterReplyReport(){
         List<Report> result=reportRepository.searchReplyReport(false,"테");
         System.out.println(result);
+    }
+
+    //이미 신고한 내역인지 확인 - 게시글
+    @Test
+    public void testFindReport(){
+        Report report=reportRepository.checkBoardReport(1l,3l);
+        System.out.println(report==null);
+    }
+
+
+    //이미 신고한 내역인지 확인 - 댓글
+    @Test
+    public void testFindReplyReport(){
+        System.out.println(reportRepository.checkReplyReport(36l,3l)==null);
     }
 
 }
