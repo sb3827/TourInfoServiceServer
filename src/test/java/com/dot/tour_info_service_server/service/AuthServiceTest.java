@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.time.LocalDate;
 
 @SpringBootTest
@@ -70,7 +71,7 @@ class AuthServiceTest {
     }
 
     @Test
-    public void changePasswordTest() {
+    public void changePasswordTest() throws AccountNotFoundException {
         ResponseDTO result = authService.changePassword(ChangePasswordRequestDTO.builder()
                         .email("member1@email.com")
                         .oldPassword("hb1234")
