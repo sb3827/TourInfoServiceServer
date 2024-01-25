@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.auth.*;
+import com.dot.tour_info_service_server.dto.response.auth.LoginServiceDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.auth.AuthService;
 import com.dot.tour_info_service_server.service.token.TokenService;
@@ -53,27 +54,24 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<ResponseMapDTO> login(@Valid @RequestBody LoginRequestDTO requestDTO) throws Exception {
         ResponseMapDTO result;
-        Long mno =null;
-        String message = "";
+        LoginServiceDTO loginServiceDTO;
 
         try {
-            mno = authService.login(requestDTO);
+            loginServiceDTO = authService.login(requestDTO);
         } catch (Exception e) {
             log.error(e.getMessage());
-            if(e.getMessage().equals("password 변경이 필요 합니다"))
-                message = e.getMessage();
-            else
                 throw e;
         }
 
         try {
-            String refreshToken = tokenService.generateRefreshToken(mno);
+            String refreshToken = tokenService.generateRefreshToken(loginServiceDTO.getMno());
             TokenDTO tokens = TokenDTO.builder()
-                    .refreshToken(refreshToken)
                     .token(tokenService.createNewAccessToken(refreshToken))
                     .build();
+            if(!loginServiceDTO.getMessage().isEmpty())
+                tokens.setRefreshToken(refreshToken);
             result = ResponseMapDTO.builder()
-                    .response(Map.of("mno", mno, "tokens", tokens, "message", message))
+                    .response(Map.of("mno", loginServiceDTO.getMno(), "tokens", tokens, "message", loginServiceDTO.getMessage()))
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
