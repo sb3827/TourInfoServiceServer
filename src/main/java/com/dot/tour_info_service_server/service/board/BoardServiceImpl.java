@@ -1,6 +1,8 @@
 package com.dot.tour_info_service_server.service.board;
 
 import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.board.CourseBoardRequestDTO;
+import com.dot.tour_info_service_server.dto.request.board.PlaceBoardRequestDTO;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.entity.boardLike.BoardLikePK;
 import com.dot.tour_info_service_server.entity.boardPlace.BoardPlace;
@@ -39,14 +41,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Long placeRegister(PlaceBoardDTO placeBoardDTO) {
+    public Long placeRegister(PlaceBoardRequestDTO placeBoardRequestDTO) {
         // boardDTO to Entity
         Board board = Board.builder()
-                .title(placeBoardDTO.getTitle())
-                .content(placeBoardDTO.getContent())
+                .title(placeBoardRequestDTO.getTitle())
+                .content(placeBoardRequestDTO.getContent())
                 .isAd(SecurityUtil.isBusinessman())
                 .isCourse(false)
-                .score(placeBoardDTO.getScore())
+                .score(placeBoardRequestDTO.getScore())
                 .likes(0)
                 .writer(Member.builder().mno(SecurityUtil.getCurrentMemberMno()).build())
                 .build();
@@ -69,7 +71,7 @@ public class BoardServiceImpl implements BoardService {
                                 .build())
                         .build())
                 .place(Place.builder()
-                        .pno(placeBoardDTO.getPlace())
+                        .pno(placeBoardRequestDTO.getPlace())
                         .build())
                 .build();
         try {
@@ -82,12 +84,12 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // 미사용 image 삭제
-        for (String src : placeBoardDTO.getDeleteImages()) {
+        for (String src : placeBoardRequestDTO.getDeleteImages()) {
             imageService.deleteImage(src);
         }
 
         // image - board 연결
-        for (Long ino : placeBoardDTO.getImages()) {
+        for (Long ino : placeBoardRequestDTO.getImages()) {
             imageService.linkBoard(ino, board);
         }
 
@@ -96,14 +98,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Long courseRegister(CourseBoardDTO courseBoardDTO) {
+    public Long courseRegister(CourseBoardRequestDTO courseBoardRequestDTO) {
         // boardDTO to entity
         Board board = Board.builder()
-                .title(courseBoardDTO.getTitle())
-                .content(courseBoardDTO.getContent())
+                .title(courseBoardRequestDTO.getTitle())
+                .content(courseBoardRequestDTO.getContent())
                 .isAd(SecurityUtil.isBusinessman())
                 .isCourse(true)
-                .score(courseBoardDTO.getScore())
+                .score(courseBoardRequestDTO.getScore())
                 .likes(0)
                 .writer(Member.builder().mno(SecurityUtil.getCurrentMemberMno()).build())
                 .build();
@@ -117,7 +119,7 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // course place list  처리
-        List<List<Long>> coursePlaceList = courseBoardDTO.getCoursePlaceList();
+        List<List<Long>> coursePlaceList = courseBoardRequestDTO.getCoursePlaceList();
         for (int i = 0; i < coursePlaceList.size(); i++) {
             List<Long> dailyPlace = coursePlaceList.get(i);
             for (int j = 0; j < dailyPlace.size(); j++) {
@@ -142,12 +144,12 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // 미사용 image 삭제
-        for (String src : courseBoardDTO.getDeleteImages()) {
+        for (String src : courseBoardRequestDTO.getDeleteImages()) {
             imageService.deleteImage(src);
         }
 
         // image - board 연결
-        for (Long ino : courseBoardDTO.getImages()) {
+        for (Long ino : courseBoardRequestDTO.getImages()) {
             imageService.linkBoard(ino, board);
         }
 
@@ -172,8 +174,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public Long placeBoardModify(PlaceBoardDTO placeBoardDTO) {
-        Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsFalse(placeBoardDTO.getBno());
+    public Long placeBoardModify(PlaceBoardRequestDTO placeBoardRequestDTO) {
+        Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsFalse(placeBoardRequestDTO.getBno());
 
         // 게시글 존재 여부
         if (result.isEmpty()) {
@@ -182,14 +184,14 @@ public class BoardServiceImpl implements BoardService {
         Board board = result.get();
 
         // 작성자 일치 여부
-        if (!Objects.equals(board.getWriter().getMno(), placeBoardDTO.getWriter())) {
+        if (!Objects.equals(board.getWriter().getMno(), placeBoardRequestDTO.getWriter())) {
             throw new RuntimeException("Bad Request");
         }
 
         // dto to entity
-        board.changeTitle(placeBoardDTO.getTitle());
-        board.changeContent(placeBoardDTO.getContent());
-        board.changeScore(placeBoardDTO.getScore());
+        board.changeTitle(placeBoardRequestDTO.getTitle());
+        board.changeContent(placeBoardRequestDTO.getContent());
+        board.changeScore(placeBoardRequestDTO.getScore());
 
         try {
             boardRepository.save(board);
@@ -211,7 +213,7 @@ public class BoardServiceImpl implements BoardService {
             BoardPlace boardPlace = BoardPlace.builder()
                     .boardPlacePK(boardPlacePK)
                     .place(Place.builder()
-                            .pno(placeBoardDTO.getPlace())
+                            .pno(placeBoardRequestDTO.getPlace())
                             .build())
                     .build();
 
@@ -229,12 +231,12 @@ public class BoardServiceImpl implements BoardService {
 
 
         // 미사용 image 삭제
-        for (String src : placeBoardDTO.getDeleteImages()) {
+        for (String src : placeBoardRequestDTO.getDeleteImages()) {
             imageService.deleteImage(src);
         }
 
         // image - board 연결
-        for (Long ino : placeBoardDTO.getImages()) {
+        for (Long ino : placeBoardRequestDTO.getImages()) {
             imageService.linkBoard(ino, board);
         }
 
@@ -243,8 +245,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Long modifyCourse(CourseBoardDTO courseBoardDTO) throws IllegalAccessException, SQLException {
-        Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsTrue(courseBoardDTO.getBno());
+    public Long modifyCourse(CourseBoardRequestDTO courseBoardRequestDTO) throws IllegalAccessException, SQLException {
+        Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsTrue(courseBoardRequestDTO.getBno());
 
         if (result.isEmpty()) {
             throw new IllegalArgumentException("없는 게시글입니다.");
@@ -252,14 +254,14 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = result.get();
         // 작성자 일치 여부
-        if (!Objects.equals(board.getWriter().getMno(), courseBoardDTO.getWriter())) {
+        if (!Objects.equals(board.getWriter().getMno(), courseBoardRequestDTO.getWriter())) {
             throw new RuntimeException("Bad Request");
         }
 
         // dto to entity
-        board.changeTitle(courseBoardDTO.getTitle());
-        board.changeContent(courseBoardDTO.getContent());
-        board.changeScore(courseBoardDTO.getScore());
+        board.changeTitle(courseBoardRequestDTO.getTitle());
+        board.changeContent(courseBoardRequestDTO.getContent());
+        board.changeScore(courseBoardRequestDTO.getScore());
 
         try {
             boardRepository.save(board);
@@ -275,7 +277,7 @@ public class BoardServiceImpl implements BoardService {
             boardPlaceRepository.deleteAllByBoardPlacePKBoard(board);
 
             // 전체 일정
-            List<List<Long>> coursePlaceList = courseBoardDTO.getCoursePlaceList();
+            List<List<Long>> coursePlaceList = courseBoardRequestDTO.getCoursePlaceList();
             for (int i = 0; i < coursePlaceList.size(); i++) {
                 // 일자별 일정
                 List<Long> dailyPlace = coursePlaceList.get(i);
@@ -301,12 +303,12 @@ public class BoardServiceImpl implements BoardService {
         }
 
         // 미사용 image 삭제
-        for (String src : courseBoardDTO.getDeleteImages()) {
+        for (String src : courseBoardRequestDTO.getDeleteImages()) {
             imageService.deleteImage(src);
         }
 
         // image - board 연결
-        for (Long ino : courseBoardDTO.getImages()) {
+        for (Long ino : courseBoardRequestDTO.getImages()) {
             imageService.linkBoard(ino, board);
         }
 

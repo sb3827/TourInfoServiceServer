@@ -1,6 +1,10 @@
 package com.dot.tour_info_service_server.controller;
 
-import com.dot.tour_info_service_server.dto.*;
+import com.dot.tour_info_service_server.dto.request.report.DisciplinaryRequestDTO;
+import com.dot.tour_info_service_server.dto.request.report.ReportRequestDTO;
+import com.dot.tour_info_service_server.dto.response.report.DisciplinaryAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.report.ReportAllResponseDTO;
+import com.dot.tour_info_service_server.dto.response.report.ReportResponseDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.report.ReportService;
 import com.dot.tour_info_service_server.dto.ResponseWrapDTO;
@@ -31,9 +35,9 @@ public class ReportController {
     //신고 정보 조회 -valid 체크
     // admin
     @GetMapping(value = "/detail/{sno}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseWrapDTO<ReportDTO>> resportDetail(@PathVariable Long sno){
-        ReportDTO data=reportService.reportDetail(sno);
-        ResponseWrapDTO<ReportDTO> response = new ResponseWrapDTO<>(false, null);
+    public ResponseEntity<ResponseWrapDTO<ReportAllResponseDTO>> resportDetail(@PathVariable Long sno){
+        ReportAllResponseDTO data=reportService.reportDetail(sno);
+        ResponseWrapDTO<ReportAllResponseDTO> response = new ResponseWrapDTO<>(false, null);
         //신고가 존재하는 경우
         if(data!=null){
             response.setResult(true);
@@ -45,11 +49,11 @@ public class ReportController {
     //회원제재 내역 전체 조회 - valid 체크
     // admin
     @GetMapping(value = "/all/{mno}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseWrapDTO<List<DisciplinaryDTO>>> disciplinaryAll(@PathVariable Long mno){
+    public ResponseEntity<ResponseWrapDTO<List<DisciplinaryAllResponseDTO>>> disciplinaryAll(@PathVariable Long mno){
 
         if(SecurityUtil.validateMno(mno)) {
-            List<DisciplinaryDTO> data = reportService.disciplinaryUserData(mno);
-            ResponseWrapDTO<List<DisciplinaryDTO>> response = new ResponseWrapDTO<>(true, data);
+            List<DisciplinaryAllResponseDTO> data = reportService.disciplinaryUserData(mno);
+            ResponseWrapDTO<List<DisciplinaryAllResponseDTO>> response = new ResponseWrapDTO<>(true, data);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
@@ -63,7 +67,12 @@ public class ReportController {
 
         if(SecurityUtil.validateMno(reportRequestDTO.getComplainant())) {
             Long data = reportService.report(reportRequestDTO);
-            if (data == 1l) {
+            if(data==-1){
+                response.setResult(false);
+                response.setData(-1l);
+                return new ResponseEntity<>(response,HttpStatus.OK);
+            }
+            else if (data == 1l) {
                 response.setResult(true);
                 response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.OK);

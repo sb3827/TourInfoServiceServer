@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class FolderRegistDTO {
-    private Long mno;
-    private String title;
+@AllArgsConstructor
+public class LoginServiceDTO {
+    Long mno;
+    String message;
 }

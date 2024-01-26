@@ -1,4 +1,4 @@
-package com.dot.tour_info_service_server.dto;
+package com.dot.tour_info_service_server.dto.response.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportDTO {
+public class ReportResponseDTO {
     private Long sno;
-    private Long complainant;
-    private Long defendant;
+    private Long complainant_mno;
+    private String complainant;
+    private Long defendant_mno;
+    private String defendant;
     private Long bno;
     private Long rno;
     private String content;

@@ -1,10 +1,13 @@
 package com.dot.tour_info_service_server.service;
 
 import com.dot.tour_info_service_server.service.mail.MailService;
+import jakarta.mail.MessagingException;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.UnsupportedEncodingException;
 
 @SpringBootTest
 @Log4j2
@@ -21,7 +24,11 @@ class MailServiceTest {
     @Test
     // 임시 비밀번호 전송 test
     public void sendPasswordTest() {
-        mailService.sendPassword("mmk2751@gmail.com", "test", "test1234");
+        try {
+            mailService.sendPassword("mmk2751@gmail.com", "test", "test1234");
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.dot.tour_info_service_server.service.cart;
 
-import com.dot.tour_info_service_server.dto.CartDTO;
+import com.dot.tour_info_service_server.dto.request.folder.CartAllRequestDTO;
 import com.dot.tour_info_service_server.entity.cart.Cart;
 import com.dot.tour_info_service_server.repository.CartRepository;
 import com.dot.tour_info_service_server.repository.PlaceRepository;
@@ -20,11 +20,11 @@ public class CartSeviceImpl implements CartService{
 
     //폴더에 장소 추가
     @Override
-    public Long addCart(CartDTO cartDTO) {
-        if (placeRepository.findById(cartDTO.getPno()).isPresent()){
-            Cart cart=dtoToEntity(cartDTO);
+    public Long addCart(CartAllRequestDTO cartAllRequestDTO) {
+        if (placeRepository.findById(cartAllRequestDTO.getPno()).isPresent()){
+            Cart cart=dtoToEntity(cartAllRequestDTO);
             cartRepository.save(cart);
-            return cartDTO.getFno();
+            return cartAllRequestDTO.getFno();
         }
         return -1l;
     }
@@ -32,8 +32,8 @@ public class CartSeviceImpl implements CartService{
 
     //폴더에 장소 제거
     @Override
-    public Long deleteCart(CartDTO cartDTO) {
-        cartRepository.delete(dtoToEntity(cartDTO));
-        return cartDTO.getPno();
+    public Long deleteCart(CartAllRequestDTO cartAllRequestDTO) {
+        cartRepository.delete(dtoToEntity(cartAllRequestDTO));
+        return cartAllRequestDTO.getPno();
     }
 }

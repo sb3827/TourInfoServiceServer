@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.auth.*;
+import com.dot.tour_info_service_server.dto.response.auth.LoginServiceDTO;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.auth.AuthService;
 import com.dot.tour_info_service_server.service.token.TokenService;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,26 +52,31 @@ public class AuthController {
 
     // permit all
     @PostMapping("/login")
-    public ResponseEntity<ResponseMapDTO> login(@Valid @RequestBody LoginRequestDTO requestDTO) {
+    public ResponseEntity<ResponseMapDTO> login(@Valid @RequestBody LoginRequestDTO requestDTO) throws Exception {
         ResponseMapDTO result;
+        LoginServiceDTO loginServiceDTO;
 
         try {
-            Long mno = authService.login(requestDTO);
-            String refreshToken = tokenService.generateRefreshToken(mno);
+            loginServiceDTO = authService.login(requestDTO);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+                throw e;
+        }
+
+        try {
+            String refreshToken = tokenService.generateRefreshToken(loginServiceDTO.getMno());
             TokenDTO tokens = TokenDTO.builder()
                     .refreshToken(refreshToken)
                     .token(tokenService.createNewAccessToken(refreshToken))
                     .build();
             result = ResponseMapDTO.builder()
-                    .response(Map.of("mno", mno, "tokens", tokens))
+                    .response(Map.of("mno", loginServiceDTO.getMno(), "tokens", tokens, "message", loginServiceDTO.getMessage()))
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
-            result = ResponseMapDTO.builder()
-                    .response(Map.of("msg", e.getMessage()))
-                    .build();
-            return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+            throw e;
         }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -94,6 +101,9 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ResponseDTO> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
+            log.info(request);
+            log.info(response);
+            log.info(SecurityContextHolder.getContext().getAuthentication());
             authService.logout();
             new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
             return new ResponseEntity<>(new ResponseDTO("success", true), HttpStatus.OK);
@@ -192,13 +202,13 @@ public class AuthController {
 
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
-
+    
     // 비밀번호 변경
-    // todo 변경
+    // authenticated
     @PostMapping("password/change")
-    public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangeMemberDTO changeMemberDTO) {
-        if (SecurityUtil.validateEmail(changeMemberDTO.getEmail())) {
-            ResponseDTO result = authService.changePassword(changeMemberDTO);
+    public ResponseEntity<ResponseDTO> changePassword(@Valid @RequestBody ChangePasswordRequestDTO passwordRequestDTO) throws Exception {
+        if (SecurityUtil.validateEmail(passwordRequestDTO.getEmail())) {
+            ResponseDTO result = authService.changePassword(passwordRequestDTO);
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
