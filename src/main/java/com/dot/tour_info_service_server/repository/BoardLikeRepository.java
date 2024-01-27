@@ -22,6 +22,7 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeP
     //게시글에 해당하는 좋아요 삭제
     void deleteAllByBoardLikePKBoard(Board board);
 
+    // bno를 받을 때 해당하는 좋아요 삭제
     @Modifying
     @Transactional
     @Query("Delete from BoardLike bl where bl.boardLikePK.board.bno=:bno")
@@ -33,6 +34,7 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikeP
     void removeBoardLIkeByMno(Long mno);
 
 
+    // 게시글 좋아요 여부
     boolean existsByBoardLikePK(BoardLikePK boardLikePK);
 
 

@@ -27,13 +27,14 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     //게시글에 해당하는것 삭제
     void deleteAllByBoardPlacePKBoard(Board board);
 
+    //bno를 넣을때 해당되는 데이터 삭제
     @Modifying
     @Transactional
     @Query("Delete from BoardPlace bp where bp.boardPlacePK.board.bno = :bno")
     void deleteByBno(Long bno);
 
 
-//    // 장소 대표이미지 조회
+   // 장소 대표이미지 조회
     @Query("select i.src " +
             "from BoardPlace bp left outer join Place p on (bp.place.pno = p.pno) " +
             "left outer join Image i on (bp.boardPlacePK.board.bno = i.board.bno) " +
