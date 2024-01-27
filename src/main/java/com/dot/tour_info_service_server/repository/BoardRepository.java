@@ -105,13 +105,16 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
 
     // 장소별 장소 포스팅 조회
-    @Query("select bp.place.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate, b.likes, b.score ,b.isAd, " +
-            "bp.place.lat, bp.place.lng, bp.place.engAddress, bp.place.localAddress, bp.place.roadAddress, bp.place.name  " +
-            "from Board b " +
+    @Transactional
+    @Query("select p.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate,COALESCE( b.likes,0), b.score ,b.isAd, " +
+            "p.lat, p.lng, p.engAddress, p.localAddress, p.roadAddress, p.name  " +
+            "from Place p " +
+            "left outer join BoardPlace  bp  on  p.pno=bp.place.pno " +
+            "left outer join Board b on (b.bno = bp.boardPlacePK.board.bno and b.isCourse=false ) " +
+            "left outer join b.writer w  " +
             "left outer join Reply r on b.bno = r.board.bno " +
-            "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
-            "where bp.place.pno = :pno and b.isCourse = false " +
-            "group by b.bno")
+            "where p.pno = :pno  " +
+            "group by b.bno  ")
     List<Object[]> getBoardByPno(Long pno);
 
     // 회원별 코스 포스팅 조회

@@ -77,4 +77,15 @@ class BoardRepositoryTests {
         }
     }
 
+    //장소검색 테스트
+    @Test
+    void getBoardByPno(){
+        List<Object[]> board=boardRepository.getBoardByPno(2l);
+        for(Object[] objects:board){
+            for (Object object:objects){
+                System.out.println("테스트 : "+object);
+            }
+        }
+    }
+
 }
