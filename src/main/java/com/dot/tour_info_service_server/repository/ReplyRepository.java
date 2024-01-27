@@ -25,7 +25,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   void removeChildReply(Long pno);
 
 
-
   //자식이 몇개있는지 반환
   int countAllByParent(Reply reply);
 

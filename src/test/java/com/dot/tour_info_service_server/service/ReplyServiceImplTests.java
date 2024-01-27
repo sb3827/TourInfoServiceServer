@@ -8,13 +8,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Log4j2
-class ReplyServiceImplTest {
+class ReplyServiceImplTests {
 
     @Autowired
     private ReplyService replyService;
 
     @Test
+    void showParentReplyList() {
+        log.info(replyService.parentReply(1L));
+    }
+
+    @Test
+    void showChildReplyList() {
+        log.info(replyService.childReply(1L,1L));
+    }
+
+    @Test
     void showReplyList() {
        log.info(replyService.showReplyList(4L));
     }
+
+    @Test
+    void replyByMember() {
+        log.info(replyService.getListOfReplyByMember(1L));
+    }
+
 }
