@@ -16,61 +16,54 @@ import java.util.stream.IntStream;
 @Log4j2
 class ReplyRepositoryTests {
 
-  @Autowired
-  ReplyRepository replyRepository;
+    @Autowired
+    ReplyRepository replyRepository;
 
-  @Autowired
-  private BoardRepository boardRepository;
+    @Autowired
+    private BoardRepository boardRepository;
 
-  @Autowired
-  private MemberRepository memberRepository;
-
-
-  @Test
-  public void testClass() {
-    System.out.println(replyRepository.getClass().getName());
-  }
-
-  @Test
-  void insertReplyDummies() {
-    IntStream.rangeClosed(1, 5).forEach(i -> {
-
-//            long bno = (long) (Math.random()* 3) + 10;
-      Member member = Member.builder().mno(3L).build();
-      Board board = Board.builder().bno(3L).build();
-
-      Reply reply = Reply.builder().board(board).member(member).text("test Reply" + i).build();
-      replyRepository.save(reply);
-    });
-  }
-
-  @Test
-  void removeReplyTest() {
-    replyRepository.removeReply(12L);
-  }
-
-
-  @Test
-  public void insertReply() {
-    IntStream.rangeClosed(1, 2).forEach(i -> {
-
-      Member member = Member.builder().mno(1L).build();
-
-      Board board = Board.builder().bno(5L).build();
-
-      Reply reply = Reply.builder()
-          .text("Reply...." + i)
-          .board(board)
-          .member(member)
-          .parent(null)
-          .build();
-      replyRepository.save(reply);
-    });
-  }
+    @Autowired
+    private MemberRepository memberRepository;
 
 
     @Test
-    void showReplyListTest(){
+    public void testClass() {
+        System.out.println(replyRepository.getClass().getName());
+    }
+
+    @Test
+    void insertReplyDummies() {
+        IntStream.rangeClosed(1, 5).forEach(i -> {
+
+//            long bno = (long) (Math.random()* 3) + 10;
+            Member member = Member.builder().mno(3L).build();
+            Board board = Board.builder().bno(3L).build();
+
+            Reply reply = Reply.builder().board(board).member(member).text("test Reply" + i).build();
+            replyRepository.save(reply);
+        });
+    }
+
+    @Test
+    void removeReplyTest() {
+        replyRepository.removeReply(12L);
+    }
+
+    @Test
+    void showReplyListTest() {
         log.info("replyList : " + replyRepository.showReplyList(2L));
     }
+
+    //bno를 삭제했을때 해당 rno가 삭제됨
+    @Test
+    void deleteByBnoTest() {
+        replyRepository.deleteByBno(1L);
+    }
+
+    //bno를 삭제했을때 해당 rno가 삭제됨
+    @Test
+    void deleteByChildRnoTest() {
+        replyRepository.deleteByChildRno(1L);
+    }
+
 }

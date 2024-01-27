@@ -1,5 +1,7 @@
 package com.dot.tour_info_service_server.repository;
 
+import com.dot.tour_info_service_server.entity.Board;
+import com.dot.tour_info_service_server.entity.Place;
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -40,36 +42,33 @@ class BoardRepositoryTests {
     }
 
 
+    // 장소 포스팅 정보 조회
     @Test
     @Transactional
-    void test2() {
-        List<Object[]> result = boardRepository.getPlaceBoardByBno(8L);
-        result.forEach(objects -> {
-            System.out.println(Arrays.toString(objects));
-        });
+    void getPlaceBoardByBno() {
+       Board result = boardRepository.getPlaceBoardByBno(8L);
+        System.out.println(result);
+    }
+
+    // 코스 포스팅 정보 조회
+    @Test
+    void getCourseBoardByBnoTest() {
+        Board result = boardRepository.getCourseBoardByBno(8L);
+        System.out.println(result);
+    }
+
+    //최근 올라온 장소 게시글 10개
+    @Test
+    void recentlyBoardTest() {
+        List<Object[]> result = boardRepository.recentlyBoard();
         for (Object[] objects: result) {
             System.out.println(Arrays.toString(objects));
         }
-
     }
 
+    // 가장 많은 추천을 받은 코스 게시글
     @Test
-    void getPlaceBoardByBnoTest() {
-//        Object result = boardRepository.getPlaceBoardByBno(1L);
-//
-//        System.out.println(result);
-//
-//        if(result.isEmpty()){
-//            log.error("empty");
-//            return;
-//        }
-//
-//        log.info(result.get());
-
-    }
-
-    @Test
-    void mostCourse(){
+    void mostCourseTest(){
         List<Object[]> mlc=boardRepository.mostLikeCourse();
         for (Object[] objects:mlc){
             System.out.println(objects);
@@ -77,14 +76,75 @@ class BoardRepositoryTests {
         }
     }
 
-    //장소검색 테스트
+    // 코스에 해당하는 1일차 코스
     @Test
-    void getBoardByPno(){
-        List<Object[]> board=boardRepository.getBoardByPno(2l);
-        for(Object[] objects:board){
-            for (Object object:objects){
-                System.out.println("테스트 : "+object);
-            }
+    void getmostLikeCoursePlaceTest() {
+        List<Object[]> result = boardRepository.recentlyBoard();
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    //코스에 해당하는 1일차 코스
+    @Test
+    void mostLikeCoursePlace() {
+        List<Place> result = boardRepository.mostLikeCoursePlace(9L);
+        for (Place place : result) {
+            System.out.println(place);
+        }
+    }
+
+    //팔로워들의 게시글
+    @Test
+    void followerBoardTest() {
+        List<Object[]> result = boardRepository.followerBoard(1L);
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    //광고 게시글
+    @Test
+    void adBoardTest() {
+        List<Object[]> result = boardRepository.adBoard();
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    // 회원별 장소 포스팅 조회
+    @Test
+    void getBoardByMnoTest() {
+        List<Object[]> result = boardRepository.getBoardByMno(1L);
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    //장소별 장소 포스팅 조회
+    @Test
+    void getBoardByPnoTest() {
+        List<Object[]> result = boardRepository.getBoardByPno(1L);
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    // 회원별 코스 포스팅 조회
+    @Test
+    void getCourseBoardByMno() {
+        List<Object[]> result = boardRepository.getCourseBoardByMno(1L);
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
+        }
+    }
+
+    //코스 검색 조회
+    @Test
+    void findCourseBoardTest() {
+        List<Object[]> result = boardRepository.findCourseBoard("");
+        for (Object[] objects: result) {
+            System.out.println(Arrays.toString(objects));
         }
     }
 
