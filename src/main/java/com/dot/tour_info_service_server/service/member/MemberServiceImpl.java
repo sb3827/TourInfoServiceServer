@@ -44,6 +44,7 @@ public class MemberServiceImpl implements MemberService {
                     .phone((String) result[4])
                     .birth((LocalDate) result[5])
                     .role((Role) result[6])
+                    .fromSocial((Boolean) result[7])
                     .build();
             return userInfoDTO;
         }

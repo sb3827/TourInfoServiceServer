@@ -27,14 +27,14 @@ class MemberServiceImplTests {
     // 회원정보 조회 테스트
     @Test
     void userInfoTest(){
-        log.info("5L : " + memberService.showUserInfo(5L));
+        log.info("22L : " + memberService.showUserInfo(22L));
     }
 
     // 회원정보 수정 테스트
     @Test
     void modifyTest() {
         LocalDate date = LocalDate.of(2023, 12, 31);
-        UserInfoDTO userInfoDTO = new UserInfoDTO(5L, null, "문영현", "v@a.com", "010-0000-1111", date, Role.MEMBER);
+        UserInfoDTO userInfoDTO = new UserInfoDTO(5L, null, "문영현", "v@a.com", "010-0000-1111", date, Role.MEMBER, true);
         Optional<Member> result = memberRepository.findById(userInfoDTO.getMno());
         if(result.isPresent()){
             Member member = result.get();

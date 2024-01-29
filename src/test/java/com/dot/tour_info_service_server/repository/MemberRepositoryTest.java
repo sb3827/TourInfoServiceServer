@@ -115,9 +115,9 @@ class MemberRepositoryTest {
 
     @Test
     void userInfoWithRoleTest(){
-        Object[] user = memberRepository.userInfo(5L).get(0);
-//        log.info("role: " + user[6]);
-        log.info("class : " + user[6].getClass());
+        Object[] user = memberRepository.userInfo(22L).get(0);
+        log.info("social: " + user[7]);
+//        log.info("class : " + user[6].getClass());
     }
 
     @Test
