@@ -23,6 +23,7 @@ class BoardLikeRepositoryTests {
 //        boardLikeRepository.removeBoardLike(9L);
     }
 
+    // 게시글 좋아요 여부
     @Test
     public void existsTest() {
         log.info(boardLikeRepository.existsByBoardLikePK(BoardLikePK.builder()
@@ -51,10 +52,13 @@ class BoardLikeRepositoryTests {
     });
   }
 
-  @Test
-  public void deleteTest () {
-    boardLikeRepository.deleteByBno(12L);
-  }
+    // bno를 받을 때 해당하는 좋아요 삭제
+    @Test
+    void deleteByBnoTest() {
+        boardLikeRepository.deleteByBno(2L);
+    }
+
+
 
 
 

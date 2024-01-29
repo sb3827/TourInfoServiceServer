@@ -24,18 +24,10 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     void deleteAllByBoard(Board board);
 
   //board 삭제시 해당하는 이미지삭제
-  @Modifying // update, delete를 할 때는 무조건 붙인다.
+  @Modifying
   @Query("delete from Image i where i.board.bno=:bno")
   void deleteByBno(Long bno);
 
-
-  // bno 넣을때 해당하는 image 반환
-  @Transactional
-  @Query("SELECT i FROM Image i WHERE i.board.bno=:bno")
-  List<Image> selectImageByBno(@Param("bno") Long bno);
-
-
-  List<Image> findAllByBoard(Board board);
 
   //bno 넣을때 경로만 반환
     @Transactional

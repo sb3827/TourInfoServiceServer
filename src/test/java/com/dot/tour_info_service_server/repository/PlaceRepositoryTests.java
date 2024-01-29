@@ -55,4 +55,14 @@ public class PlaceRepositoryTests {
             }
         }
     }
+
+    //게시글이 가장 많은 장소 3곳 정보
+    @Test
+    public void mostLikePlaceTest() {
+        List<Object[]> result = placeRepository.mostLikePlace();
+        for(Object[] list: result){
+            System.out.println(Arrays.toString(list));
+        }
+    }
+
 }

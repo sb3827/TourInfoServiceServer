@@ -34,26 +34,23 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     void setNullMno(Long mno);
 
     // 장소 포스팅 정보 조회 board, place, image, boardLike repository 처리
-    @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
-            "b.isAd, b.likes, b.score, b.modDate " +
+    @Query("SELECT b " +
             "from Board b " +
             "where b.bno =:bno and b.isCourse = false ")
-    List<Object[]> getPlaceBoardByBno(Long bno);
+    Board getPlaceBoardByBno(Long bno);
 
     // 코스 포스팅 정보 조회
     @Transactional
-    @Query("SELECT b.title, b.content, b.writer.mno, b.writer.name, b.isCourse, b.regDate, " +
-            "b.isAd, b.likes, b.score, b.modDate " +
-            "from Board b  " +
+    @Query("SELECT b " +
+            "from Board b " +
             "where b.bno =:bno and b.isCourse = true ")
-    List<Object[]> getCourseBoardByBno(Long bno);
-
-    Optional<Board> findBoardByBno(Long bno);
+    Board getCourseBoardByBno(Long bno);
 
     // 메인페이지
     //최근 올라온 장소 게시글 10개
     @Query("select b.bno,b.title,i.src, b.isCourse " +
             "from Board b left outer join Image i on(b.bno=i.board.bno) " +
+            "group by b.bno " +
             "order by b.regDate desc " +
             "limit 10 ")
     List<Object[]> recentlyBoard();

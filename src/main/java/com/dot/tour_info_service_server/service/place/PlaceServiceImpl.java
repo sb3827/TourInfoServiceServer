@@ -44,10 +44,12 @@ public class PlaceServiceImpl implements PlaceService {
     // 장소 검색
     @Override
     public List<PlaceDTO> searchPlace(Category filter, String search) {
+
         List<Object[]> result = placeRepository.searchPlace(filter, search);
         List<PlaceDTO> placeList = new ArrayList<>();
         if(!result.isEmpty()){
             for(Object[] list : result){
+                List<Object[]> placeImage = boardPlaceRepository.loadRepresentPlaceImageByPno((Long) list[0]);
                 PlaceDTO placeDTO = PlaceDTO.builder()
                         .pno((Long)list[0])
                         .name((String)list[1])
@@ -60,8 +62,18 @@ public class PlaceServiceImpl implements PlaceService {
                         .cart((int)list[8])
                         .regDate((LocalDateTime)list[9])
                         .modDate((LocalDateTime)list[10])
-                        .image((String)list[11])
                         .build();
+
+                if (placeImage != null && !placeImage.isEmpty()) {
+                    Object[] imageArray = placeImage.get(0);
+                    if (imageArray != null && imageArray.length > 0) {
+                        placeDTO.setImage((String) imageArray[0]);
+                    } else {
+                        placeDTO.setImage(null);
+                    }
+                } else {
+                    placeDTO.setImage(null);
+                }
                 placeList.add(placeDTO);
             }
             return placeList;
