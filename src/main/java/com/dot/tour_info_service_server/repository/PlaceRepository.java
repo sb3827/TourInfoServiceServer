@@ -26,6 +26,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     List<Object[]> mostLikePlace();
 
 
+    // 카테고리, 검색어로 장소 검색
     @Query("select p.pno, p.name, p.lng, p.lat, p.roadAddress, p.localAddress, p.engAddress, p.category, p.cart, p.regDate, p.modDate, i.src " +
             "from Place p left outer join BoardPlace bp on p.pno = bp.place.pno " +
             "left outer join Image i on bp.boardPlacePK.board.bno = i.board.bno " +
