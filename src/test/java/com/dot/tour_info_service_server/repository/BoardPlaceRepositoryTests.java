@@ -53,12 +53,14 @@ class BoardPlaceRepositoryTests {
     boardPlaceRepository.removeBoardPlaceByPno(9L);
   }
 
+  //bno를 넣을때 해당되는 데이터 삭제
   @Test
   public void deleteTestByBno() {
     boardPlaceRepository.deleteByBno(11L);
   }
 
 
+  // 장소 대표이미지 조회
   @Test
   public void loadRepresentImgTest() {
     try {
@@ -70,6 +72,7 @@ class BoardPlaceRepositoryTests {
     }
   }
 
+  // 코스 장소 리스트 조회
   @Test
   public void loadCourseListTest(){
     List<Object[]> result = boardPlaceRepository.loadListByBno(28L);

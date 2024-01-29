@@ -1,8 +1,8 @@
 package com.dot.tour_info_service_server.service.follow;
 
 
-import com.dot.tour_info_service_server.dto.FollowDTO;
 import com.dot.tour_info_service_server.dto.FollowResponseDTO;
+import com.dot.tour_info_service_server.dto.request.follow.FollowRequestDTO;
 import com.dot.tour_info_service_server.entity.follow.Follow;
 import com.dot.tour_info_service_server.entity.follow.FollowPK;
 import com.dot.tour_info_service_server.entity.Member;
@@ -14,16 +14,16 @@ public interface FollowService {
 
   List<FollowResponseDTO> getListOfFollowing(Long mno);
 
-  void follow(FollowDTO followDTO);
+  void follow(FollowRequestDTO followDTO);
 
   void unFollow(Long mno,Long follower);
 
 
-  default Follow dtoToEntity(FollowDTO followDTO) {
+  default Follow dtoToEntity(FollowRequestDTO followRequestDTO) {
     Follow follow = Follow.builder().
         followPk(FollowPK.builder()
-            .member(Member.builder().mno(followDTO.getMemberMno()).build())
-            .follower(Member.builder().mno(followDTO.getFollowerMno()).build())
+            .member(Member.builder().mno(followRequestDTO.getMemberMno()).build())
+            .follower(Member.builder().mno(followRequestDTO.getFollowerMno()).build())
             .build())
         .build();
     return follow;

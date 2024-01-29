@@ -24,4 +24,5 @@ public class UserInfoDTO {
     private String phone;
     private LocalDate birth;
     private Role role;
+    private boolean fromSocial;
 }

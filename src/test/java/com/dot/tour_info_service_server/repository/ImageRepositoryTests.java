@@ -34,11 +34,10 @@ class ImageRepositoryTests {
     imageRepository.removeImage(12L);
   }
 
-  @Transactional
+  //board 삭제시 해당하는 이미지삭제
   @Test
-  public void inoByBno() {
-    List<Image> result = imageRepository.selectImageByBno(3L);
-    System.out.println(result);
+  void deleteByBnoTest() {
+    imageRepository.deleteByBno(1L);
   }
 
   @Transactional
