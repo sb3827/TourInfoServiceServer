@@ -26,17 +26,20 @@ class ReplyRepositoryTests {
     @Autowired
     private MemberRepository memberRepository;
 
+    // 댓글 삭제
     @Test
     void removeReplyTest() {
         replyRepository.removeReply(12L);
         replyRepository.removeChildReply(4L);
     }
 
+    // 자식 댓글 갯수 카운트
     @Test
     void countByParent(){
         log.info("count : "+replyRepository.countAllByParent(Reply.builder().rno(8L).build()));
     }
 
+    // 부모 댓글 조회
     @Test
     public void showParentReplyTest(){
         List<Object[]>result=replyRepository.getParentReply(1l);
@@ -44,21 +47,13 @@ class ReplyRepositoryTests {
 
     }
 
+    // 회원 작성 댓글 조회
     @Test
-    public void getListByMno() {
-        Member member = Member.builder().mno(1L).build();
-        List<Reply> replies = replyRepository.getRepliesByMemberOrderByRegDate(member);
-        replies.forEach(reply -> {
-            System.out.println("rno : " + reply.getRno());
-            System.out.println("text : " + reply.getText());
-            System.out.println("regDate : " + reply.getRegDate());
-            System.out.println("modDate : " + reply.getModDate());
-            System.out.println("mno : " + reply.getMember().getMno());
-            System.out.println("=======================================");
-        });
+    void showReplyListTest() {
+        log.info("replyList : " + replyRepository.showReplyList(5L));
     }
 
-
+    // 부모 댓글 작성
     @Test
     public void insertParentReply() {
 
@@ -75,6 +70,7 @@ class ReplyRepositoryTests {
         replyRepository.save(reply);
     }
 
+    // 자식 댓글 작성
     @Test
     public void insertChildReply() {
 
@@ -94,17 +90,7 @@ class ReplyRepositoryTests {
     }
 
 
-    @Test
-    public void testClass() {
-        System.out.println(replyRepository.getClass().getName());
-    }
 
-
-
-    @Test
-    void showReplyListTest() {
-        log.info("replyList : " + replyRepository.showReplyList(2L));
-    }
 
 
 }

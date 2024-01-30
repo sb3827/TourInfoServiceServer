@@ -20,9 +20,7 @@ public interface ReplyService {
   //자식 댓글 조회
   List<ReplyMemberDTO> childReply(Long bno,Long rno);
 
-  List<ReplyRequestDTO> getListOfReplyByMember(Long mno);    // 회원이 작성한 댓글 목록
-
-  List<ReplyListDTO> showReplyList(Long mno);
+  List<ReplyListDTO> showReplyList(Long mno);  // 회원이 작성한 댓글 목록
 
   void saveReply(ReplyRequestDTO replyDTO);
 
