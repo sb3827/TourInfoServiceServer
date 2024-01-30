@@ -45,14 +45,13 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
           "order by r.regDate")
   List<Object[]> getChildReply(Long bno,Long rno);
 
-  // 회원이 작성한 댓글 목록 불러오기
-  List<Reply> getRepliesByMemberOrderByRegDate(Member member);
 
   @Modifying
   @Transactional
   @Query("update Reply r set r.member.mno = null where r.member.mno= :mno")
   void setNullMno(Long mno);
 
+  // 회원이 작성한 댓글 목록 불러오기
   @Query("select r.rno,r.member.mno, r.board.bno, b.title, r.text, r.regDate, b.isCourse from Reply r " +
           "left outer join Board b on r.board.bno = b.bno " +
           "where r.member.mno = :mno")
