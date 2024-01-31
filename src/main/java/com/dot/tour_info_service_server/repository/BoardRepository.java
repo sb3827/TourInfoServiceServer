@@ -109,9 +109,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "from Board b " +
             "left outer join Reply r on b.bno = r.board.bno " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
-            "where bp.place.pno = :pno and b.isCourse = false " +
+            "where bp.place.pno = :pno and b.isAd =:isAd and b.isCourse = false " +
             "group by b.bno")
-    Page<Object[]> getBoardByPno(Long pno, PageRequest pageRequest);
+    Page<Object[]> getBoardByPno(Long pno, PageRequest pageRequest, Boolean isAd);
 
     // 회원별 코스 포스팅 조회
     @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
@@ -127,8 +127,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
             "where (b.title like %:search% or b.content like %:search% or " +
             "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true " +
+            "and b.isAd=:isAd " +
             "group by b.bno")
-    Page<Object[]> findCourseBoard(String search, PageRequest pageRequest);
+    Page<Object[]> findCourseBoard(String search, PageRequest pageRequest, Boolean isAd);
 
     // place 검색
     Optional<Board> findBoardByBnoAndIsCourseIsFalse(Long bno);

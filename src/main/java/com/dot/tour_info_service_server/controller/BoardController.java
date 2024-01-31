@@ -152,10 +152,12 @@ public class BoardController {
     // 장소별 장소 포스팅 정보 조회
     // permit all
     @GetMapping(value = {"/place"})
-    public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno, int page) {
+    public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno,
+                                                                       @RequestParam int page,
+                                                                       @RequestParam Boolean isAd) {
         log.info("getBoardByMno... bno: " + pno);
         try {
-            List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno, page);
+            List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno, page, isAd);
             return new ResponseEntity<>(boardPlaceReplyCountDTO, HttpStatus.OK);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -174,9 +176,10 @@ public class BoardController {
     // 코스 검색 조회
     // permit all
     @GetMapping(value = {"/course"})
-    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search ,@RequestParam int page) {
+    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search ,
+                                                                @RequestParam int page, @RequestParam Boolean isAd) {
         log.info("Search.... : "+search);
-        List<BoardSearchDTO> boardSearchDTO = boardService.findCourseBoard(search, page);
+        List<BoardSearchDTO> boardSearchDTO = boardService.findCourseBoard(search, page, isAd);
         return new ResponseEntity<>(boardSearchDTO, HttpStatus.OK);
     }
 

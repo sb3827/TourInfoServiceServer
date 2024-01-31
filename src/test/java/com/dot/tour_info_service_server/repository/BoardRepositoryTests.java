@@ -127,7 +127,7 @@ class BoardRepositoryTests {
     @Test
     void getBoardByPnoTest() {
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<Object[]> result = boardRepository.getBoardByPno(1L, pageRequest);
+        Page<Object[]> result = boardRepository.getBoardByPno(1L, pageRequest, false);
         for (Object[] objects: result) {
             System.out.println(Arrays.toString(objects));
         }
@@ -146,7 +146,7 @@ class BoardRepositoryTests {
     @Test
     void findCourseBoardTest() {
         PageRequest pageRequest = PageRequest.of(1, 10);
-        Page<Object[]> result = boardRepository.findCourseBoard("",pageRequest);
+        Page<Object[]> result = boardRepository.findCourseBoard("",pageRequest, false);
         for (Object[] objects: result) {
             System.out.println(Arrays.toString(objects));
         }
