@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -99,7 +100,8 @@ class MemberRepositoryTest {
     // 회원가입 대기 조회 테스트
     @Test
     public void showTest(){
-        log.info(memberRepository.showJoinWaiting());
+        PageRequest pageRequest1=PageRequest.of(0,10);
+        log.info(memberRepository.showJoinWaiting(pageRequest1));
     }
 
     // 회원가입 승인 테스트
@@ -130,13 +132,14 @@ class MemberRepositoryTest {
 
 
     //관리자 회원 검색
+    PageRequest pageRequest=PageRequest.of(0,10);
     @Test
     @Transactional
     void searchAll(){
-        log.info("모두 검색 : "+memberRepository.searchMemberAll("이"));
-        log.info("사업자 검색 : "+memberRepository.searchBusiness(""));
-        log.info("일반 유저 검색 : "+memberRepository.searchNomal(""));
-        log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary(""));
+        log.info("모두 검색 : "+memberRepository.searchMemberAll("",pageRequest));
+        log.info("사업자 검색 : "+memberRepository.searchBusiness("",pageRequest));
+        log.info("일반 유저 검색 : "+memberRepository.searchNomal("",pageRequest));
+        log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary("",pageRequest));
     }
 
     @Test

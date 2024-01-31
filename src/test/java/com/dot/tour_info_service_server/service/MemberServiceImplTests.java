@@ -61,7 +61,7 @@ class MemberServiceImplTests {
     // 회원가입 대기 조회 테스트
     @Test
     void showJoinWaitingTest(){
-        log.info(memberService.showJoinWaiting());
+        log.info(memberService.showJoinWaiting(0));
     }
 
     // 회원가입 승인 테스트
@@ -76,12 +76,11 @@ class MemberServiceImplTests {
         memberService.deleteUserInfo(16L);
     }
 
+    //회원 검색 - 관리자
     @Test
     void managerSearchTest(){
-        log.info(memberService.managerToSearchUser("all",""));
+        log.info(memberService.managerToSearchUser(0,"all",""));
     }
-
-
 }
 
 

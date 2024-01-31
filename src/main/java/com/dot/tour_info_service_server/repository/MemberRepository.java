@@ -2,6 +2,8 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.dto.*;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -50,7 +52,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 회원가입대기 조회
     @Query("select m.mno, m.name, m.email, m.businessId from Member m where m.isApprove = false")
-    List<Object[]> showJoinWaiting();
+    Page<Object[]> showJoinWaiting(PageRequest pageRequest);
 
     // 회원가입 승인
     @Modifying
@@ -91,7 +93,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno " +
             "where r!='ADMIN' and  m.isApprove=true and m.name like concat('%',:name,'%') " +
             "group by m.mno")
-    List<Object[]> searchMemberAll(String name);
+    Page<Object[]> searchMemberAll(String name, PageRequest pageRequest);
 
     // 회원 조회 - 사업자 (관리자)
     @Transactional
@@ -99,7 +101,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno " +
             "where r='BUSINESSPERSON' and m.isApprove=true and m.name like concat('%',:name,'%') " +
             "group by m.mno")
-    List<Object[]> searchBusiness(String name);
+    Page<Object[]> searchBusiness(String name,PageRequest pageRequest);
 
     //회원 조회 - 일반 유저 (관리자)
     @Transactional
@@ -107,15 +109,15 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno " +
             "where r='MEMBER' and m.isApprove=true and m.name like concat('%',:name,'%') " +
             "group by m.mno")
-    List<Object[]> searchNomal(String name);
+    Page<Object[]> searchNomal(String name,PageRequest pageRequest);
 
     //회원 조회 - 정지된 유저
     @Transactional
     @Query("select m.mno,m.name,m.email,m.phone,m.regDate,m.roleSet,d.expDate " +
             "from Member m join m.roleSet r left outer join Disciplinary d on m.mno=d.member.mno  " +
-            "where r!='ADMIN' and m.isApprove=true and d.expDate>=now() and m.name like %:name% " +
+            "where r!='ADMIN' and m.isApprove=true and d.expDate>now() and m.name like %:name% " +
             "group by m.mno")
-    List<Object[]> searchDisciplinary(String name);
+    Page<Object[]> searchDisciplinary(String name,PageRequest pageRequest);
 
     //회원 이미지 변경
     @Modifying
