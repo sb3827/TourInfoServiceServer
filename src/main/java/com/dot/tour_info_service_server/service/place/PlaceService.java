@@ -13,7 +13,7 @@ public interface PlaceService {
 
     void removePlace(Long pno);
 
-    List<PlaceDTO> searchPlace(Category filter, String search);
+    List<PlaceDTO> searchPlace(Category filter, String search, int page);
 
     Map<String, Object> getPlaceCount(Long mno);
 

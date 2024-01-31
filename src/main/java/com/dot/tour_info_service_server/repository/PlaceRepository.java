@@ -2,6 +2,8 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,7 +37,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "(p.name like %:search% or p.localAddress like %:search% or " +
             "p.roadAddress like %:search% or p.engAddress like %:search%)" +
             "group by p.pno")
-    List<Object[]> searchPlace(Category filter, String search);
+    Page<Object[]> searchPlace(Category filter, String search, PageRequest pageRequest);
 
     // 프로시저 실행
     @Procedure("Count_pno")

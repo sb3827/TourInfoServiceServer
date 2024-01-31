@@ -23,7 +23,7 @@ public interface MemberService {
     void deleteUserInfo(Long mno);
 
     // 회원 검색 ( mno, 이미지, 이름 )
-    List<SearchUserListDTO> searchUser(String name,Long mno);
+    List<SearchUserListDTO> searchUser(String name,Long mno, int page);
 
     // 회원가입대기 ( mno, 이름, 이메일, 사업자등록번호 )
     List<JoinWaitingDTO> showJoinWaiting();

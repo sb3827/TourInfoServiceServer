@@ -44,7 +44,7 @@ public class PlaceServiceImplTests {
 
     @Test
     void placeSearchTest(){
-        log.info(placeService.searchPlace(null, "test").get(0));
+        log.info(placeService.searchPlace(null, "test", 0).get(0));
     }
 
     @Test

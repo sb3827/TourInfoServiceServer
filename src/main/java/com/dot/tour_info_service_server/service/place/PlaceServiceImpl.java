@@ -8,6 +8,8 @@ import com.dot.tour_info_service_server.entity.Place;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,9 +43,10 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<PlaceDTO> searchPlace(Category filter, String search) {
-
-        List<Object[]> result = placeRepository.searchPlace(filter, search);
+    public List<PlaceDTO> searchPlace(Category filter, String search, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = placeRepository.searchPlace(filter, search, pageRequest);
+        List<Object[]> result = pages.getContent();
         List<PlaceDTO> placeList = new ArrayList<>();
         if(!result.isEmpty()){
             for(Object[] list : result){

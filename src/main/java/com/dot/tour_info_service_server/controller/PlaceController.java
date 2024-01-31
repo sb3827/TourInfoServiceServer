@@ -41,13 +41,14 @@ public class PlaceController {
     // permit all
     @GetMapping(value = "")
     public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") String filter,
-                                                    @RequestParam(value = "search") String search){
+                                                    @RequestParam(value = "search") String search,
+                                                    @RequestParam int page){
         log.info("findPlace...... filter :  " + filter + " search : " + search);
         Category category=null;
         if(!filter.isEmpty()) {
             category = Category.valueOf(filter);
         }
-        List<PlaceDTO> placeList = placeService.searchPlace(category, search);
+        List<PlaceDTO> placeList = placeService.searchPlace(category, search, page);
         return new ResponseEntity<>(placeList, HttpStatus.OK);
     }
 

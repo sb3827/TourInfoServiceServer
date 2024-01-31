@@ -37,12 +37,12 @@ public interface BoardService {
     List<BoardMemberDTO> getBoardByMno(Long mno);
 
     // 장소별 장소 포스팅 정보 조회
-    List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno) throws IllegalAccessException, SQLException;
+    List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page) throws IllegalAccessException, SQLException;
 
     // 회원별 코스 포스팅 정보 조회
     List<BoardMemberDTO> getCourseBoardByMno(Long mno);
 
     // 코스 검색 조회
-    List<BoardSearchDTO> findCourseBoard(String search);
+    List<BoardSearchDTO> findCourseBoard(String search, int page);
 
 }

@@ -55,7 +55,7 @@ class MemberServiceImplTests {
     // 회원 검색 테스트
     @Test
     void searchUserTest(){
-        log.info(memberService.searchUser("이해창",2l));
+        log.info(memberService.searchUser("이해창",2l, 0));
     }
 
     // 회원가입 대기 조회 테스트
