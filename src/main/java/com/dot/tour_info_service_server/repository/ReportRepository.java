@@ -3,39 +3,45 @@ package com.dot.tour_info_service_server.repository;
 import com.dot.tour_info_service_server.entity.Report;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
   //신고 전체 조회 - 최신순
+  @Transactional
   @Query("select r " +
       "from Report r left outer join Member m on r.defendant_mno = m.mno " +
-      "where m.name like concat('%',:search,'%')" +
+      "where m.name like concat('%',:search,'%') " +
       "group by r.sno " +
       "order by r.regDate desc ")
-  List<Report> searchReportAll(String search);
+  Page<Report> searchReportAll( String search,PageRequest pageRequest);
 
   //신고 필터 조회 - 처리 or 처리X
+  @Transactional
   @Query("select r " +
       "from Report r left outer join Member m on r.defendant_mno = m.mno " +
-      "where r.isDone=:isDone and m.name like concat('%',:search,'%') " +
+      "where r.isDone=:isDone and m.name like concat('%',:search,'%')  " +
       "group by r.sno " +
       "order by r.regDate desc")
-  List<Report> searchIsDone(Boolean isDone, String search);
+  Page<Report> searchIsDone(Boolean isDone, String search, PageRequest pageRequest);
 
   //신고 필터 조회 - 게시글(처리 or 처리x)
+  @Transactional
   @Query("select r " +
       "from Report r left outer join Member m on r.defendant_mno = m.mno " +
-      "where r.board_bno is not null and r.isDone=:isDone and m.name like concat('%',:search,'%')" +
+      "where r.board_bno is not null and r.isDone=:isDone and m.name like concat('%',:search,'%') " +
       "group by r.sno " +
       "order by r.regDate desc ")
-  List<Report> searchBoardReport(Boolean isDone, String search);
+  Page<Report> searchBoardReport(Boolean isDone, String search, PageRequest pageRequest);
 
   //신고 필터 조회 - 댓글(처리 or 처리x)
   @Query("select r " +
@@ -43,7 +49,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
       "where r.reply_rno is not null and r.isDone=:isDone and m.name like concat('%',:search,'%') " +
       "group by r.sno " +
       "order by r.regDate desc")
-  List<Report> searchReplyReport(Boolean isDone, String search);
+  Page<Report> searchReplyReport( Boolean isDone, String search, PageRequest pageRequest);
 
   @Modifying
   @Transactional

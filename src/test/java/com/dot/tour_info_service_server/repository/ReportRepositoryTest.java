@@ -5,7 +5,10 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +18,9 @@ class ReportRepositoryTest {
     @Autowired
     private ReportRepository reportRepository;
 
+    PageRequest pageRequest=PageRequest.of(0,10);
+
+    //더미 삽입 테스트
     @Test
     public void testReportInsert(){
         Report report=Report.builder()
@@ -32,8 +38,10 @@ class ReportRepositoryTest {
     @Transactional
     @Test
     public void testAllReport(){
-        List<Report> result=reportRepository.searchReportAll("");
-        System.out.println(result);
+        Page<Report> result=reportRepository.searchReportAll("",pageRequest);
+        for (Report report:result){
+            System.out.println(result);
+        }
     }
 
 
@@ -42,7 +50,7 @@ class ReportRepositoryTest {
     @Transactional
     @Test
     public void testCheckReport(){
-        List<Report> result=reportRepository.searchIsDone(false,"");
+        Page<Report> result=reportRepository.searchIsDone(false,"",pageRequest);
         System.out.println(result);
     }
 
@@ -50,7 +58,7 @@ class ReportRepositoryTest {
     @Transactional
     @Test
     public void testFilterBoardReport(){
-        List<Report> result=reportRepository.searchBoardReport(false,"t");
+        Page<Report> result=reportRepository.searchBoardReport(false,"t",pageRequest);
         System.out.println(result);
     }
 
@@ -58,7 +66,7 @@ class ReportRepositoryTest {
     @Transactional
     @Test
     public void testFilterReplyReport(){
-        List<Report> result=reportRepository.searchReplyReport(false,"테");
+        Page<Report> result=reportRepository.searchReplyReport(false,"테",pageRequest);
         System.out.println(result);
     }
 

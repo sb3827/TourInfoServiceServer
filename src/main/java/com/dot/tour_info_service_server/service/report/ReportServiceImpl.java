@@ -10,6 +10,8 @@ import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -38,41 +40,53 @@ public class ReportServiceImpl implements ReportService{
 
     //신고 필터 조회
     @Override
-    public List<ReportResponseDTO> reportFilter(String filter, String search) {
+    public List<ReportResponseDTO> reportFilter(int page, String filter, String search) {
+        //페이지 네이션
+        PageRequest pageRequest=PageRequest.of(page,10);
+
 
         List<ReportResponseDTO> reportResponseDTOS=new ArrayList<>();
         List<Report> result;
+
         //전체 조회
         if(filter.equals("all")){
-            result=reportRepository.searchReportAll(search);
+            Page<Report> entityPage=reportRepository.searchReportAll(search,pageRequest);
+            result =entityPage.getContent();
         }
         //처리 중
         else if(filter.equals("reporting")){
-            result=reportRepository.searchIsDone(false,search);
+            Page<Report> entityPage=reportRepository.searchIsDone(false,search,pageRequest);
+            result =entityPage.getContent();
         }
         //처리 완료
         else if(filter.equals("reported")){
-            result=reportRepository.searchIsDone(true,search);
+            Page<Report>entityPage=reportRepository.searchIsDone(true,search,pageRequest);
+            result =entityPage.getContent();
         }
         //게시글 처리중
         else if(filter.equals("board_reporting")){
-            result=reportRepository.searchBoardReport(false,search);
+            Page<Report>entityPage=reportRepository.searchBoardReport(false,search,pageRequest);
+            result =entityPage.getContent();
         }
         //게시글 처리완료
         else if(filter.equals("board_reported")){
-            result=reportRepository.searchBoardReport(true,search);
+            Page<Report>entityPage=reportRepository.searchBoardReport(true,search,pageRequest);
+            result =entityPage.getContent();
         }
         //리뷰 처리중
         else if(filter.equals("reply_reporting")){
-            result=reportRepository.searchReplyReport(false,search);
+            Page<Report>entityPage=reportRepository.searchReplyReport(false,search,pageRequest);
+            result =entityPage.getContent();
         }
         //리뷰 처리완료
         else if(filter.equals("reply_reported")){
-            result=reportRepository.searchReplyReport(true,search);
+            Page<Report>entityPage=reportRepository.searchReplyReport(true,search,pageRequest);
+            result =entityPage.getContent();
         }else {
             return null;
         }
         //reportDTO로 형변환
+
         for (Report report:result){
             Optional<Member> com=memberRepository.findById(report.getComplainant_mno());
             Optional<Member> def=memberRepository.findById(report.getDefendant_mno());

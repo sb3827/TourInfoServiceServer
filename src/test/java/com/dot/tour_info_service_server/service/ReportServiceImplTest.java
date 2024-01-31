@@ -12,6 +12,8 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,7 @@ class ReportServiceImplTest {
 
     @Autowired
     private ReportRepository reportRepository;
+
 
     @Autowired
     private MemberRepository memberRepository;
@@ -47,64 +50,15 @@ class ReportServiceImplTest {
 
     @Test
     public void testSearch(){
+        int page=0;
         String filter="all";
         String search="";
 
-        List<ReportResponseDTO> reportResponseDTOS=new ArrayList<>();
-        List<Report> result;
-        //전체 조회
-        if(filter=="all"){
-            result=reportRepository.searchReportAll(search);
-        }
-        //처리 중
-        else if(filter=="reporting"){
-            result=reportRepository.searchIsDone(false,search);
-        }
-        //처리 완료
-        else if(filter=="reported"){
-            result=reportRepository.searchIsDone(true,search);
-        }
-        //게시글 처리중
-        else if(filter=="board_reporting"){
-            result=reportRepository.searchBoardReport(false,search);
-        }
-        //게시글 처리완료
-        else if(filter=="board_reported"){
-            result=reportRepository.searchBoardReport(true,search);
-        }
-        //리뷰 처리중
-        else if(filter=="reply_reporting"){
-            result=reportRepository.searchReplyReport(false,search);
-        }
-        //리뷰 처리완료
-        else if(filter=="reply_reported"){
-            result=reportRepository.searchReplyReport(true,search);
-        }else {
-            return ;
-        }
-        //reportDTO로 형변환
-        for (Report report:result){
-//            ReportDTO reportDTO=reportService.entityToDto(report);
-//            reportDTOS.add(reportDTO);
-            Optional<Member> com=memberRepository.findById(report.getComplainant_mno());
-            Optional<Member> def=memberRepository.findById(report.getDefendant_mno());
+        List<ReportResponseDTO>reports = reportService.reportFilter(page,filter,search);
 
-            ReportResponseDTO reportResponseDTO=ReportResponseDTO.builder()
-                    .sno(report.getSno())
-                    .complainant_mno(report.getComplainant_mno())
-                    .complainant(com.isPresent()?com.get().getName():null)
-                    .defendant_mno(report.getDefendant_mno())
-                    .defendant(def.isPresent()?def.get().getName():null)
-                    .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
-                    .rno(report.getReply_rno()!=null?report.getReply_rno():null)
-                    .content(report.getContent())
-                    .isDone(report.getIsDone())
-                    .message(report.getMessage())
-                    .regDate(report.getRegDate())
-                    .build();
-            reportResponseDTOS.add(reportResponseDTO);
+        for (ReportResponseDTO reportResponseDTO:reports){
+            System.out.println(reportResponseDTO);
         }
-        System.out.println(reportResponseDTOS);
     }
 
     //신고 정보 조회
