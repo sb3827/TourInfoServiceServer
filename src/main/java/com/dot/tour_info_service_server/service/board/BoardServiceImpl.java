@@ -13,6 +13,8 @@ import com.dot.tour_info_service_server.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -530,8 +532,10 @@ public class BoardServiceImpl implements BoardService {
 
     //장소별 장소 포스팅 조회
     @Override
-    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno) throws IllegalAccessException, SQLException {
-        List<Object[]> result = boardRepository.getBoardByPno(pno);
+    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page) throws IllegalAccessException, SQLException {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = boardRepository.getBoardByPno(pno,pageRequest);
+        List<Object[]> result = pages.getContent();
         List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTOS = new ArrayList<>();
 
         if (result.isEmpty()) {
@@ -595,8 +599,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSearchDTO> findCourseBoard(String search) {
-        List<Object[]> result = boardRepository.findCourseBoard(search);
+    public List<BoardSearchDTO> findCourseBoard(String search, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = boardRepository.findCourseBoard(search, pageRequest);
+        List<Object[]> result = pages.getContent();
+
         List<BoardSearchDTO> boardSearchDTOS = new ArrayList<>();
         if (result.isEmpty()) {
             return null;

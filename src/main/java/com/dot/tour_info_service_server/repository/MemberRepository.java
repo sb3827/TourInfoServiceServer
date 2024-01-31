@@ -2,6 +2,8 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.dto.*;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,7 +48,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "exists (select m2  from Member m2 left outer join Follow f on f.followPk.member.mno=m2.mno where f.followPk.follower.mno=:mno and m2.mno=m.mno) as followCheck " +
             "from Member m join m.roleSet r " +
             "where r!='ADMIN' and  m.isApprove=true and m.name like %:name%")
-    List<Object[]> searchUser(@Param("name") String name,Long mno);
+    Page<Object[]> searchUser(@Param("name") String name, Long mno, PageRequest pageRequest);
 
     // 회원가입대기 조회
     @Query("select m.mno, m.name, m.email, m.businessId from Member m where m.isApprove = false")
