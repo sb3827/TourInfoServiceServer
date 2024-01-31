@@ -162,7 +162,7 @@ class BoardServiceTests {
   @Test
   public void getBoardByPnoTest() {
     try {
-      List<BoardPlaceReplyCountDTO> result = boardService.getBoardByPno(1L);
+      List<BoardPlaceReplyCountDTO> result = boardService.getBoardByPno(1L, 0);
       System.out.println(result);
     } catch (Exception e) {
       e.getMessage();
@@ -179,7 +179,7 @@ class BoardServiceTests {
   // 코스 검색 조회
   @Test
   public void findCourseBoardTest() {
-    List<BoardSearchDTO> result = boardService.findCourseBoard("");
+    List<BoardSearchDTO> result = boardService.findCourseBoard("",1);
     System.out.println(result);
   }
 

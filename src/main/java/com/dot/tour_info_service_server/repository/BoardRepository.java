@@ -4,6 +4,8 @@ import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Place;
 import jakarta.transaction.Transactional;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -112,7 +114,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "left outer join Reply r on b.bno = r.board.bno " +
             "where p.pno = :pno  " +
             "group by b.bno  ")
-    List<Object[]> getBoardByPno(Long pno);
+    Page<Object[]> getBoardByPno(Long pno,PageRequest pageRequest);
 
     // 회원별 코스 포스팅 조회
     @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
@@ -129,7 +131,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "where (b.title like %:search% or b.content like %:search% or " +
             "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true " +
             "group by b.bno")
-    List<Object[]> findCourseBoard(String search);
+    Page<Object[]> findCourseBoard(String search, PageRequest pageRequest);
 
     // place 검색
     Optional<Board> findBoardByBnoAndIsCourseIsFalse(Long bno);

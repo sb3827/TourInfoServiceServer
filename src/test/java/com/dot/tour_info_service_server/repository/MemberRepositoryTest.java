@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -88,7 +89,8 @@ class MemberRepositoryTest {
     // 회원 검색 테스트
     @Test
     public void searchUserTest(){
-        List<Object[]> userlist= memberRepository.searchUser("",null);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<Object[]> userlist= memberRepository.searchUser("",null, pageRequest);
         for(Object[] list : userlist){
             log.info("user mno : " + list[0]);
             log.info("user image : " + list[1]);

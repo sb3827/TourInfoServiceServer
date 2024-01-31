@@ -131,8 +131,10 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 검색
     @Override
-    public List<SearchUserListDTO> searchUser(String name, Long mno) {
-        List<Object[]> result = memberRepository.searchUser(name, mno);
+    public List<SearchUserListDTO> searchUser(String name, Long mno, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = memberRepository.searchUser(name, mno, pageRequest);
+        List<Object[]> result = pages.getContent();
         List<SearchUserListDTO> userlist = new ArrayList<>();
 
         if (!result.isEmpty()) {

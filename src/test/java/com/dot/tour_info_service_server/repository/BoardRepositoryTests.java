@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -124,7 +126,8 @@ class BoardRepositoryTests {
     //장소별 장소 포스팅 조회
     @Test
     void getBoardByPnoTest() {
-        List<Object[]> result = boardRepository.getBoardByPno(1L);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<Object[]> result = boardRepository.getBoardByPno(1L, pageRequest);
         for (Object[] objects: result) {
             System.out.println(Arrays.toString(objects));
         }
@@ -142,7 +145,8 @@ class BoardRepositoryTests {
     //코스 검색 조회
     @Test
     void findCourseBoardTest() {
-        List<Object[]> result = boardRepository.findCourseBoard("");
+        PageRequest pageRequest = PageRequest.of(1, 10);
+        Page<Object[]> result = boardRepository.findCourseBoard("",pageRequest);
         for (Object[] objects: result) {
             System.out.println(Arrays.toString(objects));
         }

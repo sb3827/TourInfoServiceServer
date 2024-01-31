@@ -91,13 +91,14 @@ public class MemberController {
     // permit all
     @PostMapping(value = "/find")
     public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search,
-                                                            @RequestBody(required = false) FindMemberRequestDTO mnoDTO) {
+                                                            @RequestBody(required = false) FindMemberRequestDTO mnoDTO,
+                                                            @RequestParam int page) {
         log.info("Searching User.......");
         List<SearchUserListDTO> userlist;
         if(mnoDTO.getMno()==null){
-            userlist=memberService.searchUser(search,null);
+            userlist=memberService.searchUser(search,null, page);
         }else {
-            userlist = memberService.searchUser(search, mnoDTO.getMno());
+            userlist = memberService.searchUser(search, mnoDTO.getMno(), page);
         }
         return new ResponseEntity<>(userlist, HttpStatus.OK);
     }
