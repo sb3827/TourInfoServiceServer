@@ -532,9 +532,9 @@ public class BoardServiceImpl implements BoardService {
 
     //장소별 장소 포스팅 조회
     @Override
-    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page) throws IllegalAccessException, SQLException {
+    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page, Boolean isAd) throws IllegalAccessException, SQLException {
         PageRequest pageRequest = PageRequest.of(page, 10);
-        Page<Object[]> pages = boardRepository.getBoardByPno(pno,pageRequest);
+        Page<Object[]> pages = boardRepository.getBoardByPno(pno,pageRequest, isAd);
         List<Object[]> result = pages.getContent();
         List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTOS = new ArrayList<>();
 
@@ -602,9 +602,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSearchDTO> findCourseBoard(String search, int page) {
+    public List<BoardSearchDTO> findCourseBoard(String search, int page, Boolean isAd) {
         PageRequest pageRequest = PageRequest.of(page, 10);
-        Page<Object[]> pages = boardRepository.findCourseBoard(search, pageRequest);
+        Page<Object[]> pages = boardRepository.findCourseBoard(search, pageRequest, isAd);
         List<Object[]> result = pages.getContent();
 
         List<BoardSearchDTO> boardSearchDTOS = new ArrayList<>();
