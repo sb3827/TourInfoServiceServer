@@ -6,7 +6,9 @@ import com.dot.tour_info_service_server.dto.request.auth.EmailRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.LoginRequestDTO;
 import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
 import com.dot.tour_info_service_server.dto.response.auth.LoginServiceDTO;
+import com.dot.tour_info_service_server.entity.Disciplinary;
 import com.dot.tour_info_service_server.entity.Member;
+import com.dot.tour_info_service_server.repository.DisciplinaryRepository;
 import com.dot.tour_info_service_server.repository.MemberRepository;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.mail.MailService;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -33,10 +36,12 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final TokenService tokenService;
+    private final DisciplinaryRepository disciplinaryRepository;
 
     @Override
     public LoginServiceDTO login(LoginRequestDTO requestDTO) throws Exception {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
+
 
 
         if (result.isEmpty()) {
@@ -44,6 +49,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Member member = result.get();
+
+        Disciplinary disciplinary=disciplinaryRepository.reportList(member.getMno());
+
         if (!passwordEncoder.matches(requestDTO.getPassword(), member.getPassword())) {
             throw new BadCredentialsException("Password가 일치하지 않습니다");
         }
@@ -54,6 +62,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (!member.getIsValidate()) {
             throw new DisabledException("이메일 인증이 필요합니다.");
+        }
+        if(member.getDisciplinary()>=5 || disciplinary.getExpDate().isAfter(LocalDateTime.now())){
+            String expDate= disciplinary.getExpDate()==null? "무기한 ": disciplinary.getExpDate().toString();
+            throw new DisabledException("정지된 회원입니다. 정지기간 : "+expDate);
         }
 
         LoginServiceDTO loginServiceDTO = LoginServiceDTO.builder()
