@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,4 +16,8 @@ public class MainBoardResponseDTO {
     private String title;
     private String src;
     private boolean isCourse;
+    private String name;
+    private int likes;
+    private Double score;
+    private LocalDateTime regDate;
 }

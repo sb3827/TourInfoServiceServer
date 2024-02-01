@@ -196,6 +196,7 @@ class BoardServiceTests {
               .pno((Long) objects[0])
               .name((String) objects[1])
               .src((String) objects[2])
+
               .build();
       mainPlaceResponseDTOS.add(mainPlaceResponseDTO);
     }
@@ -267,6 +268,12 @@ class BoardServiceTests {
     MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
 
     System.out.println(mainResponseDTO);
+
+  }
+
+  @Test
+  public void main(){
+    System.out.println(boardService.mainBoard(2l));
 
   }
 }
