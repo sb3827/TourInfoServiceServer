@@ -7,6 +7,7 @@ import com.dot.tour_info_service_server.dto.response.report.ReportAllResponseDTO
 import com.dot.tour_info_service_server.dto.response.report.ReportResponseDTO;
 import com.dot.tour_info_service_server.entity.Report;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReportService {
@@ -15,7 +16,7 @@ public interface ReportService {
 
 
     //신고 필터 조회
-    List<ReportResponseDTO> reportFilter(String filter, String search);
+    List<ReportResponseDTO> reportFilter(int page, String filter, String search);
 
     //해당 신고 내역 정보 조회
     ReportAllResponseDTO reportDetail(Long sno);

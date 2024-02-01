@@ -103,12 +103,13 @@ public class MemberController {
         return new ResponseEntity<>(userlist, HttpStatus.OK);
     }
 
+
     // 회원가입대기 조회 ( 관리자만 )
     // admin
     @GetMapping(value = "/waiting")
-    public ResponseEntity<List<JoinWaitingDTO>> showJoinWaiting() {
+    public ResponseEntity<List<JoinWaitingDTO>> showJoinWaiting(@RequestParam(value = "page",required = false) int page) {
         log.info("JoinWaiting List.............");
-        List<JoinWaitingDTO> list = memberService.showJoinWaiting();
+        List<JoinWaitingDTO> list = memberService.showJoinWaiting(page);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
@@ -124,13 +125,14 @@ public class MemberController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    // 페이징 처리 완료
     //회원 검색 관리자
     // admin
     @GetMapping(value = "/filter-find")
-    public ResponseEntity<List<MemberDetailDTO>> managerSearchUser(@RequestParam("filter") String filter,
+    public ResponseEntity<List<MemberDetailDTO>> managerSearchUser(@RequestParam(value = "page",required = false) int page,@RequestParam("filter") String filter,
                                                                    @RequestParam("search") String name) {
         log.info(filter + " , " + name);
-        List<MemberDetailDTO> result = memberService.managerToSearchUser(filter, name);
+        List<MemberDetailDTO> result = memberService.managerToSearchUser(page,filter, name);
         log.info(result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

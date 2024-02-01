@@ -154,7 +154,8 @@ public class BoardController {
     @GetMapping(value = {"/place"})
     public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno,
                                                                        @RequestParam int page,
-                                                                       @RequestParam Boolean isAd) {
+                                                                       @RequestParam Boolean isAd)
+    {
         log.info("getBoardByMno... bno: " + pno);
         try {
             List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno, page, isAd);
@@ -179,6 +180,7 @@ public class BoardController {
     public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search ,
                                                                 @RequestParam int page, @RequestParam Boolean isAd) {
         log.info("Search.... : "+search);
+        log.info("isAD: "+isAd);
         List<BoardSearchDTO> boardSearchDTO = boardService.findCourseBoard(search, page, isAd);
         return new ResponseEntity<>(boardSearchDTO, HttpStatus.OK);
     }

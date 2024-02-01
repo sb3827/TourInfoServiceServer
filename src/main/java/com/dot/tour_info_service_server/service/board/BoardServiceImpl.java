@@ -539,37 +539,40 @@ public class BoardServiceImpl implements BoardService {
         List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTOS = new ArrayList<>();
 
         if (result.isEmpty()) {
-            throw new IllegalArgumentException("게시글이 없습니다.");
+            return null;
         }
 
         for (Object[] objects : result) {
             // bno을 보내주면 image 배열을 받아오는 작업
             Long bno = (Long) objects[1];
-            List<Object[]> images = imageRepository.getImageByBno(bno);
             List<String> imageUrls = new ArrayList<>();
-            for (Object[] image : images) {
-                String src = (String) image[0];
-                imageUrls.add(src);
+            if(bno!=null) {
+                List<Object[]> images = imageRepository.getImageByBno(bno);
+                for (Object[] image : images) {
+                    String src = (String) image[0];
+                    imageUrls.add(src);
+                }
             }
-            BoardPlaceReplyCountDTO boardPlaceReplyCountDTO = BoardPlaceReplyCountDTO.builder()
-                    .pno((Long) objects[0])
-                    .bno((Long) objects[1])
-                    .src(imageUrls.toArray(new String[0]))
-                    .title((String) objects[2])
-                    .replyCount((Long) objects[3])
-                    .writer((String) objects[4])
-                    .regdate((LocalDateTime) objects[5])
-                    .likes((Integer) objects[6])
-                    .score((Double) objects[7])
-                    .isAd((Boolean) objects[8])
-                    .lat((Double) objects[9])
-                    .lng((Double) objects[10])
-                    .engAddress((String) objects[11])
-                    .localAddress((String) objects[12])
-                    .roadAddress((String) objects[13])
-                    .name((String) objects[14])
-                    .build();
-            boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
+                BoardPlaceReplyCountDTO boardPlaceReplyCountDTO = BoardPlaceReplyCountDTO.builder()
+                        .pno((Long) objects[0])
+                        .bno((Long) objects[1])
+                        .src(bno!=null? imageUrls.toArray(new String[0]):null)
+                        .title((String) objects[2])
+                        .replyCount((Long) objects[3])
+                        .writer((String) objects[4])
+                        .regdate((LocalDateTime) objects[5])
+                        .likes((Integer) objects[6])
+                        .score((Double) objects[7])
+                        .isAd((Boolean) objects[8])
+                        .lat((Double) objects[9])
+                        .lng((Double) objects[10])
+                        .engAddress((String) objects[11])
+                        .localAddress((String) objects[12])
+                        .roadAddress((String) objects[13])
+                        .name((String) objects[14])
+                        .build();
+                boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
+
 
         }
         return boardPlaceReplyCountDTOS;
