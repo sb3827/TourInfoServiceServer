@@ -128,7 +128,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //코스 검색 조회
     @Query("select b.bno, b.title, b.likes, b.score, b.writer.name, b.regDate, b.isAd from Board b " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
-            "where (b.title like %:search% or b.content like %:search% or " +
+            "where (b.title like %:search% or  " +
             "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true " +
             "and b.isAd=:isAd " +
             "group by b.bno")
