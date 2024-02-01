@@ -109,10 +109,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "p.lat, p.lng, p.engAddress, p.localAddress, p.roadAddress, p.name  " +
             "from Place p " +
             "left outer join BoardPlace  bp  on  p.pno=bp.place.pno " +
-            "left outer join Board b on (b.bno = bp.boardPlacePK.board.bno and b.isCourse=false ) " +
+            "left outer join Board b on (b.bno = bp.boardPlacePK.board.bno and b.isCourse=false and b.isAd=:isAd) " +
             "left outer join b.writer w  " +
             "left outer join Reply r on b.bno = r.board.bno " +
-            "where p.pno = :pno and b.isAd =:isAd " +
+            "where p.pno = :pno " +
             "group by b.bno  ")
     Page<Object[]> getBoardByPno(Long pno,PageRequest pageRequest, Boolean isAd);
 
