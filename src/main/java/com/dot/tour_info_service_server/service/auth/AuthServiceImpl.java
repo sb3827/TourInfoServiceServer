@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
 
         String newPassword = passwordEncoder.encode(passwordRequestDTO.getNewPassword());
         member.changePassword(newPassword);
-        member.changeIsReset();
+        member.changeIsReset(false);
         try {
             memberRepository.save(member);
             responseDTO = ResponseDTO.builder()
@@ -161,7 +161,7 @@ public class AuthServiceImpl implements AuthService {
 
         String oldPassword = member.getPassword();
         String password = generateRandomPassword();
-        member.changeIsReset(); // 비밀번호 변경 요청 여부 변경
+        member.changeIsReset(true); // 비밀번호 변경 요청 여부 변경
         member.changePassword(passwordEncoder.encode(password));
         try {
             memberRepository.save(member);

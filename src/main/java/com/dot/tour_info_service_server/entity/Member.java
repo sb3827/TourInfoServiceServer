@@ -71,8 +71,8 @@ public class Member extends BaseEntity {
     this.password = password;
   }
 
-  public void changeIsReset() {
-    this.isReset = !this.isReset;
+  public void changeIsReset(boolean isReset) {
+    this.isReset = isReset;
   }
 
   public void changeName(String name) {
