@@ -56,13 +56,15 @@ public class AuthServiceImpl implements AuthService {
             throw new BadCredentialsException("Password가 일치하지 않습니다");
         }
 
+        if (!member.getIsValidate()) {
+            throw new DisabledException("이메일 인증이 필요합니다.");
+        }
+
         if (!member.isApprove()) {
             throw new DisabledException("관리자의 승인이 필요합니다.");
         }
 
-        if (!member.getIsValidate()) {
-            throw new DisabledException("이메일 인증이 필요합니다.");
-        }
+
         if(member.getDisciplinary()>=5 || disciplinary.getExpDate().isAfter(LocalDateTime.now())){
             String expDate= disciplinary.getExpDate()==null? "무기한 ": disciplinary.getExpDate().toString();
             throw new DisabledException("정지된 회원입니다. 정지기간 : "+expDate);
