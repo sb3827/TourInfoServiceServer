@@ -18,12 +18,13 @@ import java.util.Optional;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     //게시글이 가장 많은 장소 3곳 정보
-    @Query("select p.pno, p.name,i.src " +
+    @Transactional
+    @Query("select p.pno, p.name,i.src,p.cart,count(distinct b.bno),p.category " +
             "from Place p left outer join BoardPlace bp on (bp.place.pno=p.pno) " +
-            "left outer join Board b on (b.bno=bp.boardPlacePK.board.bno)" +
+            "left outer join Board b on (b.bno=bp.boardPlacePK.board.bno and b.writer.mno is not null)" +
             "left outer join Image i on(b.bno=i.board.bno) " +
             "group by p.pno " +
-            "order by count (b)desc " +
+            "order by count(distinct b.bno) desc " +
             "limit 3")
     List<Object[]> mostLikePlace();
 
