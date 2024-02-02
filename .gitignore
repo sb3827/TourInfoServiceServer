@@ -34,3 +34,8 @@ build/
 
 ### properties ###
 /src/main/resources/application.properties
+/src/main/resources/application-blue.properties
+/src/main/resources/application-common.properties
+/src/main/resources/application-green.properties
+/src/main/resources/application-local.properties
+/src/main/resources/application-secret.properties
