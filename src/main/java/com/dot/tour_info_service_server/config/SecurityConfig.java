@@ -44,7 +44,9 @@ public class SecurityConfig {
             "/place/**", "/place/placecount/**",
             "/reply/member/**", "/reply/board/**",
             "/users/profile/**", "/users/find/**",
-            "/error"
+            "/error",
+
+            "/hc", "/env"
     };
 
     private static final String[] AUTHENTICATED_LIST = {
