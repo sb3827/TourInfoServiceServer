@@ -40,7 +40,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String targetUrl = UriComponentsBuilder
 //                .fromUriString("/home")
-                .fromHttpUrl("http://"+("localhost".equals(clientAddress) ? "localhost:3000" : clientAddress)+"/oauth2")
+                .fromHttpUrl(("localhost".equals(clientAddress) ? "localhost:3000" : clientAddress)+"/oauth2")
                 .queryParam("mno", authMemberDTO.getMno())
                 .queryParam("token", token.getToken())
                 .queryParam("refreshToken",token.getRefreshToken())
