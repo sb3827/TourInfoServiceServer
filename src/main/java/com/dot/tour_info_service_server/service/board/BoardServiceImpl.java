@@ -13,6 +13,8 @@ import com.dot.tour_info_service_server.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -530,42 +532,47 @@ public class BoardServiceImpl implements BoardService {
 
     //장소별 장소 포스팅 조회
     @Override
-    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno) throws IllegalAccessException, SQLException {
-        List<Object[]> result = boardRepository.getBoardByPno(pno);
+    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page, Boolean isAd) throws IllegalAccessException, SQLException {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = boardRepository.getBoardByPno(pno,pageRequest, isAd);
+        List<Object[]> result = pages.getContent();
         List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTOS = new ArrayList<>();
 
         if (result.isEmpty()) {
-            throw new IllegalArgumentException("게시글이 없습니다.");
+            return null;
         }
 
         for (Object[] objects : result) {
             // bno을 보내주면 image 배열을 받아오는 작업
             Long bno = (Long) objects[1];
-            List<Object[]> images = imageRepository.getImageByBno(bno);
             List<String> imageUrls = new ArrayList<>();
-            for (Object[] image : images) {
-                String src = (String) image[0];
-                imageUrls.add(src);
+            if(bno!=null) {
+                List<Object[]> images = imageRepository.getImageByBno(bno);
+                for (Object[] image : images) {
+                    String src = (String) image[0];
+                    imageUrls.add(src);
+                }
             }
-            BoardPlaceReplyCountDTO boardPlaceReplyCountDTO = BoardPlaceReplyCountDTO.builder()
-                    .pno((Long) objects[0])
-                    .bno((Long) objects[1])
-                    .src(imageUrls.toArray(new String[0]))
-                    .title((String) objects[2])
-                    .replyCount((Long) objects[3])
-                    .writer((String) objects[4])
-                    .regdate((LocalDateTime) objects[5])
-                    .likes((Integer) objects[6])
-                    .score((Double) objects[7])
-                    .isAd((Boolean) objects[8])
-                    .lat((Double) objects[9])
-                    .lng((Double) objects[10])
-                    .engAddress((String) objects[11])
-                    .localAddress((String) objects[12])
-                    .roadAddress((String) objects[13])
-                    .name((String) objects[14])
-                    .build();
-            boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
+                BoardPlaceReplyCountDTO boardPlaceReplyCountDTO = BoardPlaceReplyCountDTO.builder()
+                        .pno((Long) objects[0])
+                        .bno((Long) objects[1])
+                        .src(bno!=null? imageUrls.toArray(new String[0]):null)
+                        .title((String) objects[2])
+                        .replyCount((Long) objects[3])
+                        .writer((String) objects[4])
+                        .regdate((LocalDateTime) objects[5])
+                        .likes((Integer) objects[6])
+                        .score((Double) objects[7])
+                        .isAd((Boolean) objects[8])
+                        .lat((Double) objects[9])
+                        .lng((Double) objects[10])
+                        .engAddress((String) objects[11])
+                        .localAddress((String) objects[12])
+                        .roadAddress((String) objects[13])
+                        .name((String) objects[14])
+                        .build();
+                boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
+
 
         }
         return boardPlaceReplyCountDTOS;
@@ -595,8 +602,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardSearchDTO> findCourseBoard(String search) {
-        List<Object[]> result = boardRepository.findCourseBoard(search);
+    public List<BoardSearchDTO> findCourseBoard(String search, int page, Boolean isAd) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = boardRepository.findCourseBoard(search, pageRequest, isAd);
+        List<Object[]> result = pages.getContent();
+
         List<BoardSearchDTO> boardSearchDTOS = new ArrayList<>();
         if (result.isEmpty()) {
             return null;
@@ -629,6 +639,7 @@ public class BoardServiceImpl implements BoardService {
     // 메인 조회
     @Override
     public MainResponseDTO mainBoard(Long mno) {
+        //가장 게시글 많은 장소
         List<Object[]> result = placeRepository.mostLikePlace();
         List<MainPlaceResponseDTO> mainPlaceResponseDTOS = new ArrayList<>();
         for (Object[] objects : result) {
@@ -636,10 +647,14 @@ public class BoardServiceImpl implements BoardService {
                     .pno((Long) objects[0])
                     .name((String) objects[1])
                     .src((String) objects[2])
+                    .cart((int) objects[3])
+                    .board_count((Long)objects[4])
+                    .category((Category) objects[5])
                     .build();
             mainPlaceResponseDTOS.add(mainPlaceResponseDTO);
         }
 
+        //최근 게시글
         List<Object[]> result1 = boardRepository.recentlyBoard();
         List<MainBoardResponseDTO> mainBoardResponseDTOS = new ArrayList<>();
         for (Object[] objects : result1) {
@@ -648,10 +663,15 @@ public class BoardServiceImpl implements BoardService {
                     .title((String) objects[1])
                     .src((String) objects[2])
                     .isCourse((Boolean) objects[3])
+                    .name((String)objects[4])
+                    .likes((int)objects[5])
+                    .score((Double)objects[6])
+                    .regDate((LocalDateTime) objects[7])
                     .build();
             mainBoardResponseDTOS.add(mainBoardResponseDTO);
         }
 
+        //가장 좋아요 많은 코스 게시글
         List<Object[]> result2 = boardRepository.mostLikeCourse();
         List<MostListCourseDTO> mostListCourseDTOS = new ArrayList<>();
         for (Object[] objects : result2) {
@@ -660,7 +680,12 @@ public class BoardServiceImpl implements BoardService {
                     .title((String) objects[1])
                     .src((String) objects[2])
                     .isCourse((Boolean) objects[3])
+                    .name((String)objects[4])
+                    .likes((int)objects[5])
+                    .score((Double) objects[6])
+                    .regDate((LocalDateTime) objects[7])
                     .build();
+
             List<Place> places=boardRepository.mostLikeCoursePlace((Long)objects[0]);
             List<MainPlaceDTO> mainPlaceDTOS=new ArrayList<>();
             for (Place place:places){
@@ -682,6 +707,7 @@ public class BoardServiceImpl implements BoardService {
             mostListCourseDTOS.add(mostListCourseDTO);
         }
 
+        //팔로워 게시글
         List<Object[]> result3 = boardRepository.followerBoard(mno);
         List<MainBoardResponseDTO> mainBoardResponseDTOS2 = new ArrayList<>();
         for (Object[] objects : result3) {
@@ -690,10 +716,15 @@ public class BoardServiceImpl implements BoardService {
                     .title((String) objects[1])
                     .src((String) objects[2])
                     .isCourse((Boolean) objects[3])
+                    .name((String)objects[4])
+                    .likes((int)objects[5])
+                    .score((Double)objects[6])
+                    .regDate((LocalDateTime) objects[7])
                     .build();
             mainBoardResponseDTOS2.add(mainBoardResponseDTO);
         }
 
+        //광고
         List<Object[]> result4 = boardRepository.adBoard();
         List<MainBoardResponseDTO> mainBoardResponseDTOS3 = new ArrayList<>();
         for (Object[] objects : result4) {
@@ -702,6 +733,10 @@ public class BoardServiceImpl implements BoardService {
                     .title((String) objects[1])
                     .src((String) objects[2])
                     .isCourse((Boolean) objects[3])
+                    .name((String)objects[4])
+                    .likes((int)objects[5])
+                    .score((Double)objects[6])
+                    .regDate((LocalDateTime) objects[7])
                     .build();
             mainBoardResponseDTOS3.add(mainBoardResponseDTO);
         }

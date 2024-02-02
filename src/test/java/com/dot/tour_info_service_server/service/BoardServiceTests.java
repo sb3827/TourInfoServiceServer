@@ -162,7 +162,7 @@ class BoardServiceTests {
   @Test
   public void getBoardByPnoTest() {
     try {
-      List<BoardPlaceReplyCountDTO> result = boardService.getBoardByPno(1L);
+      List<BoardPlaceReplyCountDTO> result = boardService.getBoardByPno(1L, 0, true);
       System.out.println(result);
     } catch (Exception e) {
       e.getMessage();
@@ -179,7 +179,7 @@ class BoardServiceTests {
   // 코스 검색 조회
   @Test
   public void findCourseBoardTest() {
-    List<BoardSearchDTO> result = boardService.findCourseBoard("");
+    List<BoardSearchDTO> result = boardService.findCourseBoard("",1, false);
     System.out.println(result);
   }
 
@@ -196,6 +196,7 @@ class BoardServiceTests {
               .pno((Long) objects[0])
               .name((String) objects[1])
               .src((String) objects[2])
+
               .build();
       mainPlaceResponseDTOS.add(mainPlaceResponseDTO);
     }
@@ -267,6 +268,12 @@ class BoardServiceTests {
     MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
 
     System.out.println(mainResponseDTO);
+
+  }
+
+  @Test
+  public void main(){
+    System.out.println(boardService.mainBoard(2l));
 
   }
 }

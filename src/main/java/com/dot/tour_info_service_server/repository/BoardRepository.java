@@ -4,6 +4,8 @@ import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Place;
 import jakarta.transaction.Transactional;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -48,16 +50,17 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 메인페이지
     //최근 올라온 장소 게시글 10개
-    @Query("select b.bno,b.title,i.src, b.isCourse " +
-            "from Board b left outer join Image i on(b.bno=i.board.bno) " +
+    @Query("select b.bno,b.title,i.src, b.isCourse, m.name ,b.likes,b.score,b.regDate " +
+            "from Board b left outer join Image i on(b.bno=i.board.bno) left outer join Member m on b.writer.mno=m.mno " +
+            "where b.isCourse=false " +
             "group by b.bno " +
             "order by b.regDate desc " +
             "limit 10 ")
     List<Object[]> recentlyBoard();
 
-    // 가장 많은 추천을 받은 코스 게시글
-    @Query("select b.bno, b.title, i.src, b.isCourse " +
-            "from Board b left outer join Image i on(b.bno=i.board.bno)" +
+    // 가장 많은 추천을 받은 코스 게시글 - 메인
+    @Query("select b.bno, b.title, i.src, b.isCourse, m.name ,b.likes,b.score,b.regDate  " +
+            "from Board b left outer join Image i on(b.bno=i.board.bno) left outer join Member m on b.writer.mno=m.mno " +
             "where b.isCourse=true " +
             "order by b.likes desc " +
             "limit 10")
@@ -71,8 +74,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
 
-    //팔로워들의 게시글
-    @Query("select b.bno,b.title,i.src, b.isCourse " +
+    //팔로워들의 게시글 - 메인
+    @Query("select b.bno,b.title,i.src, b.isCourse,m.name ,b.likes,b.score,b.regDate " +
             "from Board b left outer join Member m on(m.mno=b.writer.mno) " +
             "left outer join Follow f on(f.followPk.member.mno=m.mno) " +
             "left outer join Image i on(b.bno=i.board.bno) " +
@@ -82,9 +85,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "limit 10")
     List<Object[]> followerBoard(Long mno);
 
-    //광고 게시글
-    @Query("select b.bno,b.title,i.src, b.isCourse " +
-            "from Board b left outer join Image i on (b.bno=i.board.bno) " +
+    //광고 게시글 - 메인
+    @Query("select b.bno,b.title,i.src, b.isCourse,m.name ,b.likes,b.score,b.regDate " +
+            "from Board b left outer join Image i on (b.bno=i.board.bno) left outer join Member m on b.writer.mno=m.mno " +
             "where b.isAd=true " +
             "group by b.bno " +
             "order by b.regDate desc " +
@@ -102,14 +105,17 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Object[]> getBoardByMno(@Param("mno") Long mno);
 
     // 장소별 장소 포스팅 조회
-    @Query("select bp.place.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate, b.likes, b.score ,b.isAd, " +
-            "bp.place.lat, bp.place.lng, bp.place.engAddress, bp.place.localAddress, bp.place.roadAddress, bp.place.name  " +
-            "from Board b " +
+    @Transactional
+    @Query("select p.pno, b.bno, b.title , count(r.rno), b.writer.name, b.regDate,COALESCE( b.likes,0), b.score ,b.isAd, " +
+            "p.lat, p.lng, p.engAddress, p.localAddress, p.roadAddress, p.name  " +
+            "from Place p " +
+            "left outer join BoardPlace  bp  on  p.pno=bp.place.pno " +
+            "left outer join Board b on (b.bno = bp.boardPlacePK.board.bno and b.isCourse=false and b.isAd=:isAd) " +
+            "left outer join b.writer w  " +
             "left outer join Reply r on b.bno = r.board.bno " +
-            "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
-            "where bp.place.pno = :pno and b.isCourse = false " +
-            "group by b.bno")
-    List<Object[]> getBoardByPno(Long pno);
+            "where p.pno = :pno " +
+            "group by b.bno  ")
+    Page<Object[]> getBoardByPno(Long pno,PageRequest pageRequest, Boolean isAd);
 
     // 회원별 코스 포스팅 조회
     @Query("select b.bno, b.title, count(r.rno), b.regDate, i.src, b.likes, b.score, b.writer.name from Board b " +
@@ -123,10 +129,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     //코스 검색 조회
     @Query("select b.bno, b.title, b.likes, b.score, b.writer.name, b.regDate, b.isAd from Board b " +
             "left outer join BoardPlace bp on b.bno = bp.boardPlacePK.board.bno " +
-            "where (b.title like %:search% or b.content like %:search% or " +
+            "where (b.title like %:search% or  " +
             "bp.place.name like %:search% or b.writer.name like %:search%) and b.isCourse = true " +
+            "and b.isAd=:isAd " +
             "group by b.bno")
-    List<Object[]> findCourseBoard(String search);
+    Page<Object[]> findCourseBoard(String search, PageRequest pageRequest, Boolean isAd);
 
     // place 검색
     Optional<Board> findBoardByBnoAndIsCourseIsFalse(Long bno);

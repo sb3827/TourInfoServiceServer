@@ -23,16 +23,16 @@ public interface MemberService {
     void deleteUserInfo(Long mno);
 
     // 회원 검색 ( mno, 이미지, 이름 )
-    List<SearchUserListDTO> searchUser(String name,Long mno);
+    List<SearchUserListDTO> searchUser(String name,Long mno, int page);
 
     // 회원가입대기 ( mno, 이름, 이메일, 사업자등록번호 )
-    List<JoinWaitingDTO> showJoinWaiting();
+    List<JoinWaitingDTO> showJoinWaiting(int page);
 
     // 회원가입승인 ( is_approve를 true로 )
     void joinMember(Long mno);
 
     //회원 조회(관리자)
-    List<MemberDetailDTO> managerToSearchUser(String filter,String name);
+    List<MemberDetailDTO> managerToSearchUser(int page,String filter,String name);
 
     default UserInfoDTO entityToDto(Member member){
         UserInfoDTO userInfoDTO = UserInfoDTO.builder()

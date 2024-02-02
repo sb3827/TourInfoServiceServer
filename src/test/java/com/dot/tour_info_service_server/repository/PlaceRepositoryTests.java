@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.HashMap;
 import java.util.Arrays;
@@ -38,10 +39,16 @@ public class PlaceRepositoryTests {
     // 장소 검색 테스트
     @Test
     public void placeWithImageTest(){
+
         Object[] result = placeRepository.searchPlace(null, "test").get(0);
         for(Object place: result){
             log.info(place);
         }
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        log.info("cart : " + placeRepository.searchPlace(null, "test",pageRequest).getContent().get(0)[8]);
+        log.info("cart : " + placeRepository.searchPlace(null, "test",pageRequest).getContent().get(1)[8]);
+        log.info("image src : " + placeRepository.searchPlace(null, "test",pageRequest).getContent().get(0)[11]);
     }
 
     // 마이페이지 지도를 위한 프로시저 실행 테스트

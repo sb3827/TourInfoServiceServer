@@ -41,7 +41,7 @@ public class PlaceServiceImplTests {
     // 장소검색 테스트
     @Test
     void placeSearchTest(){
-        log.info(placeService.searchPlace(null, "test").get(0));
+        log.info(placeService.searchPlace(null, "test", 0).get(0));
     }
 
     // 마이페이지 방문횟수 테스트

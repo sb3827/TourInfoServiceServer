@@ -2,6 +2,8 @@ package com.dot.tour_info_service_server.repository;
 
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.entity.Place;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,12 +18,13 @@ import java.util.Optional;
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     //게시글이 가장 많은 장소 3곳 정보
-    @Query("select p.pno, p.name,i.src " +
+    @Transactional
+    @Query("select p.pno, p.name,i.src,p.cart,count(distinct b.bno),p.category " +
             "from Place p left outer join BoardPlace bp on (bp.place.pno=p.pno) " +
-            "left outer join Board b on (b.bno=bp.boardPlacePK.board.bno)" +
+            "left outer join Board b on (b.bno=bp.boardPlacePK.board.bno and b.writer.mno is not null)" +
             "left outer join Image i on(b.bno=i.board.bno) " +
             "group by p.pno " +
-            "order by count (b)desc " +
+            "order by count(distinct b.bno) desc " +
             "limit 3")
     List<Object[]> mostLikePlace();
 
@@ -35,7 +38,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "(p.name like %:search% or p.localAddress like %:search% or " +
             "p.roadAddress like %:search% or p.engAddress like %:search%) " +
             "group by p.pno")
-    List<Object[]> searchPlace(Category filter, String search);
+    Page<Object[]> searchPlace(Category filter, String search, PageRequest pageRequest);
 
     // 프로시저 실행
     @Procedure("Count_pno")

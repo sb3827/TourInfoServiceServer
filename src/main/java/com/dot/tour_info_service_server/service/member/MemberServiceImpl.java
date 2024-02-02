@@ -9,6 +9,8 @@ import com.dot.tour_info_service_server.service.image.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -129,8 +131,10 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 검색
     @Override
-    public List<SearchUserListDTO> searchUser(String name, Long mno) {
-        List<Object[]> result = memberRepository.searchUser(name, mno);
+    public List<SearchUserListDTO> searchUser(String name, Long mno, int page) {
+        PageRequest pageRequest = PageRequest.of(page, 10);
+        Page<Object[]> pages = memberRepository.searchUser(name, mno, pageRequest);
+        List<Object[]> result = pages.getContent();
         List<SearchUserListDTO> userlist = new ArrayList<>();
 
         if (!result.isEmpty()) {
@@ -152,8 +156,11 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원가입 대기 목록
     @Override
-    public List<JoinWaitingDTO> showJoinWaiting() {
-        List<Object[]> result = memberRepository.showJoinWaiting();
+    public List<JoinWaitingDTO> showJoinWaiting(int page) {
+        PageRequest pageRequest=PageRequest.of(page,10);
+
+        Page<Object[]> page1 = memberRepository.showJoinWaiting(pageRequest);
+        List<Object[]> result=page1.getContent();
         List<JoinWaitingDTO> waitingList = new ArrayList<>();
         if (!result.isEmpty()) {
             for (Object[] list : result) {
@@ -179,18 +186,25 @@ public class MemberServiceImpl implements MemberService {
 
     //회원 조회 - 관리자
     @Override
-    public List<MemberDetailDTO> managerToSearchUser(String filter, String name) {
+    public List<MemberDetailDTO> managerToSearchUser(int page,String filter, String name) {
+        //페이지 네이션
+        PageRequest pageRequest=PageRequest.of(page,10);
+
         List<Object[]> member = new ArrayList<>();
         List<MemberDetailDTO> memberDetailDTOS = new ArrayList<>();
 
         if (filter.equals("all")) {
-            member = memberRepository.searchMemberAll(name);
+            Page<Object[]> objects=memberRepository.searchMemberAll(name,pageRequest);
+            member = objects.getContent();
         } else if (filter.equals("normal")) {
-            member = memberRepository.searchNomal(name);
+            Page<Object[]> objects = memberRepository.searchNomal(name,pageRequest);
+            member = objects.getContent();
         } else if (filter.equals("business")) {
-            member = memberRepository.searchBusiness(name);
+            Page<Object[]> objects=memberRepository.searchBusiness(name,pageRequest);
+            member = objects.getContent();
         } else if (filter.equals("disciplinary")) {
-            member = memberRepository.searchDisciplinary(name);
+            Page<Object[]> objects=memberRepository.searchDisciplinary(name,pageRequest);
+            member = objects.getContent();
         }
 
         log.info(filter + " , " + member);

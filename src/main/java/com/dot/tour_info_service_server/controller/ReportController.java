@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -23,11 +24,12 @@ public class ReportController {
 
     private final ReportService reportService;
 
+    //페이징 완료
     //필터 조회
     // amdin
     @GetMapping(value = "",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseWrapDTO<List<ReportResponseDTO>>>reportFilter(@RequestParam String filter, @RequestParam String search){
-        List<ReportResponseDTO> data=reportService.reportFilter(filter,search);
+    public ResponseEntity<ResponseWrapDTO<List<ReportResponseDTO>>>reportFilter(@RequestParam(value = "page",required = false) int page, @RequestParam String filter, @RequestParam String search){
+        List<ReportResponseDTO> data=reportService.reportFilter(page,filter,search);
         ResponseWrapDTO<List<ReportResponseDTO>> response=new ResponseWrapDTO<>(true,data);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
