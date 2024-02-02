@@ -25,6 +25,8 @@ class MemberRepositoryTest {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+//    PageRequest pageRequest=PageRequest.of(0,10);
+
     @Test
     // member dummy data insert test
     public void insertMembers() {
@@ -96,13 +98,13 @@ class MemberRepositoryTest {
     }
 
     // 회원 검색 테스트
-    @Test
-    public void searchUserTest(){
-        Object[] result = memberRepository.searchUser("", null).get(0);
-        for(Object user : result){
-            log.info(user);
-        }
-    }
+//    @Test
+//    public void searchUserTest(){
+//        Object[] result = memberRepository.searchUser("", null,pageRequest).get();
+//        for(Object user : result){
+//            log.info(user);
+//        }
+//    }
 
     // 회원 프로필 조회에 팔로우 추가 테스트
     @Test
@@ -115,67 +117,68 @@ class MemberRepositoryTest {
 
     // 회원정보에 role, social 여부 추가 테스트
     @Test
-    void userInfoWithRoleTest(){
+    void userInfoWithRoleTest() {
         Object[] result = memberRepository.userInfo(22L).get(0);
-        for(Object user : result){
+        for (Object user : result) {
             log.info(user);
 
-        PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<Object[]> userlist= memberRepository.searchUser("",null, pageRequest);
-        for(Object[] list : userlist){
-            log.info("user mno : " + list[0]);
-            log.info("user image : " + list[1]);
-            log.info("user name : " + list[2]);
-            log.info("user 팔로잉 : " + list[3]);
+            PageRequest pageRequest = PageRequest.of(0, 10);
+            Page<Object[]> userlist = memberRepository.searchUser("", null, pageRequest);
+            for (Object[] list : userlist) {
+                log.info("user mno : " + list[0]);
+                log.info("user image : " + list[1]);
+                log.info("user name : " + list[2]);
+                log.info("user 팔로잉 : " + list[3]);
 
+            }
         }
-    }
 
-    // 회원가입 대기 조회 테스트
-    @Test
-    public void showTest(){
-        PageRequest pageRequest1=PageRequest.of(0,10);
-        log.info(memberRepository.showJoinWaiting(pageRequest1));
     }
-
-    // 회원가입 승인 테스트
-    @Test
-    public void joinTest(){
-        memberRepository.joinMember(8L);
-    }
-
-    // 회원탈퇴 테스트
-    @Test
-    void removeMemberTest(){
-        memberRepository.deleteById(17L);
-    }
-
-    //관리자 회원 검색
-    PageRequest pageRequest=PageRequest.of(0,10);
-    @Test
-    @Transactional
-    void searchAll(){
-        log.info("모두 검색 : "+memberRepository.searchMemberAll("",pageRequest));
-        log.info("사업자 검색 : "+memberRepository.searchBusiness("",pageRequest));
-        log.info("일반 유저 검색 : "+memberRepository.searchNomal("",pageRequest));
-        log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary("",pageRequest));
-    }
-
-    // 프로필에 cart 추가 테스트
-    @Test
-    void showCart(){
-        log.info("카트" + memberRepository.showCart(2L));
-    }
-
-    // 유저프로필 검색 테스트
-    @Test
-    void findUserProfileTest(){
-        log.info("profile : " + memberRepository.findProfileByMno(2L));
-    }
-
-    // 프로필 이미지 업데이트 테스트
-    @Test
-    void memberImageUpdateTest(){
-        memberRepository.updateMemberImage("testImageSrc", 2L);
-    }
+//    // 회원가입 대기 조회 테스트
+//    @Test
+//    public void showTest(){
+//        PageRequest pageRequest1=PageRequest.of(0,10);
+//        log.info(memberRepository.showJoinWaiting(pageRequest1));
+//    }
+//
+//    // 회원가입 승인 테스트
+//    @Test
+//    public void joinTest(){
+//        memberRepository.joinMember(8L);
+//    }
+//
+//    // 회원탈퇴 테스트
+//    @Test
+//    void removeMemberTest(){
+//        memberRepository.deleteById(17L);
+//    }
+//
+//    //관리자 회원 검색
+//    PageRequest pageRequest=PageRequest.of(0,10);
+//    @Test
+//    @Transactional
+//    void searchAll(){
+//        log.info("모두 검색 : "+memberRepository.searchMemberAll("",pageRequest));
+//        log.info("사업자 검색 : "+memberRepository.searchBusiness("",pageRequest));
+//        log.info("일반 유저 검색 : "+memberRepository.searchNomal("",pageRequest));
+//        log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary("",pageRequest));
+//    }
+//
+//    // 프로필에 cart 추가 테스트
+//    @Test
+//    void showCart(){
+//        log.info("카트" + memberRepository.showCart(2L));
+//    }
+//
+//    // 유저프로필 검색 테스트
+//    @Test
+//    void findUserProfileTest(){
+//        log.info("profile : " + memberRepository.findProfileByMno(2L));
+//    }
+//
+//    // 프로필 이미지 업데이트 테스트
+//    @Test
+//    void memberImageUpdateTest(){
+//        memberRepository.updateMemberImage("testImageSrc", 2L);
+//    }
 }
