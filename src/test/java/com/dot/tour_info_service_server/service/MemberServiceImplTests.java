@@ -43,13 +43,18 @@ class MemberServiceImplTests {
                 member.changeImage(userInfoDTO.getImage());
             memberRepository.save(member);
         }
-
     }
 
     // 회원 프로필 조회 테스트
     @Test
     void showUserProfileTest(){
         log.info(memberService.showUserProfile(2L));
+    }
+
+    // 회원탈퇴 테스트
+    @Test
+    void removeMemberTest(){
+        memberService.deleteUserInfo(16L);
     }
 
     // 회원 검색 테스트
@@ -77,6 +82,7 @@ class MemberServiceImplTests {
     }
 
     //회원 검색 - 관리자
+
     @Test
     void managerSearchTest(){
         log.info(memberService.managerToSearchUser(0,"all",""));

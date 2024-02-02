@@ -21,6 +21,7 @@ public class PlaceServiceImplTests {
     PlaceRepository placeRepository;
 
 
+    // 장소등록 테스트
     @Test
     void register(){
         RegistPlaceRequestDTO dto = RegistPlaceRequestDTO.builder()
@@ -37,26 +38,22 @@ public class PlaceServiceImplTests {
     }
 
 
-    @Test
-    void deletePlaceTest(){
-        placeService.removePlace(1L);
-    }
-
+    // 장소검색 테스트
     @Test
     void placeSearchTest(){
         log.info(placeService.searchPlace(null, "test", 0).get(0));
     }
 
+    // 마이페이지 방문횟수 테스트
     @Test
     void getPlaceCountTest(){
-//        List<Object[]> result = placeRepository.getPlaceCount(2L);
-//        Map<String, Object> placeCount= new HashMap<>();
-//        for(Object[] list: result){
-//            for(int i = 0; i < list.length; i += 2){
-//                placeCount.put((String)list[i], list[i+1]);
-//            }
-//        }
-//        log.info("결과는 : " + placeCount);
         log.info(placeService.getPlaceCount(2L));
     }
+
+    // 장소삭제 테스트
+    @Test
+    void deletePlaceTest(){
+        placeService.removePlace(1L);
+    }
+
 }

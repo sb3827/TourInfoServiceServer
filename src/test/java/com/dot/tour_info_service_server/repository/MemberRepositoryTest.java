@@ -86,9 +86,40 @@ class MemberRepositoryTest {
         log.info("is Duplicate?: "+memberRepository.existsByEmail("mmk2751@gmail.com"));
     }
 
+    // 회원 프로필 조회 테스트
+    @Test
+    public void showProfileTest(){
+        Object[] result = memberRepository.findProfileByMno(22L).get(0);
+        for(Object profile : result){
+            log.info(profile);
+        }
+    }
+
     // 회원 검색 테스트
     @Test
     public void searchUserTest(){
+        Object[] result = memberRepository.searchUser("", null).get(0);
+        for(Object user : result){
+            log.info(user);
+        }
+    }
+
+    // 회원 프로필 조회에 팔로우 추가 테스트
+    @Test
+    void showFollowTest(){
+        log.info("팔로워 : " + memberRepository.showFollowers(2L));
+        log.info("팔로워 : " + memberRepository.showFollowersByName("이해창"));
+        log.info("팔로잉 : " + memberRepository.showFollowings(2L));
+        log.info("팔로워 : " + memberRepository.showFollowingsByName("이해창"));
+    }
+
+    // 회원정보에 role, social 여부 추가 테스트
+    @Test
+    void userInfoWithRoleTest(){
+        Object[] result = memberRepository.userInfo(22L).get(0);
+        for(Object user : result){
+            log.info(user);
+
         PageRequest pageRequest = PageRequest.of(0, 10);
         Page<Object[]> userlist= memberRepository.searchUser("",null, pageRequest);
         for(Object[] list : userlist){
@@ -96,6 +127,7 @@ class MemberRepositoryTest {
             log.info("user image : " + list[1]);
             log.info("user name : " + list[2]);
             log.info("user 팔로잉 : " + list[3]);
+
         }
     }
 
@@ -112,26 +144,11 @@ class MemberRepositoryTest {
         memberRepository.joinMember(8L);
     }
 
+    // 회원탈퇴 테스트
     @Test
     void removeMemberTest(){
         memberRepository.deleteById(17L);
     }
-
-    @Test
-    void userInfoWithRoleTest(){
-        Object[] user = memberRepository.userInfo(22L).get(0);
-        log.info("social: " + user[7]);
-//        log.info("class : " + user[6].getClass());
-    }
-
-    @Test
-    void showFollowTest(){
-        log.info("팔로워 : " + memberRepository.showFollowers(2L));
-        log.info("팔로워 : " + memberRepository.showFollowersByName("이해창"));
-        log.info("팔로잉 : " + memberRepository.showFollowings(2L));
-        log.info("팔로워 : " + memberRepository.showFollowingsByName("이해창"));
-    }
-
 
     //관리자 회원 검색
     PageRequest pageRequest=PageRequest.of(0,10);
@@ -144,16 +161,19 @@ class MemberRepositoryTest {
         log.info("정지 유저 검색 : "+memberRepository.searchDisciplinary("",pageRequest));
     }
 
+    // 프로필에 cart 추가 테스트
     @Test
     void showCart(){
         log.info("카트" + memberRepository.showCart(2L));
     }
 
+    // 유저프로필 검색 테스트
     @Test
     void findUserProfileTest(){
         log.info("profile : " + memberRepository.findProfileByMno(2L));
     }
 
+    // 프로필 이미지 업데이트 테스트
     @Test
     void memberImageUpdateTest(){
         memberRepository.updateMemberImage("testImageSrc", 2L);

@@ -28,7 +28,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "limit 3")
     List<Object[]> mostLikePlace();
 
-
+    // 카테고리, 검색어로 장소 검색
     @Query("select p.pno, p.name, p.lng, p.lat, p.roadAddress, p.localAddress, p.engAddress, p.category, p.cart, p.regDate, p.modDate " +
             "from Place p " +
             "where :filter is null and " +
@@ -36,7 +36,7 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
             "p.roadAddress like %:search% or p.engAddress like %:search%) " +
             "or p.category = :filter and " +
             "(p.name like %:search% or p.localAddress like %:search% or " +
-            "p.roadAddress like %:search% or p.engAddress like %:search%)" +
+            "p.roadAddress like %:search% or p.engAddress like %:search%) " +
             "group by p.pno")
     Page<Object[]> searchPlace(Category filter, String search, PageRequest pageRequest);
 
