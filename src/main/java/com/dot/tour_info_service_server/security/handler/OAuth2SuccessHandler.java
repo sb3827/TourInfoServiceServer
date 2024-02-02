@@ -21,8 +21,8 @@ import java.io.IOException;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final TokenService tokenService;
 
-    @Value("${server.serverAddress}")
-    private String serverAddress;
+    @Value("${client.address}")
+    private String clientAddress;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         log.info("success");
@@ -40,7 +40,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String targetUrl = UriComponentsBuilder
 //                .fromUriString("/home")
-                .fromHttpUrl("http://localhost:3000/oauth2")
+                .fromHttpUrl("http://"+("localhost".equals(clientAddress) ? "localhost:3000" : clientAddress)+"/oauth2")
                 .queryParam("mno", authMemberDTO.getMno())
                 .queryParam("token", token.getToken())
                 .queryParam("refreshToken",token.getRefreshToken())
