@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
@@ -41,14 +42,8 @@ public class AuthController {
     private final AuthService authService;
     private final TokenService tokenService;
 
-    // security context 의 principal 정보 가져오기
-    // todo delete
-    @GetMapping("/getTest")
-    public ResponseEntity<String> getTest() {
-        log.info(SecurityUtil.getCurrentMemberEmail());
-        log.info(SecurityUtil.getCurrentMemberMno());
-        return new ResponseEntity<>("test", HttpStatus.OK);
-    }
+    @Value("${client.address}")
+    private String clientAddress;
 
     // permit all
     @PostMapping("/login")
@@ -179,7 +174,7 @@ public class AuthController {
 
         if (isValid) {
             // 성공한 경우
-            return new ModelAndView(new RedirectView("http://localhost:3000/login"));
+            return new ModelAndView(new RedirectView("http://"+("localhost".equals(clientAddress) ? "localhost:3000" : clientAddress)));
         } else {
             // 실패한 경우 (badRequest)
             throw new BadRequestException("잘못된 요청");

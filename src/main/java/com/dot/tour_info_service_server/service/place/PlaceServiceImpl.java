@@ -32,6 +32,7 @@ public class PlaceServiceImpl implements PlaceService {
     private final ReportRepository reportRepository;
 
 
+    // 장소 등록
     @Override
     public Long registerPlace(RegistPlaceRequestDTO placeDTO) {
         log.info("DTO-------------------");
@@ -42,6 +43,7 @@ public class PlaceServiceImpl implements PlaceService {
         return place.getPno();
     }
 
+    // 장소 검색
     @Override
     public List<PlaceDTO> searchPlace(Category filter, String search, int page) {
         PageRequest pageRequest = PageRequest.of(page, 10);
@@ -99,6 +101,7 @@ public class PlaceServiceImpl implements PlaceService {
         return null;
     }
 
+    // 장소 삭제
     @Override
     @Transactional
     public void removePlace(Long pno) {

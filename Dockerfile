@@ -1,11 +1,7 @@
 # Use the official OpenJDK 17 base image
-FROM adoptopenjdk:17-jre-hotspot
-
-# Set the working directory in the container
-WORKDIR /app
-
-# Copy the Spring Boot JAR file from the host system to the container
-COPY target/your-spring-boot-app.jar /app/app.jar
-
-# Run the Spring Boot application
-CMD ["java", "-jar", "app.jar"]
+FROM openjdk:17.0.2-jdk-slim
+ARG JAR_FILE=target/*.jar
+ARG PROFILES
+ARG ENV
+COPY ${JAR_FILE} /app.jar
+ENTRYPOINT ["java", "-Dspring.profiles.active=${PROFILES}", "-Dserver.env=${ENV}", "-jar", "app.jar"]
