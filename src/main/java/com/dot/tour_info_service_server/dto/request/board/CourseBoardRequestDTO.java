@@ -23,7 +23,7 @@ public class CourseBoardRequestDTO {
   private Double score;
   @NotNull (message = "writer(mno) cannot be null")
   private Long writer;
-  @NotBlank (message = "placeList cannot be null")
+  @NotNull (message = "placeList cannot be null")
   private List<List<Long>> coursePlaceList;
   private List<Long> images;
   private List<String> deleteImages;
