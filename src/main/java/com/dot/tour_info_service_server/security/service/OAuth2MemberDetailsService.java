@@ -36,18 +36,13 @@ public class OAuth2MemberDetailsService implements OAuth2UserService<OAuth2UserR
         // oauth 정보 획득
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        log.info("{}", oAuth2Attribute);
-
         Member member = saveSocialMember(oAuth2Attribute);
-        AuthMemberDTO authMemberDTO = new AuthMemberDTO(member.getEmail(), member.getMno(), member.getPassword(),
+
+        // OAuth2User를 implements한 authMemberDTO return
+        return new AuthMemberDTO(member.getEmail(), member.getMno(), member.getPassword(),
                 member.isFromSocial(), member.getRoleSet().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
                 .collect(Collectors.toList()), oAuth2User.getAttributes());
-
-
-
-        // OAuth2User를 implements한 authMemberDTO return
-        return authMemberDTO;
     }
 
     private Member saveSocialMember(OAuth2Attribute oAuth2Attribute) {
@@ -87,16 +82,12 @@ class OAuth2Attribute {
     private String picture;
 
     static OAuth2Attribute of(String provider, String attributeKey, Map<String, Object> attributes) {
-        switch (provider) {
-            case "google":
-                return ofGoogle(attributeKey, attributes);
-            case "kakao":
-                return ofKakao(attributeKey, attributes);
-            case "naver":
-                return ofNaver(attributeKey, attributes);
-            default:
-                throw new RuntimeException();
-        }
+        return switch (provider) {
+            case "google" -> ofGoogle(attributeKey, attributes);
+            case "kakao" -> ofKakao(attributeKey, attributes);
+            case "naver" -> ofNaver(attributeKey, attributes);
+            default -> throw new RuntimeException();
+        };
     }
 
     // google OAuth2Attribute 변환
@@ -112,7 +103,6 @@ class OAuth2Attribute {
 
     // kakao OAuth2Attribute 변환
     private static OAuth2Attribute ofKakao(String attributeKey, Map<String, Object> attributes) {
-        log.info("ofKakao");
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
@@ -127,7 +117,6 @@ class OAuth2Attribute {
 
     // naver OAuth2Attribute 변환
     private static OAuth2Attribute ofNaver(String attributeKey, Map<String, Object> attributes) {
-        log.info(attributes);
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         return OAuth2Attribute.builder()

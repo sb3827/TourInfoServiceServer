@@ -23,7 +23,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final ImageService imageService;
-
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final BoardLikeRepository boardLikeRepository;
@@ -38,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
     public UserInfoDTO showUserInfo(Long mno) {
         Object[] result = memberRepository.userInfo(mno).get(0);
         if (result != null) {
-            UserInfoDTO userInfoDTO = UserInfoDTO.builder()
+            return UserInfoDTO.builder()
                     .mno((Long) result[0])
                     .image((String) result[1])
                     .name((String) result[2])
@@ -48,7 +47,6 @@ public class MemberServiceImpl implements MemberService {
                     .role((Role) result[6])
                     .fromSocial((Boolean) result[7])
                     .build();
-            return userInfoDTO;
         }
         return null;
     }
@@ -102,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
     public UserProfileDTO showUserProfile(Long mno) {
         List<Object[]> result = memberRepository.findProfileByMno(mno);
         if (!result.isEmpty()) {
-            UserProfileDTO userProfileDTO = UserProfileDTO.builder()
+            return UserProfileDTO.builder()
                     .mno((Long) result.get(0)[0])
                     .name((String) result.get(0)[1])
                     .followings(memberRepository.showFollowings((Long) result.get(0)[0]))
@@ -110,7 +108,6 @@ public class MemberServiceImpl implements MemberService {
                     .cart(memberRepository.showCart((Long) result.get(0)[0]))
                     .image((String) result.get(0)[5])
                     .build();
-            return userProfileDTO;
         }
         return null;
     }
@@ -193,21 +190,25 @@ public class MemberServiceImpl implements MemberService {
         List<Object[]> member = new ArrayList<>();
         List<MemberDetailDTO> memberDetailDTOS = new ArrayList<>();
 
-        if (filter.equals("all")) {
-            Page<Object[]> objects=memberRepository.searchMemberAll(name,pageRequest);
-            member = objects.getContent();
-        } else if (filter.equals("normal")) {
-            Page<Object[]> objects = memberRepository.searchNomal(name,pageRequest);
-            member = objects.getContent();
-        } else if (filter.equals("business")) {
-            Page<Object[]> objects=memberRepository.searchBusiness(name,pageRequest);
-            member = objects.getContent();
-        } else if (filter.equals("disciplinary")) {
-            Page<Object[]> objects=memberRepository.searchDisciplinary(name,pageRequest);
-            member = objects.getContent();
+        switch (filter) {
+            case "all" -> {
+                Page<Object[]> objects = memberRepository.searchMemberAll(name, pageRequest);
+                member = objects.getContent();
+            }
+            case "normal" -> {
+                Page<Object[]> objects = memberRepository.searchNomal(name, pageRequest);
+                member = objects.getContent();
+            }
+            case "business" -> {
+                Page<Object[]> objects = memberRepository.searchBusiness(name, pageRequest);
+                member = objects.getContent();
+            }
+            case "disciplinary" -> {
+                Page<Object[]> objects = memberRepository.searchDisciplinary(name, pageRequest);
+                member = objects.getContent();
+            }
         }
 
-        log.info(filter + " , " + member);
         for (Object[] objects : member) {
             String roleName = objects[5] instanceof Role ? ((Role) objects[5]).name() : null;
             MemberDetailDTO memberDetailDTO = MemberDetailDTO.builder()

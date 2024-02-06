@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface BoardService {
-
     // 장소 등록
     Long placeRegister(PlaceBoardRequestDTO placeBoardRequestDTO);
 
@@ -44,5 +43,4 @@ public interface BoardService {
 
     // 코스 검색 조회
     List<BoardSearchDTO> findCourseBoard(String search, int page, Boolean isAd);
-
 }

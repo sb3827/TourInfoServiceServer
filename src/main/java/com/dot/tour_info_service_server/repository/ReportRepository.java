@@ -10,12 +10,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
-
   //신고 전체 조회 - 최신순
   @Transactional
   @Query("select r " +

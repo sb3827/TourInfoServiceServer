@@ -8,10 +8,8 @@ import com.dot.tour_info_service_server.dto.request.auth.SignupRequestDTO;
 import com.dot.tour_info_service_server.dto.response.auth.LoginServiceDTO;
 import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Role;
-import org.apache.coyote.BadRequestException;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.security.cert.CertificateException;
 import java.util.Objects;
 
 public interface AuthService {

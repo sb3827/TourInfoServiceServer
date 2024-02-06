@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -71,10 +70,10 @@ public class ReportController {
             Long data = reportService.report(reportRequestDTO);
             if(data==-1){
                 response.setResult(false);
-                response.setData(-1l);
+                response.setData(-1L);
                 return new ResponseEntity<>(response,HttpStatus.OK);
             }
-            else if (data == 1l) {
+            else if (data == 1L) {
                 response.setResult(true);
                 response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -91,9 +90,9 @@ public class ReportController {
     public ResponseEntity<ResponseWrapDTO<Long>> reportIsDone(@PathVariable Long sno){
         Long data=reportService.reportUpdate(sno);
         ResponseWrapDTO response=new ResponseWrapDTO(false,null);
-        if(data==-1l){
+        if(data==-1L){
             response.setData(-1);
-        }else if(data==sno){
+        }else if(data.equals(sno)){
             response.setResult(true);
             response.setData(data);
             return new ResponseEntity<>(response,HttpStatus.OK);
@@ -114,7 +113,7 @@ public class ReportController {
             // -1은 이미 정지된 유저
             // -2는 게시글과 댓글 둘다 신고가 된경우(게시글 신고 또는 댓글 신고만 가능)
             // -3은 신고가 존재하지 않는 경우
-            if (data <= -1l) {
+            if (data <= -1L) {
                 response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             } else if (data > 0) {

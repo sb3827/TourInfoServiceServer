@@ -4,12 +4,10 @@ import com.dot.tour_info_service_server.dto.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -77,8 +75,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> accessDeniedException(AccessDeniedException e,
-                                                               final HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> accessDeniedException(final HttpServletRequest request) {
         return new ResponseEntity<>(ErrorResponse.of(HttpStatus.FORBIDDEN, "접근이 거부되었습니다", request),
                 HttpStatus.FORBIDDEN);
     }

@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPlacePK> {
-
     // boardPlace place_pno set null
     @Modifying
     @Transactional
@@ -32,7 +31,6 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Transactional
     @Query("Delete from BoardPlace bp where bp.boardPlacePK.board.bno = :bno")
     void deleteByBno(Long bno);
-
 
    // 장소 대표이미지 조회
     @Query("select i.src " +

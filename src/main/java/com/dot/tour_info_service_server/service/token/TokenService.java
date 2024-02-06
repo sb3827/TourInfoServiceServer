@@ -24,12 +24,10 @@ public class TokenService {
         String refresh = tokenProvider.generateRefresh(mno);
         String access = createNewAccessToken(refresh);
 
-        TokenDTO tokenDto = TokenDTO.builder()
+        return TokenDTO.builder()
                 .refreshToken(refresh)
                 .token(access)
                 .build();
-
-        return tokenDto;
     }
 
     public String createNewAccessToken(String refreshToken) throws IllegalAccessException {
@@ -39,7 +37,6 @@ public class TokenService {
 
         Long UserId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
         Optional<Member> result = memberRepository.findById(UserId);
-        log.info(result);
 
         if (result.isEmpty()){
             throw new IllegalAccessException("Unexpected token");

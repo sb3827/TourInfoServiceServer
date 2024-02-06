@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface FolderRepository extends JpaRepository<Folder,Long> {
-
     //폴더 모두 조회
     @Query("select f.fno,f.title,p.pno,p.name " +
             "from Folder f " +
@@ -19,7 +18,6 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
             "group by f.fno,p.pno ")
     List<Object[]> getFolderAll(Long mno);
 
-
     //폴더명 조회
     @Query("select f from Folder f where f.member.mno=:mno")
     List<Folder> getFolderTitle(Long mno);
@@ -28,5 +26,4 @@ public interface FolderRepository extends JpaRepository<Folder,Long> {
     @Transactional
     @Query("delete from Folder f where f.member.mno = :mno")
     void removeFolderByMno(Long mno);
-
 }
