@@ -22,9 +22,7 @@ import java.util.List;
 @RequestMapping("/folder")
 @RequiredArgsConstructor
 public class FolderController {
-
     private final FolderService folderService;
-
     private final CartService cartService;
 
     //폴더 내용 모두 들고오기
@@ -66,7 +64,7 @@ public class FolderController {
         ResponseWrapDTO response=new ResponseWrapDTO<>(false,null);
         if(SecurityUtil.validateMno(folderAllRequestDTO.getMno())) {
             Long data = folderService.modify(folderAllRequestDTO);
-            if (data != -1l) {
+            if (data != -1L) {
                 response.setResult(true);
                 response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.OK);
@@ -83,7 +81,7 @@ public class FolderController {
     public ResponseEntity<ResponseWrapDTO<Long>> remove(@PathVariable Long fno){
         ResponseWrapDTO response = new ResponseWrapDTO(false,null);
         Long data=folderService.remove(fno);
-        if (data!=-1l){
+        if (data!=-1L){
             response.setResult(true);
             response.setData(data);
             return new ResponseEntity<>(response,HttpStatus.OK);
@@ -98,7 +96,7 @@ public class FolderController {
         ResponseWrapDTO response=new ResponseWrapDTO(false,null);
         if(SecurityUtil.validateMno(cartAllRequestDTO.getMno())) {
             Long data = cartService.addCart(cartAllRequestDTO);
-            if (data != -1l) {
+            if (data != -1L) {
                 response.setResult(true);
                 response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.OK);

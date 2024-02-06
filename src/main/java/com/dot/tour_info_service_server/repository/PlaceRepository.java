@@ -5,18 +5,12 @@ import com.dot.tour_info_service_server.entity.Place;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
-import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-
     //게시글이 가장 많은 장소 3곳 정보
     @Transactional
     @Query("select p.pno, p.name,i.src,p.cart,count(distinct b.bno),p.category " +
@@ -43,5 +37,4 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
     // 프로시저 실행
     @Procedure("Count_pno")
     List<Object[]> getPlaceCount(Long mno);
-
 }

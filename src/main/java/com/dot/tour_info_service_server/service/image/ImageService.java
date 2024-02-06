@@ -11,9 +11,7 @@ public interface ImageService {
     ResponseUploadDTO ImageUpload(String saveName);
     void deleteImage(String fileName);
     List<FileDTO> uploadFile(List<MultipartFile> multipartFiles);
-
     // image ino board bno 연결
     void linkBoard(Long ino, Board board);
-
     Object deleteFile(String fileName);
 }

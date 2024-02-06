@@ -18,7 +18,7 @@ public interface PlaceService {
     Map<String, Object> getPlaceCount(Long mno);
 
     default Place dtoToEntity(RegistPlaceRequestDTO dto){
-        Place place = Place.builder()
+        return Place.builder()
                 .name(dto.getName())
                 .lng(dto.getLng())
                 .lat(dto.getLat())
@@ -27,22 +27,5 @@ public interface PlaceService {
                 .engAddress(dto.getEngAddress())
                 .category(dto.getCategory())
                 .build();
-        return place;
-    }
-    default PlaceDTO entityToDto(Place dto){
-        PlaceDTO placeDTO = PlaceDTO.builder()
-                .pno(dto.getPno())
-                .name(dto.getName())
-                .lng(dto.getLng())
-                .lat(dto.getLat())
-                .roadAddress(dto.getRoadAddress())
-                .localAddress(dto.getLocalAddress())
-                .engAddress(dto.getEngAddress())
-                .category(dto.getCategory())
-                .cart(dto.getCart())
-                .regDate(dto.getRegDate())
-                .modDate(dto.getModDate())
-                .build();
-        return placeDTO;
     }
 }

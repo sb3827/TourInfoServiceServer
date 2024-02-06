@@ -31,13 +31,9 @@ public class PlaceServiceImpl implements PlaceService {
     private final ReplyRepository replyRepository;
     private final ReportRepository reportRepository;
 
-
     // 장소 등록
     @Override
     public Long registerPlace(RegistPlaceRequestDTO placeDTO) {
-        log.info("DTO-------------------");
-        log.info(placeDTO);
-
         Place place = dtoToEntity(placeDTO);
         placeRepository.save(place);
         return place.getPno();
@@ -113,7 +109,7 @@ public class PlaceServiceImpl implements PlaceService {
             placeRepository.deleteById(pno);
         } else {
             // 코스 게시글일 경우
-            if (boardRepository.boardIsCourse(pno) == true) {
+            if (boardRepository.boardIsCourse(pno)) {
                 boardPlaceRepository.updateBoardPlacePno(pno); // boardPlace pno를 null로 변경
                 cartRepository.removeCart(pno); // cart 삭제
                 placeRepository.deleteById(pno); // place 삭제
