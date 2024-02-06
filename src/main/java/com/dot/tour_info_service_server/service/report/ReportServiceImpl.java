@@ -22,21 +22,15 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService{
-
     private final ReportRepository reportRepository;
-
     private final MemberRepository memberRepository;
-
     private final DisciplinaryRepository disciplinaryRepository;
-
     //게시글 및 댓글 삭제
     private final ReplyRepository replyRepository;
     private final BoardLikeRepository boardLikeRepository;
     private final BoardPlaceRepository boardPlaceRepository;
     private final ImageRepository imageRepository;
     private final BoardRepository boardRepository;
-
-    //신고 내역 모두 조회
 
     //신고 필터 조회
     @Override
@@ -153,7 +147,6 @@ public class ReportServiceImpl implements ReportService{
         Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
 
         if (!member.isPresent()){
-            System.out.println("여긴가?");
             return null;
         }
         if(reportRequestDTO.getRno()==null && reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
@@ -163,7 +156,6 @@ public class ReportServiceImpl implements ReportService{
 
             return -1l;
         }
-        System.out.println("성공");
 
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())

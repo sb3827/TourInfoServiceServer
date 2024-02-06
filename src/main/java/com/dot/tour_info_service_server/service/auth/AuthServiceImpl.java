@@ -13,17 +13,14 @@ import com.dot.tour_info_service_server.repository.MemberRepository;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import com.dot.tour_info_service_server.service.mail.MailService;
 import com.dot.tour_info_service_server.service.token.TokenService;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import javax.security.auth.login.AccountNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -41,8 +38,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public LoginServiceDTO login(LoginRequestDTO requestDTO) throws Exception {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
-
-
 
         if (result.isEmpty()) {
             throw new BadCredentialsException("유저 정보가 없습니다");

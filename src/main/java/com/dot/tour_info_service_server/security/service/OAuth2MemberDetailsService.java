@@ -36,8 +36,6 @@ public class OAuth2MemberDetailsService implements OAuth2UserService<OAuth2UserR
         // oauth 정보 획득
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        log.info("{}", oAuth2Attribute);
-
         Member member = saveSocialMember(oAuth2Attribute);
         AuthMemberDTO authMemberDTO = new AuthMemberDTO(member.getEmail(), member.getMno(), member.getPassword(),
                 member.isFromSocial(), member.getRoleSet().stream()
@@ -112,7 +110,6 @@ class OAuth2Attribute {
 
     // kakao OAuth2Attribute 변환
     private static OAuth2Attribute ofKakao(String attributeKey, Map<String, Object> attributes) {
-        log.info("ofKakao");
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
 
@@ -127,7 +124,6 @@ class OAuth2Attribute {
 
     // naver OAuth2Attribute 변환
     private static OAuth2Attribute ofNaver(String attributeKey, Map<String, Object> attributes) {
-        log.info(attributes);
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         return OAuth2Attribute.builder()

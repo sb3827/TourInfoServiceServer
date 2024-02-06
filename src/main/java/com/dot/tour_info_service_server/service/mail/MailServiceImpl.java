@@ -5,8 +5,6 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -18,26 +16,6 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
     private final JavaMailSender javaMailSender;
-
-    @Override
-    public void sendEmailToMember(String email, String title, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        try {
-            //받는사람
-            message.setTo(email);
-            //제목
-            message.setSubject(title);
-            //내용
-            message.setText(text);
-
-            javaMailSender.send(message);
-
-        } catch (MailException e) {
-            // 메일 전송이 실패하면 예외가 발생
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void sendPassword(String email, String name, String password) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();

@@ -20,13 +20,10 @@ import java.util.*;
 @RequiredArgsConstructor
 @Log4j2
 public class FolderServiceImpl implements FolderService{
-
     //폴더 repository
     private final FolderRepository folderRepository;
-
     //장바구니 repository
     private final CartRepository cartRepository;
-
     private final BoardPlaceRepository boardPlaceRepository;
 
     //폴더 전부 조회

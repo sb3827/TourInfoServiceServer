@@ -12,8 +12,6 @@ import com.dot.tour_info_service_server.entity.Reply;
 import java.util.List;
 
 public interface ReplyService {
-//  List<ReplyDTO> getListOfReplyByBoard(Long bno);    // board 의 댓글목록 불러오기
-
   //부모 댓글 조회
   List<ReplyMemberDTO> parentReply(Long bno);
 
@@ -76,5 +74,4 @@ public interface ReplyService {
     }
     return replyDTO;
   }
-
 }

@@ -10,13 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CartSeviceImpl implements CartService{
-
     //장바구니 repository
     private final CartRepository cartRepository;
-
     //장소 repository
     private final PlaceRepository placeRepository;
-
 
     //폴더에 장소 추가
     @Override
@@ -28,7 +25,6 @@ public class CartSeviceImpl implements CartService{
         }
         return -1l;
     }
-
 
     //폴더에 장소 제거
     @Override

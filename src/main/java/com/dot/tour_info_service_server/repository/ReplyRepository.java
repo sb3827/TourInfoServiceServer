@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReplyRepository extends JpaRepository<Reply, Long> {
-
   @Modifying
   @Transactional
   // 보드 테이블 bno가 boardplace의 board_bno 와 같은거 삭제
@@ -23,8 +22,6 @@ public interface ReplyRepository extends JpaRepository<Reply, Long> {
   @Transactional
   @Query("DELETE FROM Reply r WHERE r.parent.rno IN (SELECT r.rno FROM Reply r WHERE r.board.bno IN (SELECT bp.boardPlacePK.board.bno FROM BoardPlace bp WHERE bp.place.pno = :pno))")
   void removeChildReply(Long pno);
-
-
 
   //자식이 몇개있는지 반환
   int countAllByParent(Reply reply);

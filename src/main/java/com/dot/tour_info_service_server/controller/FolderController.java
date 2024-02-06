@@ -22,9 +22,7 @@ import java.util.List;
 @RequestMapping("/folder")
 @RequiredArgsConstructor
 public class FolderController {
-
     private final FolderService folderService;
-
     private final CartService cartService;
 
     //폴더 내용 모두 들고오기

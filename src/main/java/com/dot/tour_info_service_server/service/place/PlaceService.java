@@ -29,20 +29,4 @@ public interface PlaceService {
                 .build();
         return place;
     }
-    default PlaceDTO entityToDto(Place dto){
-        PlaceDTO placeDTO = PlaceDTO.builder()
-                .pno(dto.getPno())
-                .name(dto.getName())
-                .lng(dto.getLng())
-                .lat(dto.getLat())
-                .roadAddress(dto.getRoadAddress())
-                .localAddress(dto.getLocalAddress())
-                .engAddress(dto.getEngAddress())
-                .category(dto.getCategory())
-                .cart(dto.getCart())
-                .regDate(dto.getRegDate())
-                .modDate(dto.getModDate())
-                .build();
-        return placeDTO;
-    }
 }

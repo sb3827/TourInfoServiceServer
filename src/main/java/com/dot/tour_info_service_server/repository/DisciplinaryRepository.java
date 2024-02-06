@@ -21,5 +21,4 @@ public interface DisciplinaryRepository extends JpaRepository<Disciplinary,Long>
     @Transactional
     @Query("select d from Disciplinary d left outer join Member m on d.member.mno=m.mno where m.mno=:mno order by d.dno desc limit 1")
     Disciplinary reportList(Long mno);
-
 }

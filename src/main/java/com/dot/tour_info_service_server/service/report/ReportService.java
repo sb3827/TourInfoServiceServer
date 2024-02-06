@@ -7,14 +7,9 @@ import com.dot.tour_info_service_server.dto.response.report.ReportAllResponseDTO
 import com.dot.tour_info_service_server.dto.response.report.ReportResponseDTO;
 import com.dot.tour_info_service_server.entity.Report;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReportService {
-    //신고 모두 조회
-//    List<ReportDTO> reportAll();
-
-
     //신고 필터 조회
     List<ReportResponseDTO> reportFilter(int page, String filter, String search);
 
@@ -32,20 +27,6 @@ public interface ReportService {
 
     //제재
     Long disciplinary(DisciplinaryRequestDTO disciplinaryRequestDTO);
-    default Report dtoToEntity(ReportAllResponseDTO reportAllResponseDTO){
-
-        Report report=Report.builder()
-                .sno(reportAllResponseDTO.getSno())
-                .complainant_mno(reportAllResponseDTO.getComplainant())
-                .defendant_mno(reportAllResponseDTO.getDefendant())
-                .board_bno(reportAllResponseDTO.getBno()!=null? reportAllResponseDTO.getBno():null)
-                .reply_rno(reportAllResponseDTO.getRno()!=null? reportAllResponseDTO.getRno():null)
-                .content(reportAllResponseDTO.getContent())
-                .isDone(reportAllResponseDTO.getIsDone())
-                .message(reportAllResponseDTO.getMessage())
-                .build();
-        return report;
-    }
 
     default ReportAllResponseDTO entityToDto(Report report){
         ReportAllResponseDTO reportAllResponseDTO = ReportAllResponseDTO.builder()
@@ -61,7 +42,4 @@ public interface ReportService {
                 .build();
         return reportAllResponseDTO;
     }
-
-
-
 }

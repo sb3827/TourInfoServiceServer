@@ -56,7 +56,6 @@ public class ImageServiceImpl implements ImageService {
             count++;
             String fileUrl = "";
 
-            log.info("renamedFileName = {}", renamedFileName);
             try {
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentType(multipartFile.getContentType());
@@ -64,7 +63,6 @@ public class ImageServiceImpl implements ImageService {
                 amazonS3Client.putObject(bucket, renamedFileName, multipartFile.getInputStream(), metadata);
 
                 fileUrl = amazonS3Client.getUrl(bucket, renamedFileName).toString();
-                log.info("fileUrl = {}", fileUrl);
             } catch (IOException e) {
                 e.fillInStackTrace();
                 log.error("file upload에 실패하였습니다.");
@@ -85,7 +83,6 @@ public class ImageServiceImpl implements ImageService {
     public void linkBoard(Long ino, Board board){
         Optional<Image> result = imageRepository.findById(ino);
         if(result.isEmpty()){
-            log.info("image not found");
             return;
         }
 
@@ -116,7 +113,6 @@ public class ImageServiceImpl implements ImageService {
     public void deleteImage(String fileName) {
         String[] name = fileName.split("/");
         try {
-            log.info(deleteFile(name[name.length-1]));
             imageRepository.deleteBySrc(fileName);
         } catch (Exception e) {
             e.fillInStackTrace();

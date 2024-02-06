@@ -23,7 +23,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final ImageService imageService;
-
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final BoardLikeRepository boardLikeRepository;
@@ -207,7 +206,6 @@ public class MemberServiceImpl implements MemberService {
             member = objects.getContent();
         }
 
-        log.info(filter + " , " + member);
         for (Object[] objects : member) {
             String roleName = objects[5] instanceof Role ? ((Role) objects[5]).name() : null;
             MemberDetailDTO memberDetailDTO = MemberDetailDTO.builder()

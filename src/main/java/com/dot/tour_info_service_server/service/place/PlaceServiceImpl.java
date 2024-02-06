@@ -31,13 +31,9 @@ public class PlaceServiceImpl implements PlaceService {
     private final ReplyRepository replyRepository;
     private final ReportRepository reportRepository;
 
-
     // 장소 등록
     @Override
     public Long registerPlace(RegistPlaceRequestDTO placeDTO) {
-        log.info("DTO-------------------");
-        log.info(placeDTO);
-
         Place place = dtoToEntity(placeDTO);
         placeRepository.save(place);
         return place.getPno();

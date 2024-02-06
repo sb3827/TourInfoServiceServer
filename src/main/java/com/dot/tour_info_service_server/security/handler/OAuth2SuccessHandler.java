@@ -25,11 +25,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private String clientAddress;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        log.info("success");
         AuthMemberDTO authMemberDTO = (AuthMemberDTO) authentication.getPrincipal();
-
-        log.info("OAuth2User in principal=" + /*oAuth2User*/ authMemberDTO);
-        log.info("generate token");
         TokenDTO token;
         try {
             // generate access token, refresh token
@@ -39,7 +35,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         String targetUrl = UriComponentsBuilder
-//                .fromUriString("/home")
                 .fromHttpUrl(("localhost".equals(clientAddress) ? "http://localhost:3000/oauth2" : clientAddress+"/oauth2"))
                 .queryParam("mno", authMemberDTO.getMno())
                 .queryParam("token", token.getToken())

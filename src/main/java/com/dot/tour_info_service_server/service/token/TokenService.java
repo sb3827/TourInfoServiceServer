@@ -39,7 +39,6 @@ public class TokenService {
 
         Long UserId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();
         Optional<Member> result = memberRepository.findById(UserId);
-        log.info(result);
 
         if (result.isEmpty()){
             throw new IllegalAccessException("Unexpected token");

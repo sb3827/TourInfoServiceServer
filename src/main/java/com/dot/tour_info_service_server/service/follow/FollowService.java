@@ -18,7 +18,6 @@ public interface FollowService {
 
   void unFollow(Long mno,Long follower);
 
-
   default Follow dtoToEntity(FollowRequestDTO followRequestDTO) {
     Follow follow = Follow.builder().
         followPk(FollowPK.builder()
@@ -28,5 +27,4 @@ public interface FollowService {
         .build();
     return follow;
   }
-
 }

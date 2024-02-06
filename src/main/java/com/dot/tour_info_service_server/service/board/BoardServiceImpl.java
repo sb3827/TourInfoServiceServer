@@ -25,21 +25,13 @@ import java.util.*;
 @Log4j2
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
     private final BoardRepository boardRepository;
-
     private final ReplyRepository replyRepository;
-
     private final ImageRepository imageRepository;
-
     private final ImageService imageService;
-
     private final ReportRepository reportRepository;
-
     private final BoardPlaceRepository boardPlaceRepository;
-
     private final BoardLikeRepository boardLikeRepository;
-
     private final PlaceRepository placeRepository;
 
     @Override
@@ -57,7 +49,6 @@ public class BoardServiceImpl implements BoardService {
                 .build();
         try {
             board = boardRepository.save(board);
-            log.info("board 저장");
         } catch (Exception e) {
             e.fillInStackTrace();
             log.error(e.getMessage());
@@ -79,7 +70,6 @@ public class BoardServiceImpl implements BoardService {
                 .build();
         try {
             boardPlaceRepository.save(boardPlace);
-            log.info("board-place 저장");
         } catch (Exception e) {
             e.fillInStackTrace();
             log.error(e.getMessage());
@@ -114,7 +104,6 @@ public class BoardServiceImpl implements BoardService {
                 .build();
         try {
             board = boardRepository.save(board);
-            log.info("board 저장" + board);
         } catch (Exception e) {
             e.fillInStackTrace();
             log.error(e.getMessage());
@@ -224,7 +213,6 @@ public class BoardServiceImpl implements BoardService {
                 // board - place 수정
                 boardPlaceRepository.deleteAllByBoardPlacePKBoard(board);
                 boardPlaceRepository.save(boardPlace);
-                log.info("board-place 저장");
             } catch (Exception e) {
                 e.fillInStackTrace();
                 log.error(e.getMessage());
@@ -572,8 +560,6 @@ public class BoardServiceImpl implements BoardService {
                         .name((String) objects[14])
                         .build();
                 boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
-
-
         }
         return boardPlaceReplyCountDTOS;
     }
@@ -743,9 +729,6 @@ public class BoardServiceImpl implements BoardService {
 
         MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
 
-        System.out.println(mainResponseDTO);
-
         return mainResponseDTO;
     }
-
 }

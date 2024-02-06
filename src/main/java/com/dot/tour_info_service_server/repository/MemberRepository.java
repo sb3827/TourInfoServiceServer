@@ -1,6 +1,5 @@
 package com.dot.tour_info_service_server.repository;
 
-import com.dot.tour_info_service_server.dto.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,27 +49,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "where r!='ADMIN' and  m.isApprove=true and m.name like %:name%")
     Page<Object[]> searchUser(@Param("name") String name, Long mno, PageRequest pageRequest);
 
-
-
     // 팔로워 수 조회 (mno로 검색)
     @Query("select count(f.followPk.member.mno) from Follow f where f.followPk.member.mno = :mno")
     Long showFollowers(Long mno);
 
-    // 팔로워 수 조회 (이름으로 검색)
-    @Query("select count(f.followPk.member.mno) from Follow f " +
-            "left outer join Member m on m.mno = f.followPk.member.mno " +
-            "where m.name = :name")
-    Long showFollowersByName(String name);
-
     // 팔로잉 수 조회 (mno로 검색)
     @Query("select count(f.followPk.follower.mno) from Follow f where f.followPk.follower.mno = :mno")
     Long showFollowings(Long mno);
-
-    // 팔로잉 수 조회 (이름으로 검색)
-    @Query("select count(f.followPk.follower.mno) from Follow f " +
-            "left outer join Member m on m.mno = f.followPk.follower.mno " +
-            "where m.name = :name")
-    Long showFollowingsByName(String name);
 
     // 회원정보조회
     @Query("select m.mno, m.image, m.name, m.email, m.phone, m.birth, m.roleSet, m.fromSocial from Member m where m.mno = :mno ")
@@ -122,10 +107,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "where r!='ADMIN' and m.isApprove=true and d.expDate>now() and m.name like %:name% " +
             "group by m.mno")
     Page<Object[]> searchDisciplinary(String name,PageRequest pageRequest);
-
-    //회원 이미지 변경
-    @Modifying
-    @Transactional
-    @Query("update Member m set m.image = :src where m.mno= :mno")
-    void updateMemberImage(String src, Long mno);
 }

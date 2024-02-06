@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
-
   //조회대상회원-> followerMno  팔로워->memberMno
   @Query("select f.followPk.follower.mno,f.followPk.follower.name, m.image from Follow f " +
           "left outer join Member m on m.mno = f.followPk.follower.mno " +
@@ -33,5 +32,4 @@ public interface FollowRepository extends JpaRepository<Follow, FollowPK> {
   @Transactional
   @Query("delete from Follow f where f.followPk.member.mno = :mno or f.followPk.follower.mno = :mno")
   void deleteFollowByMno(Long mno);
-
 }
