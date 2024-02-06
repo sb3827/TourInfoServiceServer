@@ -109,7 +109,7 @@ public class PlaceServiceImpl implements PlaceService {
             placeRepository.deleteById(pno);
         } else {
             // 코스 게시글일 경우
-            if (boardRepository.boardIsCourse(pno) == true) {
+            if (boardRepository.boardIsCourse(pno)) {
                 boardPlaceRepository.updateBoardPlacePno(pno); // boardPlace pno를 null로 변경
                 cartRepository.removeCart(pno); // cart 삭제
                 placeRepository.deleteById(pno); // place 삭제

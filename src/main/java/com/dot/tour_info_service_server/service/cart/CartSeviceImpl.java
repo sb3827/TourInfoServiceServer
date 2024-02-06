@@ -23,7 +23,7 @@ public class CartSeviceImpl implements CartService{
             cartRepository.save(cart);
             return cartAllRequestDTO.getFno();
         }
-        return -1l;
+        return -1L;
     }
 
     //폴더에 장소 제거

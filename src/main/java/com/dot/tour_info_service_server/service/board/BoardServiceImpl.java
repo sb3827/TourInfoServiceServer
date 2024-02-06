@@ -236,7 +236,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Long modifyCourse(CourseBoardRequestDTO courseBoardRequestDTO) throws IllegalAccessException, SQLException {
+    public Long modifyCourse(CourseBoardRequestDTO courseBoardRequestDTO) {
         Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsTrue(courseBoardRequestDTO.getBno());
 
         if (result.isEmpty()) {
@@ -309,7 +309,7 @@ public class BoardServiceImpl implements BoardService {
     //장소 포스팅 정보 조회
     @Override
     @Transactional
-    public BoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
+    public BoardInfoDTO getBoardByBno(Long bno) {
         Board result = boardRepository.getPlaceBoardByBno(bno);
         List<Object[]> images = imageRepository.getImageByBno(bno);
         List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
@@ -402,7 +402,7 @@ public class BoardServiceImpl implements BoardService {
 
     //코스 포스팅 정보 조회
     @Override
-    public BoardInfoDTO getCourseByBno(Long bno) throws IllegalAccessException, SQLException {
+    public BoardInfoDTO getCourseByBno(Long bno) {
         Board result = boardRepository.getCourseBoardByBno(bno);
         List<Object[]> images = imageRepository.getImageByBno(bno);
         List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
@@ -520,7 +520,7 @@ public class BoardServiceImpl implements BoardService {
 
     //장소별 장소 포스팅 조회
     @Override
-    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page, Boolean isAd) throws IllegalAccessException, SQLException {
+    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page, Boolean isAd) {
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Object[]> pages = boardRepository.getBoardByPno(pno,pageRequest, isAd);
         List<Object[]> result = pages.getContent();
@@ -727,8 +727,6 @@ public class BoardServiceImpl implements BoardService {
             mainBoardResponseDTOS3.add(mainBoardResponseDTO);
         }
 
-        MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
-
-        return mainResponseDTO;
+        return new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
     }
 }

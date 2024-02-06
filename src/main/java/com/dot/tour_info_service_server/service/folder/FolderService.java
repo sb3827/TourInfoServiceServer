@@ -4,8 +4,6 @@ import com.dot.tour_info_service_server.dto.request.folder.FolderRegistRequestDT
 import com.dot.tour_info_service_server.dto.request.folder.FolderAllRequestDTO;
 import com.dot.tour_info_service_server.dto.response.folder.FolderItemResponseDTO;
 import com.dot.tour_info_service_server.dto.response.folder.FolderNameResponseDTO;
-import com.dot.tour_info_service_server.entity.Folder;
-import com.dot.tour_info_service_server.entity.Member;
 
 import java.util.List;
 

@@ -65,14 +65,6 @@ public class ReplyServiceImpl implements ReplyService {
         return replyMemberDTOS;
     }
 
-
-    @Override
-    public List<ReplyRequestDTO> getListOfReplyByMember(Long mno) {
-        Member member = Member.builder().mno(mno).build();
-        List<Reply> result = replyRepository.getRepliesByMemberOrderByRegDate(member);
-        return result.stream().map(reply -> entityToDto(reply)).collect(Collectors.toList());
-    }
-
     @Override
     public List<ReplyListDTO> showReplyList(Long mno) {
         List<Object[]> result = replyRepository.showReplyList(mno);

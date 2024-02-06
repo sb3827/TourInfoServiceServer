@@ -19,10 +19,9 @@ public interface CartService {
                 .place(Place.builder().pno(cartAllRequestDTO.getPno()).build())
                 .folder(Folder.builder().fno(cartAllRequestDTO.getFno()).build())
                 .build();
-        Cart cart=Cart.builder()
+
+        return Cart.builder()
                 .cartPK(cartPK)
                 .build();
-
-        return cart;
     }
 }

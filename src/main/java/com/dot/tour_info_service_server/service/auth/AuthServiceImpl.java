@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     private final DisciplinaryRepository disciplinaryRepository;
 
     @Override
-    public LoginServiceDTO login(LoginRequestDTO requestDTO) throws Exception {
+    public LoginServiceDTO login(LoginRequestDTO requestDTO) {
         Optional<Member> result = memberRepository.findByEmail(requestDTO.getEmail());
 
         if (result.isEmpty()) {

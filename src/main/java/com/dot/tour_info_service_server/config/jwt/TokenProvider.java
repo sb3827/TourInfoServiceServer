@@ -29,7 +29,6 @@ public class TokenProvider {
     private final JwtProperties jwtProperties;
     private final RefreshTokenRepository refreshTokenRepository;
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "Bearer";
     private Key key;
 
     //token 생성 method
@@ -136,18 +135,6 @@ public class TokenProvider {
         // security context principal 저장하기 위한 객체 생성
         UserDetails principal = new AuthMemberDTO(claims.getSubject(), claims.get("id", Long.class), "", false, authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-    }
-
-    // jwt로 mno 추출
-    public Long getMemberId(String token) {
-        Claims claims = getClaims(token);
-        return claims.get("id", Long.class);
-    }
-
-    // jwt로 email 추출
-    public String getMemberEmail(String token) {
-        Claims claims = getClaims(token);
-        return claims.get("sub", String.class);
     }
 
     // jwt parsing method

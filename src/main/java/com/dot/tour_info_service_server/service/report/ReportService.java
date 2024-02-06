@@ -29,7 +29,7 @@ public interface ReportService {
     Long disciplinary(DisciplinaryRequestDTO disciplinaryRequestDTO);
 
     default ReportAllResponseDTO entityToDto(Report report){
-        ReportAllResponseDTO reportAllResponseDTO = ReportAllResponseDTO.builder()
+        return ReportAllResponseDTO.builder()
                 .sno(report.getSno())
                 .complainant(report.getComplainant_mno())
                 .defendant(report.getDefendant_mno())
@@ -40,6 +40,5 @@ public interface ReportService {
                 .message(report.getMessage())
                 .regDate(report.getRegDate())
                 .build();
-        return reportAllResponseDTO;
     }
 }

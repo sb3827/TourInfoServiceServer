@@ -37,15 +37,12 @@ public class OAuth2MemberDetailsService implements OAuth2UserService<OAuth2UserR
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         Member member = saveSocialMember(oAuth2Attribute);
-        AuthMemberDTO authMemberDTO = new AuthMemberDTO(member.getEmail(), member.getMno(), member.getPassword(),
+
+        // OAuth2User를 implements한 authMemberDTO return
+        return new AuthMemberDTO(member.getEmail(), member.getMno(), member.getPassword(),
                 member.isFromSocial(), member.getRoleSet().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_"+role.name()))
                 .collect(Collectors.toList()), oAuth2User.getAttributes());
-
-
-
-        // OAuth2User를 implements한 authMemberDTO return
-        return authMemberDTO;
     }
 
     private Member saveSocialMember(OAuth2Attribute oAuth2Attribute) {
@@ -85,16 +82,12 @@ class OAuth2Attribute {
     private String picture;
 
     static OAuth2Attribute of(String provider, String attributeKey, Map<String, Object> attributes) {
-        switch (provider) {
-            case "google":
-                return ofGoogle(attributeKey, attributes);
-            case "kakao":
-                return ofKakao(attributeKey, attributes);
-            case "naver":
-                return ofNaver(attributeKey, attributes);
-            default:
-                throw new RuntimeException();
-        }
+        return switch (provider) {
+            case "google" -> ofGoogle(attributeKey, attributes);
+            case "kakao" -> ofKakao(attributeKey, attributes);
+            case "naver" -> ofNaver(attributeKey, attributes);
+            default -> throw new RuntimeException();
+        };
     }
 
     // google OAuth2Attribute 변환

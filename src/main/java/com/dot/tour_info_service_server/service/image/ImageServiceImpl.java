@@ -52,6 +52,7 @@ public class ImageServiceImpl implements ImageService {
             String originalFileName = multipartFile.getOriginalFilename();
 
             //String fileUrl = "http://" + bucket + "/upload_" + fileName;
+            assert originalFileName != null;
             String renamedFileName = getRenamedFileName(originalFileName, count);
             count++;
             String fileUrl = "";
@@ -111,7 +112,6 @@ public class ImageServiceImpl implements ImageService {
     // delete image s3 and db
     @Transactional
     public void deleteImage(String fileName) {
-        String[] name = fileName.split("/");
         try {
             imageRepository.deleteBySrc(fileName);
         } catch (Exception e) {
@@ -126,9 +126,8 @@ public class ImageServiceImpl implements ImageService {
         String str = sdf.format(date);
 
         String ext = originalFileName.substring(originalFileName.indexOf(".") + 1);
-        String renamedFileName = originalFileName.replaceAll(originalFileName, str) + "_"
-                + String.format("%02d", count) + "." + ext;
 
-        return renamedFileName;
+        return originalFileName.replaceAll(originalFileName, str) + "_"
+                + String.format("%02d", count) + "." + ext;
     }
 }
