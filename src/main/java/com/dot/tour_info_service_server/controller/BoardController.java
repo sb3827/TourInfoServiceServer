@@ -128,7 +128,7 @@ public class BoardController {
     public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoBoardRequestDTO mnoBoardRequestDTO) {
         ResponseWrapDTO response;
         if (mnoBoardRequestDTO == null) {
-            response = new ResponseWrapDTO(true, boardService.mainBoard(-1l));
+            response = new ResponseWrapDTO(true, boardService.mainBoard(-1L));
         } else {
             response = new ResponseWrapDTO(true, boardService.mainBoard(mnoBoardRequestDTO.getMno()));
         }
