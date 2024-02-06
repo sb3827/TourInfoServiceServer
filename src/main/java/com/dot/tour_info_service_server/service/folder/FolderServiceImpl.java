@@ -55,13 +55,6 @@ public class FolderServiceImpl implements FolderService{
             }else{
                 folderItemResponseDTO.getSrc().add(null);
             }
-
-//            if (placeImage != null && !placeImage.isEmpty()) {
-//                Object[] imageArray = placeImage.get(0);
-//                if (imageArray != null && imageArray.length > 0) {
-//                    folderItemResponseDTO.getSrc().add((String) imageArray[0]);
-//                }
-//            }
         }
 
         return new ArrayList<>(folderMap.values());
