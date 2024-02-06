@@ -45,12 +45,15 @@ public class FolderServiceImpl implements FolderService{
             FolderItemResponseDTO folderItemResponseDTO = folderMap.computeIfAbsent(fno, k -> FolderItemResponseDTO.builder().fno(fno).title(title).pno(new ArrayList<>()).name(new ArrayList<>()).src(new ArrayList<>()).build());
             folderItemResponseDTO.getPno().add(pno);
             folderItemResponseDTO.getName().add(name);
-
             if (placeImage != null && !placeImage.isEmpty()) {
                 Object[] imageArray = placeImage.get(0);
                 if (imageArray != null && imageArray.length > 0) {
                     folderItemResponseDTO.getSrc().add((String) imageArray[0]);
+                }else{
+                    folderItemResponseDTO.getSrc().add(null);
                 }
+            }else{
+                folderItemResponseDTO.getSrc().add(null);
             }
         }
 
