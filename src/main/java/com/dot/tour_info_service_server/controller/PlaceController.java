@@ -58,7 +58,7 @@ public class PlaceController {
     public ResponseEntity<Map<String, Object>> getPlaceCount(@Valid @RequestParam(value="mno")
                                                                  @NotNull(message = "mno cannot be null") Long mno){
         Map<String, Object> result = placeService.getPlaceCount(mno);
-        return new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 

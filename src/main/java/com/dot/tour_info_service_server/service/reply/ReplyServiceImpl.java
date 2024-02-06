@@ -5,7 +5,6 @@ import com.dot.tour_info_service_server.dto.ReplyMemberDTO;
 import com.dot.tour_info_service_server.dto.request.reply.ReplyDeleteRequestDTO;
 import com.dot.tour_info_service_server.dto.request.reply.ReplyRequestDTO;
 import com.dot.tour_info_service_server.dto.request.reply.ReplyUpdateRequestDTO;
-import com.dot.tour_info_service_server.entity.Member;
 import com.dot.tour_info_service_server.entity.Reply;
 import com.dot.tour_info_service_server.repository.ReplyRepository;
 import com.dot.tour_info_service_server.security.util.SecurityUtil;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Log4j2

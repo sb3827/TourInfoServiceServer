@@ -45,31 +45,4 @@ public interface ReplyService {
     }
     return reply;
   }
-
-  default ReplyRequestDTO entityToDto(Reply reply) {
-    ReplyRequestDTO replyDTO;
-    if (reply.getMember() != null) {
-      if (reply.getParent() != null && reply.getParent().getRno() != null) {
-        replyDTO = ReplyRequestDTO.builder()
-            .text(reply.getText())
-            .bno(reply.getBoard().getBno())
-            .mno(reply.getMember().getMno())
-            .parentRno(reply.getParent().getRno())
-            .build();
-      } else {
-        replyDTO = ReplyRequestDTO.builder()
-            .text(reply.getText())
-            .bno(reply.getBoard().getBno())
-            .mno(reply.getMember().getMno())
-            .build();
-      }
-    } else {
-      // 유저가 삭제한 댓글에 의해 mno가 null인 경우에 대한 처리
-      replyDTO = ReplyRequestDTO.builder()
-          .text(reply.getText())
-          .bno(reply.getBoard().getBno())
-          .build();
-    }
-    return replyDTO;
-  }
 }

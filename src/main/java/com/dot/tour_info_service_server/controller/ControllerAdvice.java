@@ -75,8 +75,7 @@ public class ControllerAdvice {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> accessDeniedException(AccessDeniedException e,
-                                                               final HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> accessDeniedException(final HttpServletRequest request) {
         return new ResponseEntity<>(ErrorResponse.of(HttpStatus.FORBIDDEN, "접근이 거부되었습니다", request),
                 HttpStatus.FORBIDDEN);
     }

@@ -120,7 +120,7 @@ public class AuthController {
     @PostMapping("/email/check")
     public ResponseEntity<Map<String, Boolean>> checkDuplicate(@Valid @RequestBody EmailRequestDTO emailDTO) {
         Map<String, Boolean> responseMap = new HashMap<>();
-        Boolean isDuplicate = false;
+        Boolean isDuplicate;
         try {
             isDuplicate = authService.emailCheck(emailDTO.getEmail());
         } catch (Exception e) {

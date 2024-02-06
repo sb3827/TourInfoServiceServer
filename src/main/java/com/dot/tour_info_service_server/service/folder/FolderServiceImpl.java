@@ -94,7 +94,7 @@ public class FolderServiceImpl implements FolderService{
             folderRepository.save(folder);
             return folder.getFno();
         }
-        return -1l;
+        return -1L;
     }
 
     //폴더 삭제
@@ -109,6 +109,6 @@ public class FolderServiceImpl implements FolderService{
                 return fno;
             }
         }
-        return -1l;
+        return -1L;
     }
 }
