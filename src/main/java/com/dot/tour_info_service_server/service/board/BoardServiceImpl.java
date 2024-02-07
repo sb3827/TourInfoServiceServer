@@ -168,8 +168,6 @@ public class BoardServiceImpl implements BoardService {
         boardLikeRepository.deleteByBno(bno);
         boardPlaceRepository.deleteByBno(bno);
         reportRepository.updateReportByBoardBno(bno); //null값으로 셋팅
-//        Board board = boardRepository.findById(bno)
-//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 id."));
         boardRepository.deleteById(bno);
         return board.getBno();
     }
