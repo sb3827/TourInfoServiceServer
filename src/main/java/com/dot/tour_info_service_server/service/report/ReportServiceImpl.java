@@ -192,7 +192,6 @@ public class ReportServiceImpl implements ReportService{
         //신고하고자하는 회원이 없을 경우 null 전달
         if(reportRequestDTO.getPno()==null && reportRequestDTO.getDefendant()!=null) {
             Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
-            System.out.println("여기? " + member);
             if (member.isEmpty()) {
 
                 return null;
