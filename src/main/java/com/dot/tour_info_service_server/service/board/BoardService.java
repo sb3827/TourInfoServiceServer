@@ -4,6 +4,7 @@ import com.dot.tour_info_service_server.dto.*;
 import com.dot.tour_info_service_server.dto.request.board.CourseBoardRequestDTO;
 import com.dot.tour_info_service_server.dto.request.board.PlaceBoardRequestDTO;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface BoardService {
     Long courseRegister(CourseBoardRequestDTO courseBoardRequestDTO);
 
     // 삭제
-    Long remove(Long bno);
+    Long remove(Long bno) throws AccessDeniedException;
 
     // 장소 수정
     Long placeBoardModify(PlaceBoardRequestDTO placeBoardRequestDTO);
