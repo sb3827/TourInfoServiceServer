@@ -185,8 +185,10 @@ public class ReportServiceImpl implements ReportService{
         if(reportRequestDTO.getBno()==null && reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
             return -1L;
         }
-        System.out.println("성공");
-
+        //신고가 여러개로 들어올때
+        if ((reportRequestDTO.getPno()!=null ? 1 : 0) + (reportRequestDTO.getRno()!=null ? 1 : 0) + (reportRequestDTO.getBno()!=null ? 1 : 0) > 1) {
+            return -1l;
+        }
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())
                 .defendant_mno(reportRequestDTO.getDefendant())
