@@ -31,6 +31,16 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
       "order by r.regDate desc")
   Page<Report> searchIsDone(Boolean isDone, String search, PageRequest pageRequest);
 
+  //신고 필터 조회 - 장소(처리 or 처리x)
+  @Transactional
+  @Query("select r " +
+          "from Report r left outer join Member m on r.defendant_mno = m.mno " +
+          "where r.place_pno is not null and r.isDone=:isDone and m.name like concat('%',:search,'%') " +
+          "group by r.sno " +
+          "order by r.regDate desc ")
+  Page<Report> searchPlaceReport(Boolean isDone, String search, PageRequest pageRequest);
+
+
   //신고 필터 조회 - 게시글(처리 or 처리x)
   @Transactional
   @Query("select r " +
@@ -57,6 +67,12 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
   @Modifying
   @Query("UPDATE Report r SET r.board_bno = null where r.board_bno=:bno")
   void updateReportByBoardBno(@Param("bno") Long bno);
+
+  //이미 신고한 내역인지 확인 - 장소
+  @Query("select r " +
+          "from Report r  " +
+          "where r.place_pno=:pno and r.complainant_mno=:mno")
+  Report checkPlaceReport(Long pno, Long mno);
 
   //이미 신고한 내역인지 확인 - 게시글
   @Query("select r " +
