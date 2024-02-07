@@ -170,28 +170,37 @@ public class ReportServiceImpl implements ReportService{
     //신고
     @Override
     public Long report(ReportRequestDTO reportRequestDTO) {
-        //신고하고자하는 회원이 없을 경우 null 전달
-        Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
 
-        if (member.isEmpty()){
-            return null;
-        }
-        if(reportRequestDTO.getPno()==null && reportRepository.checkPlaceReport(reportRequestDTO.getPno(),reportRequestDTO.getComplainant())!=null) {
+        if(reportRepository.checkPlaceReport(reportRequestDTO.getPno(),reportRequestDTO.getComplainant())!=null) {
             return -1L;
         }
-        if(reportRequestDTO.getRno()==null && reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
+        if(reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
              return -1L;
         }
-        if(reportRequestDTO.getBno()==null && reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
+        if(reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
             return -1L;
         }
         //신고가 여러개로 들어올때
         if ((reportRequestDTO.getPno()!=null ? 1 : 0) + (reportRequestDTO.getRno()!=null ? 1 : 0) + (reportRequestDTO.getBno()!=null ? 1 : 0) > 1) {
             return -1l;
         }
+        //장소 게시글인데 신고당하는 유저가 있는경우
+        if(reportRequestDTO.getPno()!=null && reportRequestDTO.getDefendant()!=null){
+            return -1l;
+        }
+
+        //신고하고자하는 회원이 없을 경우 null 전달
+        if(reportRequestDTO.getPno()==null && reportRequestDTO.getDefendant()!=null) {
+            Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
+            System.out.println("여기? " + member);
+            if (member.isEmpty()) {
+
+                return null;
+            }
+        }
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())
-                .defendant_mno(reportRequestDTO.getDefendant())
+                .defendant_mno(reportRequestDTO.getDefendant()!=null?reportRequestDTO.getDefendant():null)
                 .place_pno(reportRequestDTO.getPno()!=null?reportRequestDTO.getPno():null)
                 .board_bno(reportRequestDTO.getBno()!=null?reportRequestDTO.getBno():null)
                 .reply_rno(reportRequestDTO.getRno()!=null?reportRequestDTO.getRno():null)
