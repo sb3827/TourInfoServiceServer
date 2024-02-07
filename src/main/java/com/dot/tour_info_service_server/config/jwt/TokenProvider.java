@@ -29,7 +29,6 @@ public class TokenProvider {
     private final JwtProperties jwtProperties;
     private final RefreshTokenRepository refreshTokenRepository;
     private static final String AUTHORITIES_KEY = "auth";
-    private static final String BEARER_TYPE = "Bearer";
     private Key key;
 
     //token 생성 method
@@ -105,15 +104,15 @@ public class TokenProvider {
                     .parseSignedClaims(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            log.error("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            log.error("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            log.error("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.error("JWT 토큰이 잘못되었습니다.");
         } catch (Exception e) {
-            log.info(e.getMessage());
+            log.error(e.getMessage());
         }
         return false;
     }
@@ -136,18 +135,6 @@ public class TokenProvider {
         // security context principal 저장하기 위한 객체 생성
         UserDetails principal = new AuthMemberDTO(claims.getSubject(), claims.get("id", Long.class), "", false, authorities);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-    }
-
-    // jwt로 mno 추출
-    public Long getMemberId(String token) {
-        Claims claims = getClaims(token);
-        return claims.get("id", Long.class);
-    }
-
-    // jwt로 email 추출
-    public String getMemberEmail(String token) {
-        Claims claims = getClaims(token);
-        return claims.get("sub", String.class);
     }
 
     // jwt parsing method

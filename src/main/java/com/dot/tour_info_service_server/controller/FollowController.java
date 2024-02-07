@@ -22,13 +22,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Validated
 public class FollowController {
-
     private final FollowService followService;
 
     //   팔로우 버튼을 누르는 회원 -> followerMno    팔로우 당하는 회원-> memberMno
     @PostMapping("/following")
     public ResponseEntity<Map<String, Long>> follow(@RequestBody @Valid FollowRequestDTO followRequestDTO) {
-        log.info("follow : " + followRequestDTO);
         Map<String, Long> result = new HashMap<>();
         Long mno = followRequestDTO.getMemberMno();
         result.put("mno", mno);
@@ -39,7 +37,6 @@ public class FollowController {
     //   언팔로우 버튼을 누르는 회원 -> followerMno    언팔로우 당하는 회원-> memberMno
     @DeleteMapping("/following")
     public ResponseEntity<Map<String, Long>> unFollow(@RequestBody @Valid FollowRequestDTO followRequestDTO) {
-        log.info("unfollow : " + followRequestDTO);
         followService.unFollow(followRequestDTO.getMemberMno(), followRequestDTO.getFollowerMno());
         Map<String, Long> result = new HashMap<>();
         result.put("mno", followRequestDTO.getMemberMno());
@@ -49,7 +46,6 @@ public class FollowController {
     // 회원이 팔로우 중인 사람들 조회(팔로잉 조회)        조회대상회원 -> memberMno 팔로잉->followerMno 로 나옴
     @GetMapping("/followings")
     public ResponseEntity<List<FollowResponseDTO>> getListOfFollowing(@RequestParam("mno") Long mno) {
-        log.info("List of Following : " + mno);
         List<FollowResponseDTO> result = followService.getListOfFollowing(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -57,7 +53,6 @@ public class FollowController {
     // 회원을 팔로우 중인 사람들 조회(팔로워조회)       조회대상회원-> followerMno  팔로워->memberMno 로 나옴
     @GetMapping("/followers")
     public ResponseEntity<List<FollowResponseDTO>> getListOfFollower(@RequestParam("mno") Long mno) {
-        log.info("List of follower : " + mno);
         List<FollowResponseDTO> result = followService.getListOfFollower(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -9,10 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaAuditing
 @EnableJpaRepositories(basePackages = "com.dot.tour_info_service_server.repository")
 public class TourInfoServiceServerApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(TourInfoServiceServerApplication.class, args);
 		System.out.println("http://localhost:8080");
 	}
-
 }

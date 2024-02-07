@@ -12,15 +12,11 @@ import com.dot.tour_info_service_server.entity.Reply;
 import java.util.List;
 
 public interface ReplyService {
-//  List<ReplyDTO> getListOfReplyByBoard(Long bno);    // board 의 댓글목록 불러오기
-
   //부모 댓글 조회
   List<ReplyMemberDTO> parentReply(Long bno);
 
   //자식 댓글 조회
   List<ReplyMemberDTO> childReply(Long bno,Long rno);
-
-  List<ReplyRequestDTO> getListOfReplyByMember(Long mno);    // 회원이 작성한 댓글 목록
 
   List<ReplyListDTO> showReplyList(Long mno);
 
@@ -49,32 +45,4 @@ public interface ReplyService {
     }
     return reply;
   }
-
-  default ReplyRequestDTO entityToDto(Reply reply) {
-    ReplyRequestDTO replyDTO;
-    if (reply.getMember() != null) {
-      if (reply.getParent() != null && reply.getParent().getRno() != null) {
-        replyDTO = ReplyRequestDTO.builder()
-            .text(reply.getText())
-            .bno(reply.getBoard().getBno())
-            .mno(reply.getMember().getMno())
-            .parentRno(reply.getParent().getRno())
-            .build();
-      } else {
-        replyDTO = ReplyRequestDTO.builder()
-            .text(reply.getText())
-            .bno(reply.getBoard().getBno())
-            .mno(reply.getMember().getMno())
-            .build();
-      }
-    } else {
-      // 유저가 삭제한 댓글에 의해 mno가 null인 경우에 대한 처리
-      replyDTO = ReplyRequestDTO.builder()
-          .text(reply.getText())
-          .bno(reply.getBoard().getBno())
-          .build();
-    }
-    return replyDTO;
-  }
-
 }

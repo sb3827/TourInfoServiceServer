@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface CartRepository extends JpaRepository<Cart, CartPK> {
-
     @Modifying
     @Transactional
     @Query("delete from Cart c where c.cartPK.place.pno = :pno")

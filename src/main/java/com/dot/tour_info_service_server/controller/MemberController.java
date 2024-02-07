@@ -33,7 +33,6 @@ public class MemberController {
     // authenticated
     @GetMapping(value = "/info")
     public ResponseEntity<UserInfoDTO> findUserInfo(@Valid @RequestParam("mno") @NotNull(message = "mno cannot be Empty") Long mno) {
-        log.info("findUserInfo........." + mno);
         if (SecurityUtil.validateMno(mno)) {
             UserInfoDTO userInfoDTO = memberService.showUserInfo(mno);
             return new ResponseEntity<>(userInfoDTO, HttpStatus.OK);
@@ -47,9 +46,7 @@ public class MemberController {
     @PutMapping(value = "/info/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserInfoDTO> updateUserInfo(@Valid @RequestPart("member") MemberUpdateRequestDTO requestMemberDTO,
                                                       @RequestPart("image") MultipartFile userImage) {
-        log.info("updateUserInfo.........");
-        log.info(requestMemberDTO);
-        log.info(userImage.isEmpty());
+
         if (SecurityUtil.validateMno(requestMemberDTO.getMno())) {
             if(!userImage.isEmpty())
                 requestMemberDTO.setImage(userImage);
@@ -66,7 +63,7 @@ public class MemberController {
     @GetMapping(value = "/profile")
     public ResponseEntity<UserProfileDTO> findUserProfile(@Valid @RequestParam("mno")
                                                               @NotNull(message = "mno cannot be Empty") Long mno) {
-        log.info("User Profile..........");
+
         UserProfileDTO userProfileDTO = memberService.showUserProfile(mno);
         return new ResponseEntity<>(userProfileDTO, HttpStatus.OK);
     }
@@ -76,7 +73,7 @@ public class MemberController {
     @DeleteMapping(value = "/delete")
     public ResponseEntity<Map<String, Long>> removeUserInfo(@Valid @RequestParam("mno")
                                                                 @NotNull(message = "mno cannot be Empty") Long mno) {
-        log.info("User Delete......");
+
         Map<String, Long> result = new HashMap<>();
         if (SecurityUtil.validateMno(mno)) {
             memberService.deleteUserInfo(mno);
@@ -93,7 +90,7 @@ public class MemberController {
     public ResponseEntity<List<SearchUserListDTO>> findUser(@RequestParam("search") String search,
                                                             @RequestBody(required = false) FindMemberRequestDTO mnoDTO,
                                                             @RequestParam int page) {
-        log.info("Searching User.......");
+
         List<SearchUserListDTO> userlist;
         if(mnoDTO.getMno()==null){
             userlist=memberService.searchUser(search,null, page);
@@ -108,7 +105,7 @@ public class MemberController {
     // admin
     @GetMapping(value = "/waiting")
     public ResponseEntity<List<JoinWaitingDTO>> showJoinWaiting(@RequestParam(value = "page",required = false) int page) {
-        log.info("JoinWaiting List.............");
+
         List<JoinWaitingDTO> list = memberService.showJoinWaiting(page);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
@@ -118,7 +115,7 @@ public class MemberController {
     @PutMapping(value = "/approve")
     public ResponseEntity<Map<String,Long>> joinMember(@Valid @RequestParam("mno")
                                                            @NotNull(message = "mno cannot be Empty") Long mno){
-        log.info("Join..............");
+
         Map<String, Long> result = new HashMap<>();
         memberService.joinMember(mno);
         result.put("mno", mno);
@@ -131,9 +128,8 @@ public class MemberController {
     @GetMapping(value = "/filter-find")
     public ResponseEntity<List<MemberDetailDTO>> managerSearchUser(@RequestParam(value = "page",required = false) int page,@RequestParam("filter") String filter,
                                                                    @RequestParam("search") String name) {
-        log.info(filter + " , " + name);
+
         List<MemberDetailDTO> result = memberService.managerToSearchUser(page,filter, name);
-        log.info(result);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

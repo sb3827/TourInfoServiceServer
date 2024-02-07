@@ -49,41 +49,50 @@ public class ReportServiceImpl implements ReportService{
         List<Report> result;
 
         //전체 조회
-        if(filter.equals("all")){
-            Page<Report> entityPage=reportRepository.searchReportAll(search,pageRequest);
-            result =entityPage.getContent();
-        }
-        //처리 중
-        else if(filter.equals("reporting")){
-            Page<Report> entityPage=reportRepository.searchIsDone(false,search,pageRequest);
-            result =entityPage.getContent();
-        }
-        //처리 완료
-        else if(filter.equals("reported")){
-            Page<Report>entityPage=reportRepository.searchIsDone(true,search,pageRequest);
-            result =entityPage.getContent();
-        }
-        //게시글 처리중
-        else if(filter.equals("board_reporting")){
-            Page<Report>entityPage=reportRepository.searchBoardReport(false,search,pageRequest);
-            result =entityPage.getContent();
-        }
-        //게시글 처리완료
-        else if(filter.equals("board_reported")){
-            Page<Report>entityPage=reportRepository.searchBoardReport(true,search,pageRequest);
-            result =entityPage.getContent();
-        }
-        //리뷰 처리중
-        else if(filter.equals("reply_reporting")){
-            Page<Report>entityPage=reportRepository.searchReplyReport(false,search,pageRequest);
-            result =entityPage.getContent();
-        }
-        //리뷰 처리완료
-        else if(filter.equals("reply_reported")){
-            Page<Report>entityPage=reportRepository.searchReplyReport(true,search,pageRequest);
-            result =entityPage.getContent();
-        }else {
-            return null;
+        switch (filter) {
+            case "all" -> {
+                Page<Report> entityPage = reportRepository.searchReportAll(search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //처리 중
+            case "reporting" -> {
+                Page<Report> entityPage = reportRepository.searchIsDone(false, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //처리 완료
+            case "reported" -> {
+                Page<Report> entityPage = reportRepository.searchIsDone(true, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //게시글 처리중
+            case "board_reporting" -> {
+                Page<Report> entityPage = reportRepository.searchBoardReport(false, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //게시글 처리완료
+            case "board_reported" -> {
+                Page<Report> entityPage = reportRepository.searchBoardReport(true, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //리뷰 처리중
+            case "reply_reporting" -> {
+                Page<Report> entityPage = reportRepository.searchReplyReport(false, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //리뷰 처리완료
+            case "reply_reported" -> {
+                Page<Report> entityPage = reportRepository.searchReplyReport(true, search, pageRequest);
+                result = entityPage.getContent();
+            }
+            default -> {
+                return null;
+            }
         }
         //reportDTO로 형변환
 
@@ -94,9 +103,9 @@ public class ReportServiceImpl implements ReportService{
             ReportResponseDTO reportResponseDTO=ReportResponseDTO.builder()
                     .sno(report.getSno())
                     .complainant_mno(report.getComplainant_mno())
-                    .complainant(com.isPresent()?com.get().getName():null)
+                    .complainant(com.map(Member::getName).orElse(null))
                     .defendant_mno(report.getDefendant_mno())
-                    .defendant(def.isPresent()?def.get().getName():null)
+                    .defendant(def.map(Member::getName).orElse(null))
                     .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
                     .rno(report.getReply_rno()!=null?report.getReply_rno():null)
                     .content(report.getContent())
@@ -127,7 +136,7 @@ public class ReportServiceImpl implements ReportService{
     public List<DisciplinaryAllResponseDTO> disciplinaryUserData(Long mno) {
         //회원이 없을 경우 null 전달
         Optional<Member> member=memberRepository.findById(mno);
-        if (!member.isPresent()){
+        if (member.isEmpty()){
             return null;
         }
 
@@ -152,16 +161,15 @@ public class ReportServiceImpl implements ReportService{
         //신고하고자하는 회원이 없을 경우 null 전달
         Optional<Member> member=memberRepository.findById(reportRequestDTO.getDefendant());
 
-        if (!member.isPresent()){
-            System.out.println("여긴가?");
+        if (member.isEmpty()){
             return null;
         }
         if(reportRequestDTO.getRno()==null && reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
-             return -1l;
+             return -1L;
         }
         if(reportRequestDTO.getBno()==null && reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
 
-            return -1l;
+            return -1L;
         }
         System.out.println("성공");
 
@@ -175,7 +183,7 @@ public class ReportServiceImpl implements ReportService{
                 .isDone(false)
                 .build();
         reportRepository.save(report);
-        return 1l;
+        return 1L;
     }
 
     //신고 상태 업데이트
@@ -190,7 +198,7 @@ public class ReportServiceImpl implements ReportService{
                 return report.getSno();
             }
         }
-        return -1l;
+        return -1L;
     }
 
     //제재 - merge후 board,reply delete 추가해야함
@@ -200,8 +208,8 @@ public class ReportServiceImpl implements ReportService{
         List<Disciplinary> checkDisciplinary=disciplinaryRepository.findAllByMemberMnoOrderByExpDateDesc(disciplinaryRequestDTO.getMno());
 
         //이미 정지된 유저
-        if(!checkDisciplinary.isEmpty() && checkDisciplinary.get(0).getExpDate().compareTo(LocalDateTime.now())>=0){
-            return -1l;
+        if(!checkDisciplinary.isEmpty() && !checkDisciplinary.get(0).getExpDate().isBefore(LocalDateTime.now())){
+            return -1L;
         }
 
         int row=checkDisciplinary.size();
@@ -277,25 +285,27 @@ public class ReportServiceImpl implements ReportService{
                 //대댓글이거나 대댓글이 존재하는 경우
                 else{
                     Optional<Reply> checkReply=replyRepository.findById(result.getReply_rno());
-                    Reply r=checkReply.get();
+                    if(checkReply.isPresent()) {
+                        Reply r = checkReply.get();
 
                         Reply reply = Reply.builder()
                                 .rno(result.getReply_rno())
-                                .parent(r.getParent()!=null?r.getParent():null)
+                                .parent(r.getParent() != null ? r.getParent() : null)
                                 .member(null)
                                 .board(Board.builder().bno(r.getBoard().getBno()).build())
                                 .text("신고 처리된 댓글 입니다.")
                                 .build();
                         replyRepository.save(reply);
+                    }
                 }
             }
             //게시글, 댓글 둘다 있는경우 오류 처리
             else{
-                return -2l;
+                return -2L;
             }
         }else{
             //신고가 존재하지 않는 경우
-            return -3l;
+            return -3L;
         }
         //신고 상태 업데이트 -> 신고 처리 완료
         reportUpdate(disciplinaryRequestDTO.getSno());

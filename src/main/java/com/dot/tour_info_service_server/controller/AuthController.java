@@ -9,9 +9,6 @@ import com.dot.tour_info_service_server.service.token.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
@@ -21,16 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -96,9 +89,6 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ResponseDTO> logout(HttpServletRequest request, HttpServletResponse response) {
         try {
-            log.info(request);
-            log.info(response);
-            log.info(SecurityContextHolder.getContext().getAuthentication());
             authService.logout();
             new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
             return new ResponseEntity<>(new ResponseDTO("success", true), HttpStatus.OK);
@@ -130,7 +120,7 @@ public class AuthController {
     @PostMapping("/email/check")
     public ResponseEntity<Map<String, Boolean>> checkDuplicate(@Valid @RequestBody EmailRequestDTO emailDTO) {
         Map<String, Boolean> responseMap = new HashMap<>();
-        Boolean isDuplicate = false;
+        Boolean isDuplicate;
         try {
             isDuplicate = authService.emailCheck(emailDTO.getEmail());
         } catch (Exception e) {

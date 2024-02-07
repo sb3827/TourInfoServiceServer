@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @RestController
@@ -28,7 +29,7 @@ public class BoardController {
     // authenticated
     @PostMapping(value = {"/place/posting/register"})
     public ResponseEntity<Map<String, Long>> placeRegisterPost(@RequestBody @Valid PlaceBoardRequestDTO placeBoardRequestDTO) {
-        if(!SecurityUtil.validateMno(placeBoardRequestDTO.getWriter()))
+        if (!SecurityUtil.validateMno(placeBoardRequestDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Long bno = boardService.placeRegister(placeBoardRequestDTO);
@@ -41,7 +42,7 @@ public class BoardController {
     // authenticated
     @PostMapping(value = {"/course/posting/register"})
     public ResponseEntity<Map<String, Long>> courseRegisterPost(@RequestBody @Valid CourseBoardRequestDTO courseBoardRequestDTO) {
-        if(!SecurityUtil.validateMno(courseBoardRequestDTO.getWriter()))
+        if (!SecurityUtil.validateMno(courseBoardRequestDTO.getWriter()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         Long bno = boardService.courseRegister(courseBoardRequestDTO);
@@ -53,9 +54,15 @@ public class BoardController {
     // 장소,코스 포스팅 삭제
     // authenticated
     @DeleteMapping(value = {"/place/posting/delete", "/course/posting/delete"})
-    public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) {
+    public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) throws AccessDeniedException {
         Map<String, Long> result = new HashMap<>();
-        boardService.remove(bno);
+        try {
+            boardService.remove(bno);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            e.fillInStackTrace();
+            throw e;
+        }
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -63,7 +70,7 @@ public class BoardController {
     // 장소 포스팅 수정
     // authenticated
     @PutMapping(value = {"/place/posting/modify"})
-    public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody  @Valid PlaceBoardRequestDTO placeBoardRequestDTO) {
+    public ResponseEntity<Map<String, Long>> modifyPlace(@RequestBody @Valid PlaceBoardRequestDTO placeBoardRequestDTO) {
         Map<String, Long> result = new HashMap<>();
         if (!SecurityUtil.validateMno(placeBoardRequestDTO.getWriter())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -80,14 +87,12 @@ public class BoardController {
     // 코스 게시글 수정 address
     // authenticated
     @PutMapping("/course/posting/modify")
-    public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody  @Valid CourseBoardRequestDTO courseBoardRequestDTO) {
-
-        log.info("courseBoardDTO: " + courseBoardRequestDTO);
+    public ResponseEntity<Map<String, Long>> modifyCourse(@RequestBody @Valid CourseBoardRequestDTO courseBoardRequestDTO) {
         Map<String, Long> result = new HashMap<>();
-        // token 없이 controller Test시 제거할 것
-//    if (!SecurityUtil.validateMno(courseBoardDTO.getWriter())) {
-//      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
+
+        if (!SecurityUtil.validateMno(courseBoardRequestDTO.getWriter())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         try {
             Long bno = boardService.modifyCourse(courseBoardRequestDTO);
             result.put("bno", bno);
@@ -102,7 +107,6 @@ public class BoardController {
     // permit all
     @GetMapping(value = {"/place/posting"})
     public ResponseEntity<BoardInfoDTO> getPlaceBoard(@RequestParam("bno") Long bno) {
-        log.info("getPlaceBoard... bno: " + bno);
         try {
             BoardInfoDTO boardInfoDTO = boardService.getBoardByBno(bno);
             return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
@@ -115,7 +119,6 @@ public class BoardController {
     // permit all
     @GetMapping(value = {"/course/posting"})
     public ResponseEntity<BoardInfoDTO> getCourseBoard(@RequestParam("bno") Long bno) {
-        log.info("getCourseBoard... bno: " + bno);
         try {
             BoardInfoDTO boardInfoDTO = boardService.getCourseByBno(bno);
             return new ResponseEntity<>(boardInfoDTO, HttpStatus.OK);
@@ -131,9 +134,9 @@ public class BoardController {
     @PostMapping(value = "/main")
     public ResponseEntity<ResponseWrapDTO<MainResponseDTO>> boardMain(@RequestBody(required = false) MnoBoardRequestDTO mnoBoardRequestDTO) {
         ResponseWrapDTO response;
-        if(mnoBoardRequestDTO ==null){
-            response=new ResponseWrapDTO(true,boardService.mainBoard(-1l));
-        }else {
+        if (mnoBoardRequestDTO == null) {
+            response = new ResponseWrapDTO(true, boardService.mainBoard(-1L));
+        } else {
             response = new ResponseWrapDTO(true, boardService.mainBoard(mnoBoardRequestDTO.getMno()));
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -144,7 +147,6 @@ public class BoardController {
     // permit all
     @GetMapping(value = {"/place/posting/member"})
     public ResponseEntity<List<BoardMemberDTO>> getBoardByMno(@RequestParam("mno") Long mno) {
-        log.info("getBoardByMno... bno: " + mno);
         List<BoardMemberDTO> boardMemberDTO = boardService.getBoardByMno(mno);
         return new ResponseEntity<>(boardMemberDTO, HttpStatus.OK);
     }
@@ -154,9 +156,7 @@ public class BoardController {
     @GetMapping(value = {"/place"})
     public ResponseEntity<List<BoardPlaceReplyCountDTO>> getBoardByPno(@RequestParam("pno") Long pno,
                                                                        @RequestParam int page,
-                                                                       @RequestParam Boolean isAd)
-    {
-        log.info("getBoardByMno... bno: " + pno);
+                                                                       @RequestParam Boolean isAd) {
         try {
             List<BoardPlaceReplyCountDTO> boardPlaceReplyCountDTO = boardService.getBoardByPno(pno, page, isAd);
             return new ResponseEntity<>(boardPlaceReplyCountDTO, HttpStatus.OK);
@@ -169,7 +169,6 @@ public class BoardController {
     // permit all
     @GetMapping(value = {"/course/posting/member"})
     public ResponseEntity<List<BoardMemberDTO>> getCourseBoardByMno(@RequestParam("mno") Long mno) {
-        log.info("getBoardByMno... bno: " + mno);
         List<BoardMemberDTO> boardMemberDTO = boardService.getCourseBoardByMno(mno);
         return new ResponseEntity<>(boardMemberDTO, HttpStatus.OK);
     }
@@ -177,10 +176,8 @@ public class BoardController {
     // 코스 검색 조회
     // permit all
     @GetMapping(value = {"/course"})
-    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search ,
+    public ResponseEntity<List<BoardSearchDTO>> findCourseBoard(@RequestParam("search") String search,
                                                                 @RequestParam int page, @RequestParam Boolean isAd) {
-        log.info("Search.... : "+search);
-        log.info("isAD: "+isAd);
         List<BoardSearchDTO> boardSearchDTO = boardService.findCourseBoard(search, page, isAd);
         return new ResponseEntity<>(boardSearchDTO, HttpStatus.OK);
     }

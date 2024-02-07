@@ -86,7 +86,6 @@ public class SecurityConfig {
                 // setting authorize of address
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests.requestMatchers(PERMIT_ALL_LIST).permitAll();
-                    authorizeRequests.requestMatchers("/auth/getTest").authenticated(); // todo delete
                     authorizeRequests.requestMatchers(AUTHENTICATED_LIST).authenticated();
                     authorizeRequests.requestMatchers(ADMIN_LIST).hasAuthority("[ADMIN]");
                     authorizeRequests.anyRequest().denyAll();

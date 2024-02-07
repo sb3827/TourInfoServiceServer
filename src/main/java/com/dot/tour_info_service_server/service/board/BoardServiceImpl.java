@@ -17,7 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,21 +25,13 @@ import java.util.*;
 @Log4j2
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
-
     private final BoardRepository boardRepository;
-
     private final ReplyRepository replyRepository;
-
     private final ImageRepository imageRepository;
-
     private final ImageService imageService;
-
     private final ReportRepository reportRepository;
-
     private final BoardPlaceRepository boardPlaceRepository;
-
     private final BoardLikeRepository boardLikeRepository;
-
     private final PlaceRepository placeRepository;
 
     @Override
@@ -57,7 +49,6 @@ public class BoardServiceImpl implements BoardService {
                 .build();
         try {
             board = boardRepository.save(board);
-            log.info("board 저장");
         } catch (Exception e) {
             e.fillInStackTrace();
             log.error(e.getMessage());
@@ -79,7 +70,6 @@ public class BoardServiceImpl implements BoardService {
                 .build();
         try {
             boardPlaceRepository.save(boardPlace);
-            log.info("board-place 저장");
         } catch (Exception e) {
             e.fillInStackTrace();
             log.error(e.getMessage());
@@ -114,7 +104,6 @@ public class BoardServiceImpl implements BoardService {
                 .build();
         try {
             board = boardRepository.save(board);
-            log.info("board 저장" + board);
         } catch (Exception e) {
             e.fillInStackTrace();
             log.error(e.getMessage());
@@ -161,15 +150,24 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Long remove(Long bno) {
+    public Long remove(Long bno) throws AccessDeniedException {
+        Optional<Board> result = boardRepository.findById(bno);
+
+        if(result.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 게시글 id.");
+        }
+        Board board = result.get();
+
+        if(!SecurityUtil.validateMno(board.getWriter().getMno()) && !SecurityUtil.isAdmin()) {
+            throw new AccessDeniedException("권한이 없는 사용자");
+        }
+
         replyRepository.deleteByChildRno(bno);
         replyRepository.deleteByBno(bno);
         imageRepository.deleteByBno(bno);
         boardLikeRepository.deleteByBno(bno);
         boardPlaceRepository.deleteByBno(bno);
         reportRepository.updateReportByBoardBno(bno); //null값으로 셋팅
-        Board board = boardRepository.findById(bno)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 id."));
         boardRepository.deleteById(bno);
         return board.getBno();
     }
@@ -224,7 +222,6 @@ public class BoardServiceImpl implements BoardService {
                 // board - place 수정
                 boardPlaceRepository.deleteAllByBoardPlacePKBoard(board);
                 boardPlaceRepository.save(boardPlace);
-                log.info("board-place 저장");
             } catch (Exception e) {
                 e.fillInStackTrace();
                 log.error(e.getMessage());
@@ -248,7 +245,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Long modifyCourse(CourseBoardRequestDTO courseBoardRequestDTO) throws IllegalAccessException, SQLException {
+    public Long modifyCourse(CourseBoardRequestDTO courseBoardRequestDTO) {
         Optional<Board> result = boardRepository.findBoardByBnoAndIsCourseIsTrue(courseBoardRequestDTO.getBno());
 
         if (result.isEmpty()) {
@@ -321,7 +318,7 @@ public class BoardServiceImpl implements BoardService {
     //장소 포스팅 정보 조회
     @Override
     @Transactional
-    public BoardInfoDTO getBoardByBno(Long bno) throws IllegalAccessException, SQLException {
+    public BoardInfoDTO getBoardByBno(Long bno) {
         Board result = boardRepository.getPlaceBoardByBno(bno);
         List<Object[]> images = imageRepository.getImageByBno(bno);
         List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
@@ -414,7 +411,7 @@ public class BoardServiceImpl implements BoardService {
 
     //코스 포스팅 정보 조회
     @Override
-    public BoardInfoDTO getCourseByBno(Long bno) throws IllegalAccessException, SQLException {
+    public BoardInfoDTO getCourseByBno(Long bno) {
         Board result = boardRepository.getCourseBoardByBno(bno);
         List<Object[]> images = imageRepository.getImageByBno(bno);
         List<Object[]> placeList = boardPlaceRepository.loadListByBno(bno);
@@ -532,7 +529,7 @@ public class BoardServiceImpl implements BoardService {
 
     //장소별 장소 포스팅 조회
     @Override
-    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page, Boolean isAd) throws IllegalAccessException, SQLException {
+    public List<BoardPlaceReplyCountDTO> getBoardByPno(Long pno, int page, Boolean isAd) {
         PageRequest pageRequest = PageRequest.of(page, 10);
         Page<Object[]> pages = boardRepository.getBoardByPno(pno,pageRequest, isAd);
         List<Object[]> result = pages.getContent();
@@ -572,8 +569,6 @@ public class BoardServiceImpl implements BoardService {
                         .name((String) objects[14])
                         .build();
                 boardPlaceReplyCountDTOS.add(boardPlaceReplyCountDTO);
-
-
         }
         return boardPlaceReplyCountDTOS;
     }
@@ -741,11 +736,6 @@ public class BoardServiceImpl implements BoardService {
             mainBoardResponseDTOS3.add(mainBoardResponseDTO);
         }
 
-        MainResponseDTO mainResponseDTO = new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
-
-        System.out.println(mainResponseDTO);
-
-        return mainResponseDTO;
+        return new MainResponseDTO(mainPlaceResponseDTOS, mainBoardResponseDTOS, mostListCourseDTOS, mainBoardResponseDTOS2, mainBoardResponseDTOS3);
     }
-
 }
