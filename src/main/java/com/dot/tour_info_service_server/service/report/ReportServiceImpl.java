@@ -67,6 +67,18 @@ public class ReportServiceImpl implements ReportService{
                 result = entityPage.getContent();
             }
 
+            //장소 처리중
+            case "place_reporting"->{
+                Page<Report> entityPage = reportRepository.searchPlaceReport(false, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
+            //장소 처리완료
+            case "place_reported"->{
+                Page<Report> entityPage = reportRepository.searchPlaceReport(true, search, pageRequest);
+                result = entityPage.getContent();
+            }
+
             //게시글 처리중
             case "board_reporting" -> {
                 Page<Report> entityPage = reportRepository.searchBoardReport(false, search, pageRequest);
@@ -164,11 +176,13 @@ public class ReportServiceImpl implements ReportService{
         if (member.isEmpty()){
             return null;
         }
+        if(reportRequestDTO.getPno()==null && reportRepository.checkPlaceReport(reportRequestDTO.getPno(),reportRequestDTO.getComplainant())!=null) {
+            return -1L;
+        }
         if(reportRequestDTO.getRno()==null && reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
              return -1L;
         }
         if(reportRequestDTO.getBno()==null && reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
-
             return -1L;
         }
         System.out.println("성공");
@@ -176,6 +190,7 @@ public class ReportServiceImpl implements ReportService{
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())
                 .defendant_mno(reportRequestDTO.getDefendant())
+                .place_pno(reportRequestDTO.getPno()!=null?reportRequestDTO.getPno():null)
                 .board_bno(reportRequestDTO.getBno()!=null?reportRequestDTO.getBno():null)
                 .reply_rno(reportRequestDTO.getRno()!=null?reportRequestDTO.getRno():null)
                 .content(reportRequestDTO.getContent())
