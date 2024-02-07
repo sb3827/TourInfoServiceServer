@@ -22,15 +22,21 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService{
+
     private final ReportRepository reportRepository;
+
     private final MemberRepository memberRepository;
+
     private final DisciplinaryRepository disciplinaryRepository;
+
     //게시글 및 댓글 삭제
     private final ReplyRepository replyRepository;
     private final BoardLikeRepository boardLikeRepository;
     private final BoardPlaceRepository boardPlaceRepository;
     private final ImageRepository imageRepository;
     private final BoardRepository boardRepository;
+
+    //신고 내역 모두 조회
 
     //신고 필터 조회
     @Override
@@ -165,6 +171,7 @@ public class ReportServiceImpl implements ReportService{
 
             return -1L;
         }
+        System.out.println("성공");
 
         Report report=Report.builder()
                 .complainant_mno(reportRequestDTO.getComplainant())
@@ -278,16 +285,18 @@ public class ReportServiceImpl implements ReportService{
                 //대댓글이거나 대댓글이 존재하는 경우
                 else{
                     Optional<Reply> checkReply=replyRepository.findById(result.getReply_rno());
-                    Reply r = checkReply.get();
+                    if(checkReply.isPresent()) {
+                        Reply r = checkReply.get();
 
                         Reply reply = Reply.builder()
                                 .rno(result.getReply_rno())
-                                .parent(r.getParent()!=null?r.getParent():null)
+                                .parent(r.getParent() != null ? r.getParent() : null)
                                 .member(null)
                                 .board(Board.builder().bno(r.getBoard().getBno()).build())
                                 .text("신고 처리된 댓글 입니다.")
                                 .build();
                         replyRepository.save(reply);
+                    }
                 }
             }
             //게시글, 댓글 둘다 있는경우 오류 처리
