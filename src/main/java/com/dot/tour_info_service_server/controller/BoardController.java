@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @RestController
@@ -53,9 +54,15 @@ public class BoardController {
     // 장소,코스 포스팅 삭제
     // authenticated
     @DeleteMapping(value = {"/place/posting/delete", "/course/posting/delete"})
-    public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) {
+    public ResponseEntity<Map<String, Long>> remove(@RequestParam("bno") Long bno) throws AccessDeniedException {
         Map<String, Long> result = new HashMap<>();
-        boardService.remove(bno);
+        try {
+            boardService.remove(bno);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            e.fillInStackTrace();
+            throw e;
+        }
         result.put("bno", bno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

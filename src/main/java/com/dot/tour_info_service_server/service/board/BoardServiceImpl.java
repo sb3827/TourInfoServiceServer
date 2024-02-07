@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -149,15 +150,26 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Long remove(Long bno) {
+    public Long remove(Long bno) throws AccessDeniedException {
+        Optional<Board> result = boardRepository.findById(bno);
+
+        if(result.isEmpty()){
+            throw new IllegalArgumentException("존재하지 않는 게시글 id.");
+        }
+        Board board = result.get();
+
+        if(!SecurityUtil.validateMno(board.getWriter().getMno()) && !SecurityUtil.isAdmin()) {
+            throw new AccessDeniedException("권한이 없는 사용자");
+        }
+
         replyRepository.deleteByChildRno(bno);
         replyRepository.deleteByBno(bno);
         imageRepository.deleteByBno(bno);
         boardLikeRepository.deleteByBno(bno);
         boardPlaceRepository.deleteByBno(bno);
         reportRepository.updateReportByBoardBno(bno); //null값으로 셋팅
-        Board board = boardRepository.findById(bno)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 id."));
+//        Board board = boardRepository.findById(bno)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글 id."));
         boardRepository.deleteById(bno);
         return board.getBno();
     }
