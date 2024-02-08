@@ -2,6 +2,7 @@ package com.dot.tour_info_service_server.service.place;
 
 import com.dot.tour_info_service_server.dto.PlaceDTO;
 import com.dot.tour_info_service_server.dto.request.place.RegistPlaceRequestDTO;
+import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.entity.Place;
@@ -46,21 +47,21 @@ public class PlaceServiceImpl implements PlaceService {
         Page<Object[]> pages = placeRepository.searchPlace(filter, search, pageRequest);
         List<Object[]> result = pages.getContent();
         List<PlaceDTO> placeList = new ArrayList<>();
-        if(!result.isEmpty()){
-            for(Object[] list : result){
+        if (!result.isEmpty()) {
+            for (Object[] list : result) {
                 List<Object[]> placeImage = boardPlaceRepository.loadRepresentPlaceImageByPno((Long) list[0]);
                 PlaceDTO placeDTO = PlaceDTO.builder()
-                        .pno((Long)list[0])
-                        .name((String)list[1])
+                        .pno((Long) list[0])
+                        .name((String) list[1])
                         .lng((Double) list[2])
-                        .lat((Double)list[3])
-                        .roadAddress((String)list[4])
-                        .localAddress((String)list[5])
-                        .engAddress((String)list[6])
-                        .category((Category)list[7])
-                        .cart((int)list[8])
-                        .regDate((LocalDateTime)list[9])
-                        .modDate((LocalDateTime)list[10])
+                        .lat((Double) list[3])
+                        .roadAddress((String) list[4])
+                        .localAddress((String) list[5])
+                        .engAddress((String) list[6])
+                        .category((Category) list[7])
+                        .cart((int) list[8])
+                        .regDate((LocalDateTime) list[9])
+                        .modDate((LocalDateTime) list[10])
                         .build();
 
                 if (placeImage != null && !placeImage.isEmpty()) {
@@ -86,10 +87,10 @@ public class PlaceServiceImpl implements PlaceService {
     public Map<String, Object> getPlaceCount(Long mno) {
         List<Object[]> result = placeRepository.getPlaceCount(mno);
         Map<String, Object> placeCount = new HashMap<>();
-        if(!result.isEmpty()){
-            for(Object[] list: result){
-                for(int i=0; i< list.length; i+=2){
-                    placeCount.put((String)list[i], list[i+1]);
+        if (!result.isEmpty()) {
+            for (Object[] list : result) {
+                for (int i = 0; i < list.length; i += 2) {
+                    placeCount.put((String) list[i], list[i + 1]);
                 }
             }
             return placeCount;
@@ -101,35 +102,37 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     @Transactional
     public void removePlace(Long pno) {
+        List<Boolean> isCourseList = boardRepository.boardIsCourse(pno);
+        List<Board> result = boardRepository.getBoardsInfo(pno);
 
-        List<Long> deleteBnos = boardRepository.returnBnos(pno);
-
-        // 장소만 등록되어있고 게시글은 없을 경우 장소만 삭제
-        if (boardRepository.boardIsCourse(pno) == null) {
-            placeRepository.deleteById(pno);
-        } else {
-            // 코스 게시글일 경우
-            if (boardRepository.boardIsCourse(pno)) {
-                boardPlaceRepository.updateBoardPlacePno(pno); // boardPlace pno를 null로 변경
-                cartRepository.removeCart(pno); // cart 삭제
-                placeRepository.deleteById(pno); // place 삭제
-            }
-            // 장소 포스팅 게시글일 경우
-            else {
-                replyRepository.removeChildReply(pno); // 대댓글 먼저 삭제
-                replyRepository.removeReply(pno); // 댓글 삭제
-                imageRepository.removeImage(pno); // 이미지 삭제
-                boardLikeRepository.removeBoardLike(pno); // 좋아요 삭제
-                reportRepository.updateReportBnoNull(boardRepository.returnBnos(pno)); // 리포트 null로 변경
-                cartRepository.removeCart(pno); // cart 삭제
-                boardPlaceRepository.removeBoardPlaceByPno(pno); // boardPlace 삭제
-                // 게시글 삭제
-                for ( Long bnos : deleteBnos){
-                boardRepository.deleteById(bnos);
+        if (!result.isEmpty()) {
+            // 게시글 없을 경우
+            if (isCourseList.isEmpty()) {
+                placeRepository.deleteById(pno);
+            } else {
+                for (int i = 0; i < result.size(); i++) {
+                    Board board = result.get(i);
+                    // 코스 게시글
+                    if (board.getIsCourse().equals(true)) {
+                        boardPlaceRepository.updateBoardPlacePno(pno, board.getBno()); // boardPlace pno를 null로 변경
+                    }
+                    // 장소 게시글
+                    if (board.getIsCourse().equals(false)) {
+                        replyRepository.removeChildReply(pno); // 대댓글 먼저 삭제
+                        replyRepository.removeReply(pno); // 댓글 삭제
+                        imageRepository.removeImage(pno); // 이미지 삭제
+                        boardLikeRepository.removeBoardLike(pno); // 좋아요 삭제
+                        reportRepository.updateReportBnoNull(boardRepository.returnBnos(pno)); // 리포트 null로 변경
+                        boardPlaceRepository.deleteByBno(board.getBno());
+                        boardRepository.deleteById(board.getBno());
+                    }
                 }
-                placeRepository.deleteById(pno);// 장소 삭제
+                cartRepository.removeCart(pno); // cart 삭제
+                placeRepository.deleteById(pno); // 장소 삭제
             }
         }
     }
 }
+
+
 
