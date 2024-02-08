@@ -15,8 +15,9 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     // boardPlace place_pno set null
     @Modifying
     @Transactional
-    @Query("Update BoardPlace bp set bp.place.pno = null where bp.place.pno = :pno")
-    void updateBoardPlacePno(Long pno);
+    @Query("Update BoardPlace bp set bp.place.pno = null where bp.place.pno = :pno and bp.boardPlacePK.board.bno = :bno")
+    void updateBoardPlacePno(@Param("pno") Long pno, @Param("bno") Long bno);
+
 
     @Modifying
     @Transactional
