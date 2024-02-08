@@ -272,18 +272,20 @@ public class ReportServiceImpl implements ReportService {
                     replyRepository.deleteById(result.getReply_rno());
                 }
                 //대댓글이거나 대댓글이 존재하는 경우
-                else {
-                    Optional<Reply> checkReply = replyRepository.findById(result.getReply_rno());
-                    Reply r = checkReply.get();
+                else{
+                    Optional<Reply> checkReply=replyRepository.findById(result.getReply_rno());
+                    if(checkReply.isPresent()) {
+                        Reply r = checkReply.get();
 
-                    Reply reply = Reply.builder()
-                            .rno(result.getReply_rno())
-                            .parent(r.getParent() != null ? r.getParent() : null)
-                            .member(null)
-                            .board(Board.builder().bno(r.getBoard().getBno()).build())
-                            .text("신고 처리된 댓글 입니다.")
-                            .build();
-                    replyRepository.save(reply);
+                        Reply reply = Reply.builder()
+                                .rno(result.getReply_rno())
+                                .parent(r.getParent() != null ? r.getParent() : null)
+                                .member(null)
+                                .board(Board.builder().bno(r.getBoard().getBno()).build())
+                                .text("신고 처리된 댓글 입니다.")
+                                .build();
+                        replyRepository.save(reply);
+                    }
                 }
             }
             //게시글, 댓글 둘다 있는경우 오류 처리
