@@ -8,7 +8,8 @@ import org.hibernate.annotations.ColumnDefault;
 //같은 사용자가 같은 게시글 또는 댓글을 여러번 신고불가능하도록 unique 설정
 @Table(name = "report", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"complainant_mno", "board_bno"}),
-        @UniqueConstraint(columnNames = {"complainant_mno","reply_rno"})
+        @UniqueConstraint(columnNames = {"complainant_mno","reply_rno"}),
+        @UniqueConstraint(columnNames = {"complainant_mno","place_pno"})
 })
 @Builder
 @Getter
@@ -33,6 +34,8 @@ public class Report extends BaseEntity{
     private Long complainant_mno;
 
     private Long defendant_mno;
+
+    private Long place_pno;
 
     private Long board_bno;
 
