@@ -202,6 +202,7 @@ public class ReportServiceImpl implements ReportService {
                 .defendant_mno(reportRequestDTO.getDefendant())
                 .board_bno(reportRequestDTO.getBno() != null ? reportRequestDTO.getBno() : null)
                 .reply_rno(reportRequestDTO.getRno() != null ? reportRequestDTO.getRno() : null)
+                .place_pno(reportRequestDTO.getPno() != null ? reportRequestDTO.getPno() : null)
                 .content(reportRequestDTO.getContent())
                 .message(reportRequestDTO.getMessage())
                 .isDone(false)
