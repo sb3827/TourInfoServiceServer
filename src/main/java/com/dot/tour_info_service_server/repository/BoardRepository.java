@@ -16,7 +16,10 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
     // 게시글이 코스 게시글이면 true, 장소 게시글이면 false
     @Query("select b.isCourse from Board b where b.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno)")
-    Boolean boardIsCourse(Long pno);
+    List<Boolean> boardIsCourse(Long pno);
+
+    @Query("select b from Board b where b.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno)")
+    List<Board> getBoardsInfo(Long pno);
 
     // pno로 작성한 게시글 bno 반환
     @Query("select b.bno from Board b where b.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno)")
