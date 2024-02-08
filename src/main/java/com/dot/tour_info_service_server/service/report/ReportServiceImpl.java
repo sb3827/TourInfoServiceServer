@@ -175,11 +175,11 @@ public class ReportServiceImpl implements ReportService {
         }
         //신고가 여러개로 들어올때
         if ((reportRequestDTO.getPno() != null ? 1 : 0) + (reportRequestDTO.getRno() != null ? 1 : 0) + (reportRequestDTO.getBno() != null ? 1 : 0) > 1) {
-            return -1l;
+            return -1L;
         }
         //장소 게시글인데 신고당하는 유저가 있는경우
         if (reportRequestDTO.getPno() != null && reportRequestDTO.getDefendant() != null) {
-            return -1l;
+            return -1L;
         }
 
         //신고하고자하는 회원이 없을 경우 null 전달
