@@ -111,7 +111,7 @@ public class ReplyServiceImpl implements ReplyService {
         Optional<Reply> result = replyRepository.findById(replyDeleteRequestDTO.getRno());
         if (result.isPresent()) {
             Reply reply = result.get();
-            if (!SecurityUtil.validateMno(reply.getMember().getMno())) {
+            if (!SecurityUtil.isAdmin() || !SecurityUtil.validateMno(reply.getMember().getMno())) {
                 log.error("delete reply_mno not matched");
                 throw new RuntimeException("자신의 댓글만 삭제 가능합니다");
             }

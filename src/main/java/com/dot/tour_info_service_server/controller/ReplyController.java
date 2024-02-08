@@ -85,7 +85,7 @@ public class ReplyController {
   // authenticated
   @PutMapping("/delete")
   public ResponseEntity<Map<String, Long>> delete(@RequestBody @Valid ReplyDeleteRequestDTO replyDeleteRequestDTO) {
-    if (!SecurityUtil.validateMno(replyDeleteRequestDTO.getMno())) {
+    if (!SecurityUtil.isAdmin() || !SecurityUtil.validateMno(replyDeleteRequestDTO.getMno())) {
       log.error("mno not matched");
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
