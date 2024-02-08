@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final MemberRepository memberRepository;
@@ -63,13 +63,13 @@ public class ReportServiceImpl implements ReportService{
             }
 
             //장소 처리중
-            case "place_reporting"->{
+            case "place_reporting" -> {
                 Page<Report> entityPage = reportRepository.searchPlaceReport(false, search, pageRequest);
                 result = entityPage.getContent();
             }
 
             //장소 처리완료
-            case "place_reported"->{
+            case "place_reported" -> {
                 Page<Report> entityPage = reportRepository.searchPlaceReport(true, search, pageRequest);
                 result = entityPage.getContent();
             }
@@ -164,36 +164,38 @@ public class ReportServiceImpl implements ReportService{
     @Override
     public Long report(ReportRequestDTO reportRequestDTO) {
 
-        if(reportRepository.checkPlaceReport(reportRequestDTO.getPno(),reportRequestDTO.getComplainant())!=null) {
+        if (reportRepository.checkPlaceReport(reportRequestDTO.getPno(), reportRequestDTO.getComplainant()) != null) {
             return -1L;
         }
-        if(reportRepository.checkBoardReport(reportRequestDTO.getBno(),reportRequestDTO.getComplainant())!=null){
-             return -1L;
+        if (reportRepository.checkBoardReport(reportRequestDTO.getBno(), reportRequestDTO.getComplainant()) != null) {
+            return -1L;
         }
-        if(reportRepository.checkReplyReport(reportRequestDTO.getRno(),reportRequestDTO.getComplainant())!=null) {
+        if (reportRepository.checkReplyReport(reportRequestDTO.getRno(), reportRequestDTO.getComplainant()) != null) {
             return -1L;
         }
         //신고가 여러개로 들어올때
-        if ((reportRequestDTO.getPno()!=null ? 1 : 0) + (reportRequestDTO.getRno()!=null ? 1 : 0) + (reportRequestDTO.getBno()!=null ? 1 : 0) > 1) {
+        if ((reportRequestDTO.getPno() != null ? 1 : 0) + (reportRequestDTO.getRno() != null ? 1 : 0) + (reportRequestDTO.getBno() != null ? 1 : 0) > 1) {
             return -1l;
         }
         //장소 게시글인데 신고당하는 유저가 있는경우
-        if(reportRequestDTO.getPno()!=null && reportRequestDTO.getDefendant()!=null){
+        if (reportRequestDTO.getPno() != null && reportRequestDTO.getDefendant() != null) {
             return -1l;
         }
 
         //신고하고자하는 회원이 없을 경우 null 전달
-        Optional<Member> member = memberRepository.findById(reportRequestDTO.getDefendant());
+        if (reportRequestDTO.getDefendant() != null) {
+            Optional<Member> member = memberRepository.findById(reportRequestDTO.getDefendant());
 
-        if (member.isEmpty()) {
-            return null;
-        }
-        if (reportRequestDTO.getRno() == null && reportRepository.checkBoardReport(reportRequestDTO.getBno(), reportRequestDTO.getComplainant()) != null) {
-            return -1L;
-        }
-        if (reportRequestDTO.getBno() == null && reportRepository.checkReplyReport(reportRequestDTO.getRno(), reportRequestDTO.getComplainant()) != null) {
+            if (member.isEmpty()) {
+                return null;
+            }
+            if (reportRequestDTO.getRno() == null && reportRepository.checkBoardReport(reportRequestDTO.getBno(), reportRequestDTO.getComplainant()) != null) {
+                return -1L;
+            }
+            if (reportRequestDTO.getBno() == null && reportRepository.checkReplyReport(reportRequestDTO.getRno(), reportRequestDTO.getComplainant()) != null) {
 
-            return -1L;
+                return -1L;
+            }
         }
 
         Report report = Report.builder()
@@ -304,9 +306,9 @@ public class ReportServiceImpl implements ReportService{
                     replyRepository.deleteById(result.getReply_rno());
                 }
                 //대댓글이거나 대댓글이 존재하는 경우
-                else{
-                    Optional<Reply> checkReply=replyRepository.findById(result.getReply_rno());
-                    if(checkReply.isPresent()) {
+                else {
+                    Optional<Reply> checkReply = replyRepository.findById(result.getReply_rno());
+                    if (checkReply.isPresent()) {
                         Reply r = checkReply.get();
 
                         Reply reply = Reply.builder()
