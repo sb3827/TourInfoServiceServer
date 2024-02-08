@@ -7,7 +7,6 @@ import com.dot.tour_info_service_server.dto.response.report.ReportAllResponseDTO
 import com.dot.tour_info_service_server.dto.response.report.ReportResponseDTO;
 import com.dot.tour_info_service_server.entity.*;
 import com.dot.tour_info_service_server.repository.*;
-import com.dot.tour_info_service_server.security.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
