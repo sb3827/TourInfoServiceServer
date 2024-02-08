@@ -11,6 +11,8 @@ import java.util.Map;
 public interface PlaceService {
     Long registerPlace(RegistPlaceRequestDTO dto);
 
+    boolean modifyPlace(Long pno, String name);
+
     void removePlace(Long pno);
 
     List<PlaceDTO> searchPlace(Category filter, String search, int page);

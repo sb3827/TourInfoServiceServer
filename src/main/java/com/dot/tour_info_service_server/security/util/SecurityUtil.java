@@ -1,7 +1,6 @@
 package com.dot.tour_info_service_server.security.util;
 
 import com.dot.tour_info_service_server.security.dto.AuthMemberDTO;
-import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -30,7 +29,7 @@ public class SecurityUtil {
     // request email과 principal 검증
     public static boolean validateEmail(String email) {
         try {
-            return Objects.equals(getCurrentMemberEmail(), email) || isAdmin();
+            return Objects.equals(getCurrentMemberEmail(), email);
         } catch (Exception e) {
             return false;
         }
@@ -70,7 +69,7 @@ public class SecurityUtil {
     // request mno와 principal 검증
     public static boolean validateMno(Long mno) {
         try {
-            return Objects.equals(getCurrentMemberMno(), mno) || isAdmin();
+            return Objects.equals(getCurrentMemberMno(), mno);
         } catch (Exception e) {
             return false;
         }
