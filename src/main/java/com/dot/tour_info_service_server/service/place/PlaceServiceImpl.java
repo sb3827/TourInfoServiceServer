@@ -13,10 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -95,6 +92,21 @@ public class PlaceServiceImpl implements PlaceService {
             return placeCount;
         }
         return null;
+    }
+
+    @Override
+    public boolean modifyPlace(Long pno, String name) {
+        Optional<Place> result = placeRepository.findById(pno);
+
+        if(result.isEmpty()){
+            return false;
+        }
+
+        Place place = result.get();
+        place.changeName(name);
+
+        placeRepository.save(place);
+        return true;
     }
 
     // 장소 삭제

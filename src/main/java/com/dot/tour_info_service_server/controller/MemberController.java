@@ -75,7 +75,7 @@ public class MemberController {
                                                                 @NotNull(message = "mno cannot be Empty") Long mno) {
 
         Map<String, Long> result = new HashMap<>();
-        if (SecurityUtil.validateMno(mno)) {
+        if (SecurityUtil.validateMno(mno) || SecurityUtil.isAdmin()) {
             memberService.deleteUserInfo(mno);
             result.put("mno", mno);
             return new ResponseEntity<>(result, HttpStatus.OK);
