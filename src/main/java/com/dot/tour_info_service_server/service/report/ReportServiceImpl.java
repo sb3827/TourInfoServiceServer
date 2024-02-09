@@ -118,6 +118,7 @@ public class ReportServiceImpl implements ReportService{
                     .complainant(com.map(Member::getName).orElse(null))
                     .defendant_mno(report.getDefendant_mno())
                     .defendant(def.map(Member::getName).orElse(null))
+                    .pno(report.getPlace_pno()!=null?report.getPlace_pno():null)
                     .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
                     .rno(report.getReply_rno()!=null?report.getReply_rno():null)
                     .content(report.getContent())
