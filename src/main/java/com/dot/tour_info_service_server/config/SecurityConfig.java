@@ -44,7 +44,7 @@ public class SecurityConfig {
             "/place/**", "/place/placecount/**",
             "/reply/member/**", "/reply/board/**",
             "/users/profile/**", "/users/find/**",
-            "/error",
+            "/error", "/login",
 
             "/hc", "/env"
     };
@@ -62,7 +62,7 @@ public class SecurityConfig {
     };
 
     private static final String[] ADMIN_LIST = {
-            "/place/delete",
+            "/place/delete", "/place/modify",
             "/report/**",
             "/users/waiting", "/users/approve/**", "/users/filter-find/**"
     };

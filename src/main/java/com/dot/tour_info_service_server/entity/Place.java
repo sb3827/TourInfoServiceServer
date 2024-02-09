@@ -37,4 +37,7 @@ public class Place extends BaseEntity{
     @Column(nullable = false)
     private int cart; //장바구니 담은 총 갯수
 
+    public void changeName(String name) {
+        this.name = name;
+    }
 }

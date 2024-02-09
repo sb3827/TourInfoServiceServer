@@ -1,6 +1,7 @@
 package com.dot.tour_info_service_server.controller;
 
 import com.dot.tour_info_service_server.dto.PlaceDTO;
+import com.dot.tour_info_service_server.dto.request.place.ModifyNameRequestDTO;
 import com.dot.tour_info_service_server.dto.request.place.RegistPlaceRequestDTO;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.service.place.PlaceService;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -61,11 +63,21 @@ public class PlaceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    //admin
+    @PutMapping(value = "/modify")
+    public ResponseEntity<Void> modifyPlace(@Valid @RequestParam("pno")
+                                                @NotNull(message = "pno cannot be null") Long pno,
+                                            @RequestBody ModifyNameRequestDTO nameRequestDTO) throws BadRequestException {
+        if(!placeService.modifyPlace(pno, nameRequestDTO.getName()))
+            throw new BadRequestException("잘못된 요청 입니다.");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     // admin
     @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> removePlace(@Valid @RequestParam("pno")
-                                                             @NotNull(message = "pno cannnot be null") Long pno){
+                                                             @NotNull(message = "pno cannot be null") Long pno){
 
         Map<String, Long> result = new HashMap<>();
         placeService.removePlace(pno);
