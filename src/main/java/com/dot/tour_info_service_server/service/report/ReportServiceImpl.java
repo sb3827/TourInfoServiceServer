@@ -32,6 +32,7 @@ public class ReportServiceImpl implements ReportService {
     private final BoardPlaceRepository boardPlaceRepository;
     private final ImageRepository imageRepository;
     private final BoardRepository boardRepository;
+    private final PlaceRepository placeRepository;
 
     //신고 필터 조회
     @Override
@@ -102,26 +103,44 @@ public class ReportServiceImpl implements ReportService {
             }
         }
         //reportDTO로 형변환
-
         for (Report report : result) {
             Optional<Member> com = memberRepository.findById(report.getComplainant_mno());
-            Optional<Member> def = memberRepository.findById(report.getDefendant_mno());
+            if(report.getPlace_pno()==null) {
+                Optional<Member> def = memberRepository.findById(report.getDefendant_mno());
+                ReportResponseDTO reportResponseDTO = ReportResponseDTO.builder()
+                        .sno(report.getSno())
+                        .complainant_mno(report.getComplainant_mno())
+                        .complainant(com.map(Member::getName).orElse(null))
+                        .defendant_mno(def.isPresent()?def.get().getMno():null)
+                        .defendant(def.isPresent()?def.get().getName():null)
+                        .pno(report.getPlace_pno()!=null?report.getPlace_pno():null)
+                        .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
+                        .rno(report.getReply_rno()!=null?report.getReply_rno():null)
+                        .content(report.getContent())
+                        .isDone(report.getIsDone())
+                        .message(report.getMessage())
+                        .regDate(report.getRegDate())
+                        .build();
+                reportResponseDTOS.add(reportResponseDTO);
+            }else{
+                Optional<Place> pl=placeRepository.findById(report.getPlace_pno());
+                ReportResponseDTO reportResponseDTO = ReportResponseDTO.builder()
+                        .sno(report.getSno())
+                        .complainant_mno(report.getComplainant_mno())
+                        .complainant(com.map(Member::getName).orElse(null))
+                        .defendant_mno(pl.isPresent()?pl.get().getPno():null)
+                        .defendant(pl.isPresent()?pl.get().getName():null)
+                        .pno(report.getPlace_pno()!=null?report.getPlace_pno():null)
+                        .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
+                        .rno(report.getReply_rno()!=null?report.getReply_rno():null)
+                        .content(report.getContent())
+                        .isDone(report.getIsDone())
+                        .message(report.getMessage())
+                        .regDate(report.getRegDate())
+                        .build();
+                reportResponseDTOS.add(reportResponseDTO);
+            }
 
-            ReportResponseDTO reportResponseDTO = ReportResponseDTO.builder()
-                    .sno(report.getSno())
-                    .complainant_mno(report.getComplainant_mno())
-                    .complainant(com.map(Member::getName).orElse(null))
-                    .defendant_mno(report.getDefendant_mno())
-                    .defendant(def.map(Member::getName).orElse(null))
-                    .pno(report.getPlace_pno()!=null?report.getPlace_pno():null)
-                    .bno(report.getBoard_bno()!=null?report.getBoard_bno():null)
-                    .rno(report.getReply_rno()!=null?report.getReply_rno():null)
-                    .content(report.getContent())
-                    .isDone(report.getIsDone())
-                    .message(report.getMessage())
-                    .regDate(report.getRegDate())
-                    .build();
-            reportResponseDTOS.add(reportResponseDTO);
         }
         return reportResponseDTOS;
     }
@@ -194,7 +213,6 @@ public class ReportServiceImpl implements ReportService {
                 return -1L;
             }
             if (reportRequestDTO.getBno() == null && reportRepository.checkReplyReport(reportRequestDTO.getRno(), reportRequestDTO.getComplainant()) != null) {
-
                 return -1L;
             }
         }
