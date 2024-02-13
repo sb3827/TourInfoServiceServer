@@ -113,6 +113,7 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public void deleteImage(String fileName) {
         try {
+            log.debug(deleteFile(fileName));
             imageRepository.deleteBySrc(fileName);
         } catch (Exception e) {
             e.fillInStackTrace();

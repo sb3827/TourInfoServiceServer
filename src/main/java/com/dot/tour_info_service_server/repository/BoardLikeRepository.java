@@ -9,11 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 public interface BoardLikeRepository extends JpaRepository<BoardLike, BoardLikePK> {
-    @Modifying
-    @Transactional
-    @Query("delete from BoardLike bl where bl.boardLikePK.board.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno)")
-    void removeBoardLike(Long pno);
-
     //게시글에 해당하는 좋아요 삭제
     void deleteAllByBoardLikePKBoard(Board board);
 
