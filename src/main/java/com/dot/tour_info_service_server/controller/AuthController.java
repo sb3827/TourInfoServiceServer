@@ -164,7 +164,7 @@ public class AuthController {
 
         if (isValid) {
             // 성공한 경우
-            return new ModelAndView(new RedirectView("http://"+("localhost".equals(clientAddress) ? "localhost:3000" : clientAddress)));
+            return new ModelAndView(new RedirectView(("localhost".equals(clientAddress) ? "http://localhost:3000" : clientAddress)));
         } else {
             // 실패한 경우 (badRequest)
             throw new BadRequestException("잘못된 요청");
