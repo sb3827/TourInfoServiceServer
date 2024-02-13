@@ -9,6 +9,7 @@ import com.dot.tour_info_service_server.entity.Place;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -114,35 +115,29 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     @Transactional
     public void removePlace(Long pno) {
-        List<Boolean> isCourseList = boardRepository.boardIsCourse(pno);
         List<Board> result = boardRepository.getBoardsInfo(pno);
 
-        if (!result.isEmpty()) {
-            // 게시글 없을 경우
-            if (isCourseList.isEmpty()) {
-                placeRepository.deleteById(pno);
-            } else {
-                for (int i = 0; i < result.size(); i++) {
-                    Board board = result.get(i);
-                    // 코스 게시글
-                    if (board.getIsCourse().equals(true)) {
-                        boardPlaceRepository.updateBoardPlacePno(pno, board.getBno()); // boardPlace pno를 null로 변경
-                    }
-                    // 장소 게시글
-                    if (board.getIsCourse().equals(false)) {
-                        replyRepository.removeChildReply(pno); // 대댓글 먼저 삭제
-                        replyRepository.removeReply(pno); // 댓글 삭제
-                        imageRepository.removeImage(pno); // 이미지 삭제
-                        boardLikeRepository.removeBoardLike(pno); // 좋아요 삭제
-                        reportRepository.updateReportBnoNull(boardRepository.returnBnos(pno)); // 리포트 null로 변경
-                        boardPlaceRepository.deleteByBno(board.getBno());
-                        boardRepository.deleteById(board.getBno());
-                    }
+        if(!result.isEmpty()) {
+            for (int i = 0; i < result.size(); i++) {
+                Board board = result.get(i);
+                if (board.getIsCourse().equals(true)) { // course-place list 수정
+                    boardPlaceRepository.updateBoardPlacePno(pno, board.getBno()); // boardPlace pno를 null로 변경
                 }
-                cartRepository.removeCart(pno); // cart 삭제
-                placeRepository.deleteById(pno); // 장소 삭제
+
+                // board가 장소 or 코스+연결된 장소x
+                if (board.getIsCourse().equals(false) || !boardPlaceRepository.existsBoardPlaceByBoard(board.getBno())) {
+                    replyRepository.removeChildReply(pno); // 대댓글 먼저 삭제
+                    replyRepository.removeReply(pno); // 댓글 삭제
+                    imageRepository.removeImage(pno); // 이미지 삭제
+                    boardLikeRepository.removeBoardLike(pno); // 좋아요 삭제
+                    boardPlaceRepository.deleteByBno(board.getBno()); // board-place 연결 제거
+                    boardRepository.deleteById(board.getBno()); // board 삭제
+                }
             }
         }
+
+        cartRepository.removeCart(pno); // cart 삭제
+        placeRepository.deleteById(pno); // 장소 삭제
     }
 }
 
