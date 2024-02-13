@@ -99,7 +99,9 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Object deleteFile(String fileName) {
+    public Object deleteFile(String src) {
+        String fileName = src.substring(src.lastIndexOf("/") + 1);
+        log.debug(fileName);
         boolean isObjectExist = amazonS3Client.doesObjectExist(bucket, fileName);
         if (isObjectExist) {
             amazonS3Client.deleteObject(bucket, fileName);
@@ -113,6 +115,8 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public void deleteImage(String fileName) {
         try {
+            log.debug(deleteFile(fileName));
+            deleteFile(fileName);
             imageRepository.deleteBySrc(fileName);
         } catch (Exception e) {
             e.fillInStackTrace();

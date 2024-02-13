@@ -11,11 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    @Modifying
-    @Transactional
-    @Query("delete from Image i where i.board.bno in (select bp.boardPlacePK.board.bno from BoardPlace bp where bp.place.pno = :pno )")
-    void removeImage(Long pno);
-
     //게시글에 해당하는 image 삭제
     void deleteAllByBoard(Board board);
 

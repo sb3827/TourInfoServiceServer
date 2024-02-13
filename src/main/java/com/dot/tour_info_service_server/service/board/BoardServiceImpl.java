@@ -161,10 +161,13 @@ public class BoardServiceImpl implements BoardService {
         if(!SecurityUtil.validateMno(board.getWriter().getMno()) && !SecurityUtil.isAdmin()) {
             throw new AccessDeniedException("권한이 없는 사용자");
         }
+        List<Object[]> images = imageRepository.getImageByBno(bno);
 
         replyRepository.deleteByChildRno(bno);
         replyRepository.deleteByBno(bno);
-        imageRepository.deleteByBno(bno);
+        for (Object[] list: images) {
+            imageService.deleteImage((String) list[0]);
+        }
         boardLikeRepository.deleteByBno(bno);
         boardPlaceRepository.deleteByBno(bno);
         reportRepository.updateReportByBoardBno(bno); //null값으로 셋팅

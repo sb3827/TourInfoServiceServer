@@ -6,6 +6,7 @@ import com.dot.tour_info_service_server.entity.Board;
 import com.dot.tour_info_service_server.entity.Category;
 import com.dot.tour_info_service_server.repository.*;
 import com.dot.tour_info_service_server.entity.Place;
+import com.dot.tour_info_service_server.service.board.BoardService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -21,14 +23,11 @@ import java.util.*;
 @Log4j2
 @RequiredArgsConstructor
 public class PlaceServiceImpl implements PlaceService {
+    private final BoardService boardService;
     private final PlaceRepository placeRepository;
     private final BoardPlaceRepository boardPlaceRepository;
-    private final BoardLikeRepository boardLikeRepository;
     private final BoardRepository boardRepository;
     private final CartRepository cartRepository;
-    private final ImageRepository imageRepository;
-    private final ReplyRepository replyRepository;
-    private final ReportRepository reportRepository;
 
     // 장소 등록
     @Override
@@ -114,7 +113,7 @@ public class PlaceServiceImpl implements PlaceService {
     // 장소 삭제
     @Override
     @Transactional
-    public void removePlace(Long pno) {
+    public void removePlace(Long pno) throws AccessDeniedException {
         List<Board> result = boardRepository.getBoardsInfo(pno);
 
         if(!result.isEmpty()) {
@@ -126,12 +125,7 @@ public class PlaceServiceImpl implements PlaceService {
 
                 // board가 장소 or 코스+연결된 장소x
                 if (board.getIsCourse().equals(false) || !boardPlaceRepository.existsBoardPlaceByBoard(board.getBno())) {
-                    replyRepository.removeChildReply(pno); // 대댓글 먼저 삭제
-                    replyRepository.removeReply(pno); // 댓글 삭제
-                    imageRepository.removeImage(pno); // 이미지 삭제
-                    boardLikeRepository.removeBoardLike(pno); // 좋아요 삭제
-                    boardPlaceRepository.deleteByBno(board.getBno()); // board-place 연결 제거
-                    boardRepository.deleteById(board.getBno()); // board 삭제
+                    boardService.remove(board.getBno());
                 }
             }
         }
