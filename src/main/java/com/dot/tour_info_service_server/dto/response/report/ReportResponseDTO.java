@@ -17,6 +17,7 @@ public class ReportResponseDTO {
     private String complainant;
     private Long defendant_mno;
     private String defendant;
+    private Long pno; //장소 추가
     private Long bno;
     private Long rno;
     private String content;
