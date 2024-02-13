@@ -54,6 +54,6 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
 
     // board에 연결된 place 존재 여부 조회
     @Query("select count(bp) > 0 from BoardPlace bp " +
-            "where bp.boardPlacePK.board.bno = :bno and bp.place.pno != null")
+            "where bp.boardPlacePK.board.bno = :bno and bp.place.pno is not null")
     boolean existsBoardPlaceByBoard(@Param("bno") Long bno);
 }
