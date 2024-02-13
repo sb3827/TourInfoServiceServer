@@ -29,9 +29,9 @@ public class PlaceController {
 
     // authenticated
     @PostMapping(value = "/register")
-    public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody RegistPlaceRequestDTO placeDTO){
+    public ResponseEntity<Map<String, Long>> registerPlace(@RequestBody RegistPlaceRequestDTO placeDTO) {
 
-        if(placeDTO.getName()==null) {
+        if (placeDTO.getName() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Map<String, Long> result = new HashMap<>();
@@ -42,12 +42,12 @@ public class PlaceController {
 
     // permit all
     @GetMapping(value = "")
-    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value="filter") String filter,
+    public ResponseEntity<List<PlaceDTO>> findPlace(@RequestParam(value = "filter") String filter,
                                                     @RequestParam(value = "search") String search,
-                                                    @RequestParam int page){
+                                                    @RequestParam int page) {
 
-        Category category=null;
-        if(!filter.isEmpty()) {
+        Category category = null;
+        if (!filter.isEmpty()) {
             category = Category.valueOf(filter);
         }
         List<PlaceDTO> placeList = placeService.searchPlace(category, search, page);
@@ -56,9 +56,9 @@ public class PlaceController {
 
     // 지역별 방문수
     // permit all
-    @GetMapping(value="/placecount")
-    public ResponseEntity<Map<String, Object>> getPlaceCount(@Valid @RequestParam(value="mno")
-                                                                 @NotNull(message = "mno cannot be null") Long mno){
+    @GetMapping(value = "/placecount")
+    public ResponseEntity<Map<String, Object>> getPlaceCount(@Valid @RequestParam(value = "mno")
+                                                             @NotNull(message = "mno cannot be null") Long mno) {
         Map<String, Object> result = placeService.getPlaceCount(mno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -66,21 +66,25 @@ public class PlaceController {
     //admin
     @PutMapping(value = "/modify")
     public ResponseEntity<Void> modifyPlace(@Valid @RequestParam("pno")
-                                                @NotNull(message = "pno cannot be null") Long pno,
+                                            @NotNull(message = "pno cannot be null") Long pno,
                                             @RequestBody ModifyNameRequestDTO nameRequestDTO) throws BadRequestException {
-        if(!placeService.modifyPlace(pno, nameRequestDTO.getName()))
+        if (!placeService.modifyPlace(pno, nameRequestDTO.getName()))
             throw new BadRequestException("잘못된 요청 입니다.");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // admin
-    @DeleteMapping(value="/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Long>> removePlace(@Valid @RequestParam("pno")
-                                                             @NotNull(message = "pno cannot be null") Long pno){
+                                                         @NotNull(message = "pno cannot be null") Long pno) {
 
         Map<String, Long> result = new HashMap<>();
-        placeService.removePlace(pno);
+        try {
+            placeService.removePlace(pno);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
         result.put("pno", pno);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

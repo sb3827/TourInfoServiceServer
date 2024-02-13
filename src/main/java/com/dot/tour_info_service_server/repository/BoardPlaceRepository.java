@@ -33,7 +33,7 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Query("Delete from BoardPlace bp where bp.boardPlacePK.board.bno = :bno")
     void deleteByBno(Long bno);
 
-   // 장소 대표이미지 조회
+    // 장소 대표이미지 조회
     @Query("select i.src " +
             "from BoardPlace bp left outer join Place p on (bp.place.pno = p.pno) " +
             "left outer join Image i on (bp.boardPlacePK.board.bno = i.board.bno) " +
@@ -51,4 +51,9 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
 
     // table 존재 여부 조회
     boolean existsByBoardPlacePK(BoardPlacePK boardPlacePK);
+
+    // board에 연결된 place 존재 여부 조회
+    @Query("select count(bp) > 0 from BoardPlace bp " +
+            "where bp.boardPlacePK.board.bno = :bno and bp.place.pno != null")
+    boolean existsBoardPlaceByBoard(@Param("bno") Long bno);
 }
