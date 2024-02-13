@@ -5,6 +5,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.io.UnsupportedEncodingException;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
     private final JavaMailSender javaMailSender;
+    @Value("${server.serverAddress}")
+    private String address;
+
     @Override
     public void sendPassword(String email, String name, String password) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -42,7 +46,8 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         String title = name + "님의 DoT 이메일 인증";
         String text = "<h1>" + name + "님의 DoT 가입을 축하드립니다.</h1>" +
-                "<p>보내드린 <a href='http://localhost:8080/auth/email/validation?email=" + email + "&token=" + token +
+                "<p>보내드린 <a href='http://"+(address.equals("localhost") ? address+":8080" : address)+
+                "/auth/email/validation?email=" + email + "&token=" + token +
                 "'>주소</a> 로 10분 이내로 접속하여 인증해 주세요.</p>" +
                 "<p>가입하신 내역이 없다면 이 메일을 무시하셔도 됩니다.</p>" +
                 "<meta charset='UTF-8'>";
@@ -65,7 +70,8 @@ public class MailServiceImpl implements MailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         String title = name + "님의 DoT 이메일 인증(재전송)";
         String text = "<h1>" + name + "님의 재전송된 이메일 인증 입니다.</h1>" +
-                "<p>보내드린 <a href='http://localhost:8080/auth/email/validation?email=" + email + "&token=" + token +
+                "<p>보내드린 <a href='http://"+(address.equals("localhost") ? address+":8080" : address)+
+                "/auth/email/validation?email=" + email + "&token=" + token +
                 "'>주소</a> 로 10분 이내로 접속하여 인증해 주세요.</p>" +
                 "<p>가입하신 내역이 없다면 이 메일을 무시하셔도 됩니다.</p>" +
                 "<meta charset='UTF-8'>";
