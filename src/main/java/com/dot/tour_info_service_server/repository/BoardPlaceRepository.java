@@ -18,12 +18,6 @@ public interface BoardPlaceRepository extends JpaRepository<BoardPlace, BoardPla
     @Query("Update BoardPlace bp set bp.place.pno = null where bp.place.pno = :pno and bp.boardPlacePK.board.bno = :bno")
     void updateBoardPlacePno(@Param("pno") Long pno, @Param("bno") Long bno);
 
-
-    @Modifying
-    @Transactional
-    @Query("delete from BoardPlace bp where bp.place.pno = :pno")
-    void removeBoardPlaceByPno(Long pno);
-
     //게시글에 해당하는것 삭제
     void deleteAllByBoardPlacePKBoard(Board board);
 
